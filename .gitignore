@@ -1,0 +1,7 @@
+.android-tools/
+__pycache__/
+*.pyc
+poetry-app-debug.apk
+android/.gradle/
+android/app/build/
+android/app/src/main/assets/
