@@ -2,6 +2,7 @@ package com.local.poetryapp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -22,15 +23,24 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 
 import androidx.webkit.WebViewAssetLoader;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends Activity {
     private static final int REQUEST_EXPORT_JSON = 41;
@@ -38,6 +48,7 @@ public class MainActivity extends Activity {
     private WebView webView;
     private String pendingExportText = "";
     private MediaPlayer mediaPlayer;
+    private double nativeSpeed = 1.0;
     private final Handler mediaHandler = new Handler(Looper.getMainLooper());
     private final Runnable mediaProgressRunnable = new Runnable() {
         @Override
@@ -128,12 +139,17 @@ public class MainActivity extends Activity {
         public int loadAudio(String assetPath, double speed) {
             releaseNativeAudio();
             try {
-                AssetFileDescriptor descriptor = getAssets().openFd(assetPath);
                 mediaPlayer = new MediaPlayer();
-                mediaPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
-                descriptor.close();
+                File downloaded = downloadedAudioFile(assetPath);
+                if (downloaded.exists() && downloaded.length() > 64000) {
+                    mediaPlayer.setDataSource(downloaded.getAbsolutePath());
+                } else {
+                    AssetFileDescriptor descriptor = getAssets().openFd(assetPath);
+                    mediaPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+                    descriptor.close();
+                }
                 mediaPlayer.prepare();
-                applyNativeSpeed(speed);
+                nativeSpeed = speed;
                 mediaPlayer.setOnCompletionListener(player -> webView.post(() -> webView.evaluateJavascript(
                     "window.nativeAudioEnded && window.nativeAudioEnded()",
                     null
@@ -150,6 +166,7 @@ public class MainActivity extends Activity {
         public boolean playAudio() {
             try {
                 if (mediaPlayer == null) return false;
+                applyNativeSpeed(nativeSpeed);
                 mediaPlayer.start();
                 return true;
             } catch (Exception error) {
@@ -175,7 +192,8 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public void setAudioSpeed(double speed) {
-            applyNativeSpeed(speed);
+            nativeSpeed = speed;
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) applyNativeSpeed(speed);
         }
 
         @JavascriptInterface
@@ -184,19 +202,61 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void exportUserData(String text) {
-            pendingExportText = text == null ? "" : text;
-            runOnUiThread(() -> {
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("application/json");
-                intent.putExtra(Intent.EXTRA_TITLE, "hymn-library-backup.json");
+        public void downloadMissingAudio(String itemsJson) {
+            new Thread(() -> {
+                int downloaded = 0;
+                int skipped = 0;
+                int failed = 0;
                 try {
-                    startActivityForResult(intent, REQUEST_EXPORT_JSON);
-                } catch (ActivityNotFoundException error) {
-                    Toast.makeText(MainActivity.this, "無法開啟檔案儲存介面", Toast.LENGTH_SHORT).show();
+                    JSONArray items = new JSONArray(itemsJson == null ? "[]" : itemsJson);
+                    int total = items.length();
+                    for (int i = 0; i < total; i++) {
+                        JSONObject item = items.getJSONObject(i);
+                        String collection = item.optString("collection");
+                        String number = item.optString("number");
+                        String assetPath = item.optString("path");
+                        if (assetPath.isEmpty()) {
+                            failed++;
+                        } else if (audioAvailable(assetPath)) {
+                            skipped++;
+                        } else if (downloadAudioFile(collection, number, assetPath)) {
+                            downloaded++;
+                        } else {
+                            failed++;
+                        }
+                        int done = i + 1;
+                        int downloadedNow = downloaded;
+                        int skippedNow = skipped;
+                        int failedNow = failed;
+                        webView.post(() -> webView.evaluateJavascript(
+                            "window.nativeAudioDownloadProgress && window.nativeAudioDownloadProgress(" + done + "," + total + "," + downloadedNow + "," + skippedNow + "," + failedNow + ")",
+                            null
+                        ));
+                    }
+                } catch (Exception error) {
+                    failed++;
                 }
-            });
+                int downloadedDone = downloaded;
+                int skippedDone = skipped;
+                int failedDone = failed;
+                webView.post(() -> webView.evaluateJavascript(
+                    "window.nativeAudioDownloadDone && window.nativeAudioDownloadDone(" + downloadedDone + "," + skippedDone + "," + failedDone + ")",
+                    null
+                ));
+            }).start();
+        }
+
+        @JavascriptInterface
+        public void exportUserData(String text) {
+            String exportText = text == null ? "" : text;
+            new Thread(() -> {
+                boolean ok = exportBackupToDownloads(exportText);
+                runOnUiThread(() -> Toast.makeText(
+                    MainActivity.this,
+                    ok ? "已匯出到 Download/Poetry_APP" : "匯出失敗",
+                    Toast.LENGTH_SHORT
+                ).show());
+            }).start();
         }
 
         @JavascriptInterface
@@ -204,8 +264,11 @@ public class MainActivity extends Activity {
             runOnUiThread(() -> {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("application/json");
+                intent.setType("*/*");
                 intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "application/json", "text/plain", "*/*" });
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, defaultBackupFolderUri());
+                }
                 try {
                     startActivityForResult(intent, REQUEST_IMPORT_JSON);
                 } catch (ActivityNotFoundException error) {
@@ -221,6 +284,117 @@ public class MainActivity extends Activity {
                 mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed((float) speed));
             }
         } catch (Exception ignored) {
+        }
+    }
+
+    private File downloadedAudioFile(String assetPath) {
+        return new File(getFilesDir(), assetPath);
+    }
+
+    private boolean audioAvailable(String assetPath) {
+        File downloaded = downloadedAudioFile(assetPath);
+        if (downloaded.exists() && downloaded.length() > 64000) return true;
+        try (AssetFileDescriptor descriptor = getAssets().openFd(assetPath)) {
+            return descriptor.getLength() > 64000;
+        } catch (Exception error) {
+            return false;
+        }
+    }
+
+    private Uri defaultBackupFolderUri() {
+        return Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload%2FPoetry_APP");
+    }
+
+    private boolean exportBackupToDownloads(String text) {
+        try {
+            String fileName = "hymn-library-backup.json";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "application/json");
+                values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Poetry_APP");
+                values.put(MediaStore.MediaColumns.IS_PENDING, 1);
+                Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+                if (uri == null) return false;
+                try (OutputStream output = getContentResolver().openOutputStream(uri)) {
+                    if (output == null) return false;
+                    output.write(text.getBytes(StandardCharsets.UTF_8));
+                }
+                values.clear();
+                values.put(MediaStore.MediaColumns.IS_PENDING, 0);
+                getContentResolver().update(uri, values, null, null);
+                return true;
+            }
+            File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Poetry_APP");
+            if (!folder.exists() && !folder.mkdirs()) return false;
+            File target = new File(folder, fileName);
+            try (FileOutputStream output = new FileOutputStream(target)) {
+                output.write(text.getBytes(StandardCharsets.UTF_8));
+            }
+            return true;
+        } catch (Exception error) {
+            return false;
+        }
+    }
+
+    private boolean downloadAudioFile(String collection, String number, String assetPath) {
+        if (!"hymns".equals(collection) && !"supplement".equals(collection)) return false;
+        try {
+            int sourceNumber;
+            if (number.startsWith("附")) sourceNumber = 1000 + Integer.parseInt(number.substring(1));
+            else sourceNumber = Integer.parseInt(number);
+            String book = "hymns".equals(collection) ? "ch" : "ts";
+            String pageUrl = "https://www.hymnal.net/en/hymn/" + book + "/" + sourceNumber;
+            String page = readUrl(pageUrl);
+            Pattern pattern = Pattern.compile("https://www\\.hymnal\\.net/Hymns/[^\\\"'<>\\s]+?\\.mp3");
+            Matcher matcher = pattern.matcher(page);
+            LinkedHashSet<String> urls = new LinkedHashSet<>();
+            while (matcher.find()) urls.add(matcher.group());
+            String best = "";
+            int bestScore = -1;
+            for (String url : urls) {
+                int score = 0;
+                if ("hymns".equals(collection) && url.contains("/Chinese/mp3/")) score += 100;
+                if ("supplement".equals(collection) && url.contains("/ChineseTS/mp3/")) score += 100;
+                if (url.contains("_vocal.mp3")) score += 50;
+                if (url.contains("_full.mp3")) score += 35;
+                if (url.contains("_i.mp3")) score += 25;
+                if (score > bestScore) {
+                    bestScore = score;
+                    best = url;
+                }
+            }
+            if (best.isEmpty()) return false;
+            byte[] bytes = readBytes(best);
+            if (bytes.length <= 64000) return false;
+            File target = downloadedAudioFile(assetPath);
+            File parent = target.getParentFile();
+            if (parent != null) parent.mkdirs();
+            try (FileOutputStream output = new FileOutputStream(target)) {
+                output.write(bytes);
+            }
+            return true;
+        } catch (Exception error) {
+            return false;
+        }
+    }
+
+    private String readUrl(String urlText) throws Exception {
+        return new String(readBytes(urlText), StandardCharsets.UTF_8);
+    }
+
+    private byte[] readBytes(String urlText) throws Exception {
+        java.net.URL url = new java.net.URL(urlText);
+        java.net.URLConnection connection = url.openConnection();
+        connection.setConnectTimeout(45000);
+        connection.setReadTimeout(60000);
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+        try (InputStream input = connection.getInputStream()) {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            byte[] chunk = new byte[8192];
+            int read;
+            while ((read = input.read(chunk)) != -1) buffer.write(chunk, 0, read);
+            return buffer.toByteArray();
         }
     }
 

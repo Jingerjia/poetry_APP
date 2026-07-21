@@ -581,6 +581,32 @@ async function audioPath(song) {
   return audio[song.collection]?.[audioKey(song.number)] || '';
 }
 
+async function audioDownloadItems() {
+  const audio = await audioIndex();
+  return ['hymns', 'supplement'].flatMap((book) => Object.entries(audio[book] || {}).map(([number, path]) => ({
+    collection: book,
+    number,
+    path,
+  })));
+}
+
+async function updateAudioLibrary() {
+  if (!window.AndroidBridge?.downloadMissingAudio) return;
+  const ok = confirm('\u662f\u5426\u66f4\u65b0\u97f3\u6a94\uff1f\u5df2\u6709\u7684\u97f3\u6a94\u6703\u81ea\u52d5\u8df3\u904e\u3002');
+  if (!ok) return;
+  const button = $('audio-library-download');
+  button.disabled = true;
+  button.textContent = '\u6e96\u5099\u4e2d...';
+  try {
+    const items = await audioDownloadItems();
+    window.AndroidBridge.downloadMissingAudio(JSON.stringify(items));
+  } catch (error) {
+    console.error(error);
+    button.disabled = false;
+    button.textContent = '\u4e0b\u8f09\u5931\u6557';
+  }
+}
+
 function formatTime(seconds) {
   if (!Number.isFinite(seconds)) return '0:00';
   const minutes = Math.floor(seconds / 60);
@@ -606,7 +632,7 @@ async function resetPlayer(song) {
     if (hasNativeAudio()) {
       nativeAudioDuration = window.AndroidBridge.loadAudio(path, Number($('audio-speed').value));
       if (nativeAudioDuration > 0) $('audio-duration').textContent = formatTime(nativeAudioDuration / 1000);
-      else $('audio-duration').textContent = '\u7121\u97f3\u6a94';
+      else $('audio-duration').textContent = '\u9700\u4e0b\u8f09';
     } else {
       audio.src = path;
       audio.playbackRate = Number($('audio-speed').value);
@@ -766,6 +792,10 @@ function bindUI() {
     importUserData(event.target.files[0]);
     event.target.value = '';
   };
+  if (window.AndroidBridge?.downloadMissingAudio) {
+    $('audio-library-download').hidden = false;
+    $('audio-library-download').onclick = updateAudioLibrary;
+  }
   $('favorite-group-select').onchange = (event) => { activeFavoriteGroupId = event.target.value; renderFavorites(); };
   $('toggle-favorite').onclick = toggleCurrentFavorite;
   $('search-toggle').onclick = () => toggleSearch(true);
@@ -807,6 +837,18 @@ window.nativeAudioEnded = () => {
   nativeAudioPlaying = false;
   $('play-toggle').textContent = '\u25b6';
   setAudioProgress(1000);
+};
+window.nativeAudioDownloadProgress = (done, total, downloaded, skipped, failed) => {
+  const button = $('audio-library-download');
+  button.textContent = `${done}/${total} \u5df2\u4e0b\u8f09 ${downloaded} \u8df3\u904e ${skipped}`;
+  if (failed) button.textContent += ` \u5931\u6557 ${failed}`;
+};
+window.nativeAudioDownloadDone = (downloaded, skipped, failed) => {
+  const button = $('audio-library-download');
+  button.disabled = false;
+  button.textContent = failed ? '\u66f4\u65b0\u5b8c\u6210\u6709\u5931\u6557' : '\u97f3\u6a94\u5df2\u66f4\u65b0';
+  if (!$('viewer').hidden) resetPlayer(currentSongs[currentIndex]);
+  setTimeout(() => { button.textContent = '\u4e0b\u8f09\u97f3\u6a94'; }, 2200);
 };
 bindUI();
 document.addEventListener('keydown', (event) => {
