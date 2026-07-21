@@ -206,8 +206,12 @@ function searchNeedles(query) {
   return [full, ...terms].filter(Boolean);
 }
 
+function songSearchText(song) {
+  return song.lyricText || song.text || '';
+}
+
 function snippetFor(song, query) {
-  const source = compactLyricText(`${song.title}\n${song.text || ''}`);
+  const source = song.lyricText || compactLyricText(`${song.title}\n${song.text || ''}`);
   if (!query.trim()) return '';
   const needles = searchNeedles(query);
   const mapped = normalizedWithMap(source);
@@ -233,7 +237,7 @@ async function search(query = '') {
     const normalizedQuery = normalizeText(query);
     const terms = query.trim().split(/\s+/).map(normalizeText).filter(Boolean);
     const songs = rows
-      .map((song) => ({ song, normalized: normalizeText(`${song.number} ${song.title} ${song.text || ''}`) }))
+      .map((song) => ({ song, normalized: normalizeText(`${song.number} ${song.title} ${songSearchText(song)}`) }))
       .filter(({ normalized }) => !normalizedQuery || normalized.includes(normalizedQuery) || terms.every((term) => normalized.includes(term)))
       .slice(0, 50)
       .map(({ song }) => ({ ...song, snippet: snippetFor(song, query) }));
