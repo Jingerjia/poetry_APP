@@ -3,28 +3,27 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hymn Library</title><link rel="stylesheet" href="style.css">
 </head><body>
-<header><div class="brand">&#x8A69;&#x6B4C;&#x9078;&#x96C6;</div><button id="search-toggle" class="search-toggle" aria-label="search">&#x2315;</button></header>
+<header><div class="brand">&#x8A69;&#x6B4C;&#x9078;&#x96C6;</div></header>
 <p id="loading" class="loading">&#x6B63;&#x5728;&#x8F09;&#x5165;&#x8A69;&#x6B4C;&#x8CC7;&#x6599;&#x5EAB;...</p>
 <main id="home">
-  <section class="intro"><p id="selection-title">&#x8A69;&#x6B4C; &#x9078;&#x64C7;&#x8A69;&#x6B4C;</p><h1>&#x8F38;&#x5165;&#x7DE8;&#x865F;</h1></section>
-  <nav id="collections" aria-label="collections">
+  <nav id="home-tabs" class="home-tabs" aria-label="home sections">
+    <button class="home-tab active" data-panel="keypad-panel">&#x8A69;&#x6B4C;&#x9078;&#x96C6;</button>
+    <button class="home-tab" data-panel="browse-panel">&#x5FEB;&#x901F;&#x700F;&#x89BD;</button>
+    <button class="home-tab" data-panel="history-panel">&#x6700;&#x8FD1;&#x958B;&#x555F;</button>
+    <button class="home-tab" data-panel="favorites-panel">&#x6211;&#x7684;&#x6700;&#x611B;</button>
+  </nav>
+  <section id="keypad-panel" class="home-panel"><section class="intro"><p id="selection-title">&#x8A69;&#x6B4C; &#x9078;&#x64C7;&#x8A69;&#x6B4C;</p><h1>&#x8F38;&#x5165;&#x7DE8;&#x865F;</h1></section><div class="section-title"><h2>&#x8A69;&#x6B4C;&#x9078;&#x96C6;</h2><button id="search-toggle" class="search-toggle" aria-label="search">&#x2315;</button></div><nav id="collections" aria-label="collections">
     <button class="collection active" data-book="hymns">&#x8A69;&#x6B4C;</button>
     <button class="collection" data-book="supplement">&#x88DC;&#x5145;</button>
     <button class="collection" data-book="new-songs">&#x65B0;&#x6B4C;</button>
     <button class="collection" data-book="new-poems">&#x65B0;&#x8A69;</button>
-  </nav>
-  <section class="number-panel"><div id="number-display" aria-live="polite">&#x8ACB;&#x8F38;&#x5165;&#x7DE8;&#x865F;</div><div id="keypad" class="keypad">
+  </nav><section class="number-panel"><div id="number-display" aria-live="polite">&#x8ACB;&#x8F38;&#x5165;&#x7DE8;&#x865F;</div><div id="keypad" class="keypad">
     <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button>
     <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button>
     <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button>
     <button class="special" data-key="extra">&#x9644;</button><button data-key="0">0</button><button class="delete" data-key="clear">C</button>
-  </div><button id="open-song" class="open-song" disabled>&#x78BA;&#x5B9A;</button></section>
-  <nav id="home-tabs" class="home-tabs" aria-label="home sections">
-    <button class="home-tab active" data-panel="browse-panel">&#x5FEB;&#x901F;&#x700F;&#x89BD;</button>
-    <button class="home-tab" data-panel="history-panel">&#x6700;&#x8FD1;&#x958B;&#x555F;</button>
-    <button class="home-tab" data-panel="favorites-panel">&#x6211;&#x7684;&#x6700;&#x611B;</button>
-  </nav>
-  <section id="browse-panel" class="home-panel"><div class="section-title"><h2>&#x5FEB;&#x901F;&#x700F;&#x89BD;</h2><button class="text-button" id="browse-all">&#x67E5;&#x770B;&#x5168;&#x90E8;</button></div><div id="featured" class="song-list"></div></section>
+  </div><button id="open-song" class="open-song" disabled>&#x78BA;&#x5B9A;</button></section></section>
+  <section id="browse-panel" class="home-panel" hidden><div class="section-title"><h2>&#x5FEB;&#x901F;&#x700F;&#x89BD;</h2><button class="text-button" id="browse-all">&#x67E5;&#x770B;&#x5168;&#x90E8;</button></div><div id="featured" class="song-list"></div></section>
   <section id="history-panel" class="home-panel" hidden><div class="section-title"><h2>&#x6700;&#x8FD1;&#x958B;&#x555F;</h2><button class="text-button" id="clear-history">&#x6E05;&#x9664;</button></div><div id="history-list" class="song-list"></div></section>
   <section id="favorites-panel" class="home-panel" hidden><div class="section-title"><h2>&#x6211;&#x7684;&#x6700;&#x611B;</h2><div class="backup-actions"><button class="text-button" id="export-data">&#x532F;&#x51FA;</button><button class="text-button" id="import-data">&#x532F;&#x5165;</button><input id="import-file" type="file" accept="application/json,.json" hidden></div></div><div class="favorite-manager"><div id="favorite-groups" class="group-list"></div><div class="group-editor"><input id="new-group-name" placeholder="&#x65B0;&#x589E;&#x7FA4;&#x7D44;"><button id="add-group">&#x65B0;&#x589E;</button></div></div><div id="favorite-list" class="song-list"></div></section>
 </main>

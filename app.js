@@ -389,6 +389,12 @@ function updateDisplay() {
   $('open-song').disabled = !digits;
 }
 
+function showNumberMessage(message) {
+  digits = '';
+  $('number-display').textContent = message;
+  $('open-song').disabled = true;
+}
+
 function pressKey(value) {
   if (value === 'clear') digits = '';
   else if (value === 'extra') digits = digits.startsWith('\u9644') ? digits : '\u9644';
@@ -421,10 +427,10 @@ async function openByNumber() {
     const index = await bookIndex();
     const song = index.songs.find((item) => String(item.number) === songNumberInput());
     if (song) openSong(song, index.songs);
-    else $('number-display').textContent = '\u627e\u4e0d\u5230\u9019\u9996\u8a69\u6b4c';
+    else showNumberMessage('\u627e\u4e0d\u5230\u9019\u9996\u8a69\u6b4c');
   } catch (error) {
     console.error(error);
-    $('number-display').textContent = dbErrorMessage;
+    showNumberMessage(dbErrorMessage);
   }
 }
 
