@@ -15,8 +15,36 @@ function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[c]));
 }
 
+const variantGroups = [
+  ['\u4f60', '\u7962', '\u79b0', '\u59b3', '\u60a8'],
+  ['\u4ed6', '\u7942'],
+  ['\u624d', '\u7e94'],
+  ['\u5594', '\u54e6'],
+  ['\u91cc', '\u88e1', '\u88cf'],
+  ['\u7740', '\u8457'],
+  ['\u70ba', '\u7232'],
+  ['\u773e', '\u8846'],
+  ['\u555f', '\u5553'],
+  ['\u6052', '\u6046'],
+  ['\u7fa8', '\u7fa1'],
+  ['\u7fa4', '\u7fa3'],
+  ['\u6eab', '\u6e29'],
+  ['\u5cf0', '\u5cef'],
+  ['\u6c61', '\u6c59'],
+  ['\u5e8a', '\u7240'],
+  ['\u8aaa', '\u8aac'],
+  ['\u7d55', '\u7d76'],
+  ['\u5f4c', '\u5f25'],
+  ['\u9ebc', '\u9ebd', '\u4e48'],
+  ['\u537b', '\u5374'],
+  ['\u6559', '\u654e'],
+  ['\u5373', '\u537d'],
+  ['\u5b9d', '\u5bf6'],
+  ['\u5e76', '\u4e26', '\u4f75'],
+];
+const variants = Object.fromEntries(variantGroups.flatMap((group) => group.map((char) => [char, group[0]])));
+
 function normalizeText(value) {
-  const variants = { '\u7e94':'\u624d', '\u7942':'\u4ed6', '\u59b3':'\u4f60', '\u88e1':'\u91cc', '\u88cf':'\u91cc', '\u8457':'\u7740', '\u54e6':'\u5594' };
   return Array.from(String(value).normalize('NFKC').toLocaleLowerCase())
     .map((char) => variants[char] || char)
     .join('')
