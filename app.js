@@ -18,6 +18,12 @@ let activeFavoriteGroupId = favoriteState.groups[0]?.id || 'default';
 let historyTimer = null;
 let pendingHistoryId = '';
 let setAudioProgress = () => {};
+let nativeAudioDuration = 0;
+let nativeAudioPlaying = false;
+
+function hasNativeAudio() {
+  return !!window.AndroidBridge?.loadAudio;
+}
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[c]));
@@ -257,6 +263,8 @@ function showHomePanel(panelId) {
 
 function closeViewer() {
   cancelHistoryTimer();
+  if (window.AndroidBridge?.releaseAudio) window.AndroidBridge.releaseAudio();
+  nativeAudioPlaying = false;
   $('audio').pause();
   $('viewer').hidden = true;
 }
@@ -586,14 +594,23 @@ async function resetPlayer(song) {
   audio.pause();
   audio.removeAttribute('src');
   audio.load();
+  if (window.AndroidBridge?.releaseAudio) window.AndroidBridge.releaseAudio();
+  nativeAudioDuration = 0;
+  nativeAudioPlaying = false;
   setAudioProgress(0);
   $('audio-current').textContent = '0:00';
   $('audio-duration').textContent = '0:00';
   $('play-toggle').textContent = '\u25b6';
   $('player').hidden = !path;
   if (path) {
-    audio.src = path;
-    audio.playbackRate = Number($('audio-speed').value);
+    if (hasNativeAudio()) {
+      nativeAudioDuration = window.AndroidBridge.loadAudio(path, Number($('audio-speed').value));
+      if (nativeAudioDuration > 0) $('audio-duration').textContent = formatTime(nativeAudioDuration / 1000);
+      else $('audio-duration').textContent = '\u7121\u97f3\u6a94';
+    } else {
+      audio.src = path;
+      audio.playbackRate = Number($('audio-speed').value);
+    }
   }
 }
 
@@ -638,17 +655,26 @@ function bindPlayer() {
   };
   setAudioProgress = setProgress;
   const seekAudio = (value) => {
-    if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
-    const wasPaused = audio.paused;
     const clamped = Math.min(1000, Math.max(0, Math.round(Number(value) || 0)));
     setProgress(clamped);
+    if (hasNativeAudio()) {
+      if (!nativeAudioDuration) return;
+      const millis = Math.round((clamped / 1000) * nativeAudioDuration);
+      window.AndroidBridge.seekAudio(millis);
+      $('audio-current').textContent = formatTime(millis / 1000);
+      return;
+    }
+    if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+    const wasPaused = audio.paused;
     audio.currentTime = (clamped / 1000) * audio.duration;
     $('audio-current').textContent = formatTime(audio.currentTime);
     if (wasPaused) audio.pause();
   };
   const pointerX = (event) => event.clientX ?? event.touches?.[0]?.clientX ?? event.changedTouches?.[0]?.clientX;
   const seekFromPointer = (event) => {
-    if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+    if (hasNativeAudio()) {
+      if (!nativeAudioDuration) return;
+    } else if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
     const x = pointerX(event);
     if (!Number.isFinite(x)) return;
     const rect = progress.getBoundingClientRect();
@@ -658,6 +684,18 @@ function bindPlayer() {
     seekAudio(value);
   };
   $('play-toggle').onclick = async () => {
+    if (hasNativeAudio()) {
+      if (!nativeAudioDuration) return;
+      if (nativeAudioPlaying) {
+        window.AndroidBridge.pauseAudio();
+        nativeAudioPlaying = false;
+        $('play-toggle').textContent = '\u25b6';
+      } else {
+        nativeAudioPlaying = !!window.AndroidBridge.playAudio();
+        $('play-toggle').textContent = nativeAudioPlaying ? '\u275a\u275a' : '!';
+      }
+      return;
+    }
     if (!audio.src) return;
     if (audio.paused) {
       try { await audio.play(); } catch (error) { console.error(error); $('play-toggle').textContent = '!'; }
@@ -694,7 +732,11 @@ function bindPlayer() {
     if (event.key === 'ArrowLeft') seekAudio(current - 20);
     if (event.key === 'ArrowRight') seekAudio(current + 20);
   };
-  $('audio-speed').onchange = (event) => { audio.playbackRate = Number(event.target.value); };
+  $('audio-speed').onchange = (event) => {
+    const speed = Number(event.target.value);
+    if (hasNativeAudio()) window.AndroidBridge.setAudioSpeed(speed);
+    else audio.playbackRate = speed;
+  };
 }
 
 function bindUI() {
@@ -751,6 +793,21 @@ window.selectBook = selectBook;
 window.openByNumber = openByNumber;
 window.appBack = appBack;
 window.importUserDataFromText = importUserDataFromText;
+window.nativeAudioState = (currentMs, durationMs, playing) => {
+  nativeAudioDuration = durationMs || nativeAudioDuration;
+  nativeAudioPlaying = !!playing;
+  $('audio-current').textContent = formatTime((currentMs || 0) / 1000);
+  if (nativeAudioDuration > 0) {
+    $('audio-duration').textContent = formatTime(nativeAudioDuration / 1000);
+    setAudioProgress((currentMs / nativeAudioDuration) * 1000);
+  }
+  $('play-toggle').textContent = nativeAudioPlaying ? '\u275a\u275a' : '\u25b6';
+};
+window.nativeAudioEnded = () => {
+  nativeAudioPlaying = false;
+  $('play-toggle').textContent = '\u25b6';
+  setAudioProgress(1000);
+};
 bindUI();
 document.addEventListener('keydown', (event) => {
   if (!$('viewer').hidden && event.key === 'ArrowLeft') moveSong(-1);

@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.os.Bundle;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -33,6 +37,26 @@ public class MainActivity extends Activity {
     private static final int REQUEST_IMPORT_JSON = 42;
     private WebView webView;
     private String pendingExportText = "";
+    private MediaPlayer mediaPlayer;
+    private final Handler mediaHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mediaProgressRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mediaPlayer != null && webView != null) {
+                try {
+                    int current = mediaPlayer.getCurrentPosition();
+                    int duration = mediaPlayer.getDuration();
+                    boolean playing = mediaPlayer.isPlaying();
+                    webView.post(() -> webView.evaluateJavascript(
+                        "window.nativeAudioState && window.nativeAudioState(" + current + "," + duration + "," + playing + ")",
+                        null
+                    ));
+                } catch (Exception ignored) {
+                }
+                mediaHandler.postDelayed(this, 400);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +125,65 @@ public class MainActivity extends Activity {
 
     public class AppBridge {
         @JavascriptInterface
+        public int loadAudio(String assetPath, double speed) {
+            releaseNativeAudio();
+            try {
+                AssetFileDescriptor descriptor = getAssets().openFd(assetPath);
+                mediaPlayer = new MediaPlayer();
+                mediaPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+                descriptor.close();
+                mediaPlayer.prepare();
+                applyNativeSpeed(speed);
+                mediaPlayer.setOnCompletionListener(player -> webView.post(() -> webView.evaluateJavascript(
+                    "window.nativeAudioEnded && window.nativeAudioEnded()",
+                    null
+                )));
+                mediaHandler.post(mediaProgressRunnable);
+                return mediaPlayer.getDuration();
+            } catch (Exception error) {
+                releaseNativeAudio();
+                return 0;
+            }
+        }
+
+        @JavascriptInterface
+        public boolean playAudio() {
+            try {
+                if (mediaPlayer == null) return false;
+                mediaPlayer.start();
+                return true;
+            } catch (Exception error) {
+                return false;
+            }
+        }
+
+        @JavascriptInterface
+        public void pauseAudio() {
+            try {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) mediaPlayer.pause();
+            } catch (Exception ignored) {
+            }
+        }
+
+        @JavascriptInterface
+        public void seekAudio(int millis) {
+            try {
+                if (mediaPlayer != null) mediaPlayer.seekTo(Math.max(0, millis));
+            } catch (Exception ignored) {
+            }
+        }
+
+        @JavascriptInterface
+        public void setAudioSpeed(double speed) {
+            applyNativeSpeed(speed);
+        }
+
+        @JavascriptInterface
+        public void releaseAudio() {
+            releaseNativeAudio();
+        }
+
+        @JavascriptInterface
         public void exportUserData(String text) {
             pendingExportText = text == null ? "" : text;
             runOnUiThread(() -> {
@@ -130,6 +213,32 @@ public class MainActivity extends Activity {
                 }
             });
         }
+    }
+
+    private void applyNativeSpeed(double speed) {
+        try {
+            if (mediaPlayer != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed((float) speed));
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void releaseNativeAudio() {
+        mediaHandler.removeCallbacks(mediaProgressRunnable);
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.release();
+            } catch (Exception ignored) {
+            }
+            mediaPlayer = null;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        releaseNativeAudio();
+        super.onDestroy();
     }
 
     @Override
