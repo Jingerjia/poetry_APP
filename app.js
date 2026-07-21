@@ -73,6 +73,25 @@ function saveFavorites() {
   writeStore(favoritesKey, favoriteState);
 }
 
+function normalizeSongList(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((song) => song && song.id && song.collection && song.number !== undefined && song.title)
+    .map(songSummary);
+}
+
+function normalizeFavoriteState(value) {
+  const groups = Array.isArray(value?.groups) ? value.groups : [];
+  const normalized = groups
+    .filter((group) => group && group.name)
+    .map((group, index) => ({
+      id: String(group.id || `group-${Date.now().toString(36)}-${index}`),
+      name: String(group.name).trim() || '\u672a\u547d\u540d',
+      songs: normalizeSongList(group.songs),
+    }));
+  return { groups: normalized.length ? normalized : [{ id: 'default', name: '\u6211\u7684\u6700\u611b', songs: [] }] };
+}
+
 function activeFavoriteGroup() {
   return favoriteState.groups.find((group) => group.id === activeFavoriteGroupId) || favoriteState.groups[0];
 }
@@ -286,6 +305,48 @@ function toggleCurrentFavorite() {
   else group.songs.unshift(songSummary(song));
   saveFavorites();
   renderFavorites();
+}
+
+function exportUserData() {
+  const payload = {
+    app: 'hymn-library',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    history: normalizeSongList(loadHistory()),
+    favorites: normalizeFavoriteState(favoriteState),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'hymn-library-backup.json';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function importUserData(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const payload = JSON.parse(String(reader.result));
+      const importedHistory = normalizeSongList(payload.history);
+      const importedFavorites = normalizeFavoriteState(payload.favorites);
+      saveHistory(importedHistory);
+      favoriteState = importedFavorites;
+      activeFavoriteGroupId = favoriteState.groups[0].id;
+      saveFavorites();
+      renderHistory();
+      renderFavorites();
+      alert('\u532f\u5165\u5b8c\u6210');
+    } catch (error) {
+      console.error(error);
+      alert('\u532f\u5165\u5931\u6557\uff0c\u8acb\u78ba\u8a8d\u662f\u6b63\u78ba\u7684 JSON \u5099\u4efd\u6a94');
+    }
+  };
+  reader.readAsText(file, 'utf-8');
 }
 
 function renderCollections() {
@@ -509,6 +570,12 @@ function bindUI() {
   $('clear-history').onclick = () => { saveHistory([]); renderHistory(); };
   $('add-group').onclick = addFavoriteGroup;
   $('new-group-name').onkeydown = (event) => { if (event.key === 'Enter') addFavoriteGroup(); };
+  $('export-data').onclick = exportUserData;
+  $('import-data').onclick = () => $('import-file').click();
+  $('import-file').onchange = (event) => {
+    importUserData(event.target.files[0]);
+    event.target.value = '';
+  };
   $('favorite-group-select').onchange = (event) => { activeFavoriteGroupId = event.target.value; renderFavorites(); };
   $('toggle-favorite').onclick = toggleCurrentFavorite;
   $('search-toggle').onclick = () => toggleSearch(true);
