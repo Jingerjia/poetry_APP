@@ -4,15 +4,84 @@ const indexCache = new Map();
 const searchCache = new Map();
 let audioIndexPromise = null;
 const dbErrorMessage = '\u8cc7\u6599\u5eab\u8f09\u5165\u5931\u6557\uff0c\u8acb\u78ba\u8a8d database/web-db.js \u8207 database \u8cc7\u6599\u593e\u5b58\u5728';
+const historyKey = 'hymn-library-history-v1';
+const favoritesKey = 'hymn-library-favorites-v1';
 
 let collection = 'hymns';
 let digits = '';
 let currentSongs = [];
 let currentIndex = 0;
 let touchX = 0;
+let favoriteState = loadFavorites();
+let activeFavoriteGroupId = favoriteState.groups[0]?.id || 'default';
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[c]));
+}
+
+function readStore(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return value || fallback;
+  } catch (error) {
+    console.warn('storage read failed', key, error);
+    return fallback;
+  }
+}
+
+function writeStore(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.warn('storage write failed', key, error);
+  }
+}
+
+function songSummary(song) {
+  return {
+    id: song.id,
+    collection: song.collection,
+    number: song.number,
+    title: song.title,
+    image: song.image || song.images?.[0],
+    images: song.images,
+    data: song.data,
+  };
+}
+
+function loadHistory() {
+  return readStore(historyKey, []);
+}
+
+function saveHistory(items) {
+  writeStore(historyKey, items.slice(0, 30));
+}
+
+function loadFavorites() {
+  const fallback = { groups: [{ id: 'default', name: '\u6211\u7684\u6700\u611b', songs: [] }] };
+  const state = readStore(favoritesKey, fallback);
+  if (!Array.isArray(state.groups) || !state.groups.length) return fallback;
+  state.groups = state.groups.map((group) => ({
+    id: group.id || `group-${Date.now()}`,
+    name: group.name || '\u672a\u547d\u540d',
+    songs: Array.isArray(group.songs) ? group.songs : [],
+  }));
+  return state;
+}
+
+function saveFavorites() {
+  writeStore(favoritesKey, favoriteState);
+}
+
+function activeFavoriteGroup() {
+  return favoriteState.groups.find((group) => group.id === activeFavoriteGroupId) || favoriteState.groups[0];
+}
+
+function rememberSong(song) {
+  const summary = songSummary(song);
+  const items = [summary, ...loadHistory().filter((item) => item.id !== summary.id)];
+  saveHistory(items);
+  renderHistory();
 }
 
 const variantGroups = [
@@ -130,6 +199,93 @@ function songButton(song) {
 
 function bindSongs(parent, songs) {
   parent.querySelectorAll('.song-item').forEach((button, index) => button.onclick = () => openSong(songs[index], songs));
+}
+
+function renderHistory() {
+  const items = loadHistory();
+  $('history-list').innerHTML = items.length ? items.map(songButton).join('') : '<p class="empty">\u9084\u6c92\u6709\u958b\u555f\u904e\u8a69\u6b4c</p>';
+  bindSongs($('history-list'), items);
+}
+
+function favoriteRow(song, index) {
+  return `<div class="favorite-row">${songButton(song)}<button class="remove-favorite" data-index="${index}" aria-label="remove">\u00d7</button></div>`;
+}
+
+function renderFavoriteGroups() {
+  const group = activeFavoriteGroup();
+  activeFavoriteGroupId = group.id;
+  $('favorite-groups').innerHTML = favoriteState.groups.map((item) => [
+    `<button class="group-chip${item.id === activeFavoriteGroupId ? ' active' : ''}" data-id="${escapeHtml(item.id)}">${escapeHtml(item.name)}</button>`,
+    favoriteState.groups.length > 1 ? `<button class="group-delete" data-id="${escapeHtml(item.id)}" aria-label="delete">\u00d7</button>` : '',
+  ].join('')).join('');
+  $('favorite-groups').querySelectorAll('.group-chip').forEach((button) => {
+    button.onclick = () => {
+      activeFavoriteGroupId = button.dataset.id;
+      renderFavorites();
+    };
+  });
+  $('favorite-groups').querySelectorAll('.group-delete').forEach((button) => {
+    button.onclick = () => {
+      favoriteState.groups = favoriteState.groups.filter((item) => item.id !== button.dataset.id);
+      if (!favoriteState.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = favoriteState.groups[0].id;
+      saveFavorites();
+      renderFavorites();
+    };
+  });
+}
+
+function renderFavoriteList() {
+  const group = activeFavoriteGroup();
+  $('favorite-list').innerHTML = group.songs.length ? group.songs.map(favoriteRow).join('') : '<p class="empty">\u9019\u500b\u7fa4\u7d44\u9084\u6c92\u6709\u8a69\u6b4c</p>';
+  bindSongs($('favorite-list'), group.songs);
+  $('favorite-list').querySelectorAll('.remove-favorite').forEach((button) => {
+    button.onclick = (event) => {
+      event.stopPropagation();
+      group.songs.splice(Number(button.dataset.index), 1);
+      saveFavorites();
+      renderFavorites();
+    };
+  });
+}
+
+function renderFavoriteTools() {
+  const group = activeFavoriteGroup();
+  const song = currentSongs[currentIndex];
+  $('favorite-group-select').innerHTML = favoriteState.groups.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join('');
+  $('favorite-group-select').value = group.id;
+  const exists = !!song && group.songs.some((item) => item.id === song.id);
+  $('toggle-favorite').textContent = exists ? '\u2605' : '\u2606';
+  $('toggle-favorite').classList.toggle('active', exists);
+  $('toggle-favorite').title = exists ? '\u5f9e\u6700\u611b\u79fb\u9664' : '\u52a0\u5165\u6700\u611b';
+}
+
+function renderFavorites() {
+  renderFavoriteGroups();
+  renderFavoriteList();
+  renderFavoriteTools();
+}
+
+function addFavoriteGroup() {
+  const input = $('new-group-name');
+  const name = input.value.trim();
+  if (!name) return;
+  const id = `group-${Date.now().toString(36)}`;
+  favoriteState.groups.push({ id, name, songs: [] });
+  activeFavoriteGroupId = id;
+  input.value = '';
+  saveFavorites();
+  renderFavorites();
+}
+
+function toggleCurrentFavorite() {
+  const song = currentSongs[currentIndex];
+  if (!song) return;
+  const group = activeFavoriteGroup();
+  const index = group.songs.findIndex((item) => item.id === song.id);
+  if (index >= 0) group.songs.splice(index, 1);
+  else group.songs.unshift(songSummary(song));
+  saveFavorites();
+  renderFavorites();
 }
 
 function renderCollections() {
@@ -290,12 +446,14 @@ async function resetPlayer(song) {
 
 async function renderSong() {
   const song = currentSongs[currentIndex];
+  rememberSong(song);
   $('viewer-number').textContent = `${collections[song.collection]} ${displayNumber(song.number)}`;
   $('viewer-title').textContent = song.title;
   $('song-page').src = song.images ? song.images[0] : song.image;
   $('page-indicator').textContent = `${currentIndex + 1} / ${currentSongs.length}`;
   $('previous-song').disabled = !currentIndex;
   $('next-song').disabled = currentIndex === currentSongs.length - 1;
+  renderFavoriteTools();
   await resetPlayer(song);
 }
 
@@ -348,6 +506,11 @@ function bindUI() {
   });
   $('open-song').onclick = openByNumber;
   $('browse-all').onclick = () => toggleSearch(true);
+  $('clear-history').onclick = () => { saveHistory([]); renderHistory(); };
+  $('add-group').onclick = addFavoriteGroup;
+  $('new-group-name').onkeydown = (event) => { if (event.key === 'Enter') addFavoriteGroup(); };
+  $('favorite-group-select').onchange = (event) => { activeFavoriteGroupId = event.target.value; renderFavorites(); };
+  $('toggle-favorite').onclick = toggleCurrentFavorite;
   $('search-toggle').onclick = () => toggleSearch(true);
   $('close-search').onclick = () => toggleSearch(false);
   $('search-input').oninput = (event) => search(event.target.value);
@@ -369,4 +532,6 @@ document.addEventListener('keydown', (event) => {
 });
 renderCollections();
 updateDisplay();
+renderHistory();
+renderFavorites();
 loadFeatured().finally(() => { $('loading').hidden = true; });
