@@ -360,15 +360,23 @@ function toggleCurrentFavorite() {
   renderFavorites();
 }
 
-function exportUserData() {
-  const payload = {
+function userDataPayload() {
+  return {
     app: 'hymn-library',
     version: 1,
     exportedAt: new Date().toISOString(),
     history: normalizeSongList(loadHistory()),
     favorites: normalizeFavoriteState(favoriteState),
   };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+}
+
+function exportUserData() {
+  const text = JSON.stringify(userDataPayload(), null, 2);
+  if (window.AndroidBridge?.exportUserData) {
+    window.AndroidBridge.exportUserData(text);
+    return;
+  }
+  const blob = new Blob([text], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -379,28 +387,34 @@ function exportUserData() {
   URL.revokeObjectURL(url);
 }
 
+function applyImportedUserData(text) {
+  try {
+    const payload = JSON.parse(String(text));
+    const importedHistory = normalizeSongList(payload.history);
+    const importedFavorites = normalizeFavoriteState(payload.favorites);
+    if (!confirm('\u532f\u5165\u5f8c\u6703\u8986\u84cb\u76ee\u524d\u9019\u53f0\u88dd\u7f6e\u7684\u6700\u8fd1\u958b\u555f\u8207\u6700\u611b\u7fa4\u7d44\uff0c\u8981\u7e7c\u7e8c\u55ce\uff1f')) return;
+    saveHistory(importedHistory);
+    favoriteState = importedFavorites;
+    activeFavoriteGroupId = favoriteState.groups[0].id;
+    saveFavorites();
+    renderHistory();
+    renderFavorites();
+    alert('\u532f\u5165\u5b8c\u6210');
+  } catch (error) {
+    console.error(error);
+    alert('\u532f\u5165\u5931\u6557\uff0c\u8acb\u78ba\u8a8d\u662f\u6b63\u78ba\u7684 JSON \u5099\u4efd\u6a94');
+  }
+}
+
 function importUserData(file) {
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const payload = JSON.parse(String(reader.result));
-      const importedHistory = normalizeSongList(payload.history);
-      const importedFavorites = normalizeFavoriteState(payload.favorites);
-      if (!confirm('\u532f\u5165\u5f8c\u6703\u8986\u84cb\u76ee\u524d\u9019\u53f0\u88dd\u7f6e\u7684\u6700\u8fd1\u958b\u555f\u8207\u6700\u611b\u7fa4\u7d44\uff0c\u8981\u7e7c\u7e8c\u55ce\uff1f')) return;
-      saveHistory(importedHistory);
-      favoriteState = importedFavorites;
-      activeFavoriteGroupId = favoriteState.groups[0].id;
-      saveFavorites();
-      renderHistory();
-      renderFavorites();
-      alert('\u532f\u5165\u5b8c\u6210');
-    } catch (error) {
-      console.error(error);
-      alert('\u532f\u5165\u5931\u6557\uff0c\u8acb\u78ba\u8a8d\u662f\u6b63\u78ba\u7684 JSON \u5099\u4efd\u6a94');
-    }
-  };
+  reader.onload = () => applyImportedUserData(reader.result);
   reader.readAsText(file, 'utf-8');
+}
+
+function importUserDataFromText(text) {
+  applyImportedUserData(text);
 }
 
 function renderCollections() {
@@ -613,6 +627,13 @@ function moveSong(change) {
 
 function bindPlayer() {
   const audio = $('audio');
+  const seekAudio = (value) => {
+    if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+    const wasPaused = audio.paused;
+    audio.currentTime = (Number(value) / 1000) * audio.duration;
+    $('audio-current').textContent = formatTime(audio.currentTime);
+    if (wasPaused) audio.pause();
+  };
   $('play-toggle').onclick = async () => {
     if (!audio.src) return;
     if (audio.paused) {
@@ -629,9 +650,8 @@ function bindPlayer() {
     $('audio-current').textContent = formatTime(audio.currentTime);
     if (Number.isFinite(audio.duration) && audio.duration > 0) $('audio-progress').value = Math.round((audio.currentTime / audio.duration) * 1000);
   };
-  $('audio-progress').oninput = (event) => {
-    if (Number.isFinite(audio.duration) && audio.duration > 0) audio.currentTime = (Number(event.target.value) / 1000) * audio.duration;
-  };
+  $('audio-progress').oninput = (event) => seekAudio(event.target.value);
+  $('audio-progress').onchange = (event) => seekAudio(event.target.value);
   $('audio-speed').onchange = (event) => { audio.playbackRate = Number(event.target.value); };
 }
 
@@ -654,7 +674,10 @@ function bindUI() {
   $('add-group').onclick = addFavoriteGroup;
   $('new-group-name').onkeydown = (event) => { if (event.key === 'Enter') addFavoriteGroup(); };
   $('export-data').onclick = exportUserData;
-  $('import-data').onclick = () => $('import-file').click();
+  $('import-data').onclick = () => {
+    if (window.AndroidBridge?.importUserData) window.AndroidBridge.importUserData();
+    else $('import-file').click();
+  };
   $('import-file').onchange = (event) => {
     importUserData(event.target.files[0]);
     event.target.value = '';
@@ -685,6 +708,7 @@ window.pressKey = pressKey;
 window.selectBook = selectBook;
 window.openByNumber = openByNumber;
 window.appBack = appBack;
+window.importUserDataFromText = importUserDataFromText;
 bindUI();
 document.addEventListener('keydown', (event) => {
   if (!$('viewer').hidden && event.key === 'ArrowLeft') moveSong(-1);
