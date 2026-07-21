@@ -8,6 +8,7 @@ const historyKey = 'hymn-library-history-v1';
 const favoritesKey = 'hymn-library-favorites-v1';
 
 let collection = 'hymns';
+let browseCollection = 'hymns';
 let digits = '';
 let currentSongs = [];
 let currentIndex = 0;
@@ -253,6 +254,29 @@ function showHomePanel(panelId) {
   });
 }
 
+function closeViewer() {
+  cancelHistoryTimer();
+  $('audio').pause();
+  $('viewer').hidden = true;
+}
+
+function appBack() {
+  if (!$('search').hidden) {
+    toggleSearch(false);
+    return true;
+  }
+  if (!$('viewer').hidden) {
+    closeViewer();
+    return true;
+  }
+  const activePanel = $('home-tabs').querySelector('.home-tab.active')?.dataset.panel;
+  if (activePanel && activePanel !== 'keypad-panel') {
+    showHomePanel('keypad-panel');
+    return true;
+  }
+  return false;
+}
+
 function favoriteRow(song, index) {
   return `<div class="favorite-row">${songButton(song)}<button class="remove-favorite" data-index="${index}" aria-label="remove">\u00d7</button></div>`;
 }
@@ -381,7 +405,11 @@ function importUserData(file) {
 
 function renderCollections() {
   $('collections').querySelectorAll('.collection').forEach((button) => button.classList.toggle('active', button.dataset.book === collection));
-  $('selection-title').textContent = `${collections[collection]} \u9078\u64c7\u8a69\u6b4c`;
+  $('selection-title').textContent = '\u8a69\u6b4c\u9078\u96c6';
+}
+
+function renderBrowseCollections() {
+  $('browse-collections').querySelectorAll('.collection').forEach((button) => button.classList.toggle('active', button.dataset.book === browseCollection));
 }
 
 function updateDisplay() {
@@ -413,13 +441,20 @@ async function selectBook(key) {
 
 async function loadFeatured() {
   try {
-    const songs = (await bookIndex()).songs.slice(0, 9);
+    const index = await bookIndex(browseCollection);
+    const songs = index.songs.slice(0, 9).map((song) => ({ ...song, snippet: previewSnippet(song) }));
     $('featured').innerHTML = songs.map(songButton).join('');
     bindSongs($('featured'), songs);
   } catch (error) {
     console.error(error);
     $('featured').innerHTML = `<p class="empty">${dbErrorMessage}</p>`;
   }
+}
+
+async function selectBrowseBook(key) {
+  browseCollection = key;
+  renderBrowseCollections();
+  await loadFeatured();
 }
 
 async function openByNumber() {
@@ -461,6 +496,12 @@ function searchNeedles(query) {
 
 function songSearchText(song) {
   return song.lyricText || song.text || '';
+}
+
+function previewSnippet(song) {
+  const source = song.lyricText || compactLyricText(`${song.title}\n${song.text || ''}`);
+  const text = Array.from(source).slice(0, 42).join('');
+  return text ? `${escapeHtml(text)}${Array.from(source).length > 42 ? '\u2026' : ''}` : '';
 }
 
 function snippetFor(song, query) {
@@ -601,6 +642,9 @@ function bindUI() {
   $('collections').querySelectorAll('.collection').forEach((button) => {
     button.onclick = () => selectBook(button.dataset.book);
   });
+  $('browse-collections').querySelectorAll('.collection').forEach((button) => {
+    button.onclick = () => selectBrowseBook(button.dataset.book);
+  });
   $('keypad').querySelectorAll('button[data-key]').forEach((button) => {
     button.onclick = () => pressKey(button.dataset.key);
   });
@@ -618,9 +662,10 @@ function bindUI() {
   $('favorite-group-select').onchange = (event) => { activeFavoriteGroupId = event.target.value; renderFavorites(); };
   $('toggle-favorite').onclick = toggleCurrentFavorite;
   $('search-toggle').onclick = () => toggleSearch(true);
+  $('search-field').onclick = () => toggleSearch(true);
   $('close-search').onclick = () => toggleSearch(false);
   $('search-input').oninput = (event) => search(event.target.value);
-  $('close-viewer').onclick = () => { cancelHistoryTimer(); $('audio').pause(); $('viewer').hidden = true; };
+  $('close-viewer').onclick = closeViewer;
   $('previous-song').onclick = () => moveSong(-1);
   $('next-song').onclick = () => moveSong(1);
   $('page-area').ontouchstart = (event) => { touchX = event.changedTouches[0].screenX; };
@@ -639,13 +684,15 @@ function bindUI() {
 window.pressKey = pressKey;
 window.selectBook = selectBook;
 window.openByNumber = openByNumber;
+window.appBack = appBack;
 bindUI();
 document.addEventListener('keydown', (event) => {
   if (!$('viewer').hidden && event.key === 'ArrowLeft') moveSong(-1);
   if (!$('viewer').hidden && event.key === 'ArrowRight') moveSong(1);
 });
 renderCollections();
+renderBrowseCollections();
 updateDisplay();
 renderHistory();
 renderFavorites();
-loadFeatured().finally(() => { $('loading').hidden = true; });
+loadFeatured();
