@@ -25,6 +25,7 @@ BOOKS = {
     "new-poems": ("\u65b0\u8a69.pdf", "\u65b0\u8a69", 1),
 }
 SEARCH_SHARD_SIZE = 50
+APPENDIX_OFFSET = 780000
 
 
 def clean(text: str) -> str:
@@ -33,12 +34,27 @@ def clean(text: str) -> str:
 
 def read_heading(text: str):
     """Return only headings found at a genuine score-page start, never a TOC row."""
-    match = re.match(r"\s*(?:[^\n]*\.docx\s+)?(\d{1,4})\s+([^\n]{1,100})", text.replace("\r", " "), re.I)
-    if not match or int(match.group(1)) == 0:
+    match = re.match(
+        r"\s*(?:[^\n]*\.docx\s+)?(?:(\d{1,4})|\u9644\s*(\d{1,2}))\s+([^\n]{1,100})",
+        text.replace("\r", " "),
+        re.I,
+    )
+    if not match:
         return None
-    title = re.split(r"(?:\s+[A-Ga-g][b#]?\s+\d|\s+[A-Ga-g][mM]?(?:aj|in)?\b|\s+\(\u4e00\)|\s+\u4e00[\u3001\u3002\u3001])", match.group(2))[0]
+    if match.group(1):
+        number = int(match.group(1))
+        sort_key = number
+    else:
+        number = f"\u9644{int(match.group(2))}"
+        sort_key = APPENDIX_OFFSET + int(match.group(2))
+    if number == 0:
+        return None
+    title = re.split(
+        r"(?:\s+[A-Ga-g][b#]?\s+\d|\s+[A-Ga-g][mM]?(?:aj|in)?\b|\s+\(\u4e00\)|\s+\u4e00[\u3001\u3002\u3001])",
+        match.group(3),
+    )[0]
     title = re.sub(r"\s+", " ", title).strip(" .-|")
-    return (int(match.group(1)), title) if len(title) > 1 else None
+    return (number, title, sort_key) if len(title) > 1 else None
 
 
 def write_json(path: Path, value) -> None:
@@ -50,23 +66,29 @@ def legacy_image(book: str, page: int) -> Path:
     return LEGACY_PAGES / book / f"{page:04d}.jpg"
 
 
+def number_folder(number) -> str:
+    if isinstance(number, int):
+        return f"{number:04d}"
+    return f"A{int(str(number).replace(chr(0x9644), '')):03d}"
+
+
 def export_book(key: str, filename: str, label: str, first_score_page: int):
     doc = fitz.open(PDF_DIR / filename)
     starts = []
     for page_index in range(first_score_page, doc.page_count):
         found = read_heading(doc[page_index].get_text("text"))
         if found:
-            number, title = found
+            number, title, sort_key = found
             # This rejects repeated headers inside multi-page songs. It does not
             # assume that every hundred-number range is complete.
-            if not starts or number > starts[-1]["number"]:
-                starts.append({"number": number, "title": title, "start": page_index})
+            if not starts or sort_key > starts[-1]["sortKey"]:
+                starts.append({"number": number, "title": title, "sortKey": sort_key, "start": page_index})
 
     public_songs = []
     search_songs = []
     for pos, item in enumerate(starts):
         end = starts[pos + 1]["start"] - 1 if pos + 1 < len(starts) else doc.page_count - 1
-        song_dir = OUT / "songs" / key / f"{item['number']:04d}"
+        song_dir = OUT / "songs" / key / number_folder(item["number"])
         song_dir.mkdir(parents=True, exist_ok=True)
         images = []
         page_text = []
@@ -81,21 +103,31 @@ def export_book(key: str, filename: str, label: str, first_score_page: int):
             images.append(destination.relative_to(ROOT).as_posix())
             page_text.append(clean(doc[page_index].get_text("text")))
         song_id = f"{key}-{item['number']}"
-        record = {"id": song_id, "collection": key, "number": item["number"], "title": item["title"],
-                  "images": images, "text": " ".join(page_text)}
+        record = {
+            "id": song_id,
+            "collection": key,
+            "number": item["number"],
+            "title": item["title"],
+            "images": images,
+            "text": " ".join(page_text),
+        }
         write_json(song_dir / "song.json", record)
-        public_songs.append({key: record[key] for key in ("id", "collection", "number", "title")}
-                            | {"image": images[0], "data": (song_dir / "song.json").relative_to(ROOT).as_posix()})
+        public_songs.append(
+            {field: record[field] for field in ("id", "collection", "number", "title")}
+            | {"image": images[0], "data": (song_dir / "song.json").relative_to(ROOT).as_posix()}
+        )
         search_songs.append(record)
     doc.close()
 
     shard_paths = []
     for shard_number, start in enumerate(range(0, len(search_songs), SEARCH_SHARD_SIZE), 1):
         path = OUT / "search" / key / f"part-{shard_number:02d}.json"
-        write_json(path, search_songs[start:start + SEARCH_SHARD_SIZE])
+        write_json(path, search_songs[start : start + SEARCH_SHARD_SIZE])
         shard_paths.append(path.relative_to(ROOT).as_posix())
-    write_json(OUT / "indexes" / f"{key}.json", {"collection": key, "label": label, "songs": public_songs,
-                                                      "searchFiles": shard_paths})
+    write_json(
+        OUT / "indexes" / f"{key}.json",
+        {"collection": key, "label": label, "songs": public_songs, "searchFiles": shard_paths},
+    )
     print(f"Built {label}: {len(public_songs)} songs, {len(shard_paths)} search files")
 
 

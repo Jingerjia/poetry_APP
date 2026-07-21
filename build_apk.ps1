@@ -12,6 +12,11 @@ $env:ANDROID_HOME = $sdk
 $env:ANDROID_SDK_ROOT = $sdk
 $env:PATH = "$jdk\bin;$gradleHome\bin;$cmdlineLatest\bin;$env:PATH"
 
+& node (Join-Path $root "build_web_bundle.js")
+if ($LASTEXITCODE -ne 0) {
+    throw "Web database bundle failed with exit code $LASTEXITCODE"
+}
+
 Copy-Item (Join-Path $root "index.html"), (Join-Path $root "app.js"), (Join-Path $root "style.css") -Destination (Join-Path $root "android\app\src\main\assets") -Force
 if (Test-Path (Join-Path $root "android\app\src\main\assets\database")) {
     Remove-Item (Join-Path $root "android\app\src\main\assets\database") -Recurse -Force

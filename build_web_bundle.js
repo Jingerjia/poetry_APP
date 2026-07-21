@@ -4,7 +4,8 @@ const path = require("path");
 const root = __dirname;
 const database = path.join(root, "database");
 const books = ["hymns", "supplement", "new-songs", "new-poems"];
-const bundle = { indexes: {}, search: {} };
+const audioBooks = ["hymns", "supplement"];
+const bundle = { indexes: {}, search: {}, audio: {} };
 
 for (const book of books) {
   const indexPath = path.join(database, "indexes", `${book}.json`);
@@ -17,6 +18,28 @@ for (const book of books) {
     bundle.search[book][searchFile] = JSON.parse(fs.readFileSync(diskPath, "utf8"));
   }
 }
+
+for (const book of audioBooks) {
+  const audioDir = path.join(database, "audio", book);
+  bundle.audio[book] = {};
+  if (!fs.existsSync(audioDir)) continue;
+
+  for (const fileName of fs.readdirSync(audioDir)) {
+    if (!fileName.endsWith(".mp3")) continue;
+    const number = path.basename(fileName, ".mp3");
+    const stats = fs.statSync(path.join(audioDir, fileName));
+    if (stats.size > 64000) {
+      bundle.audio[book][number] = `database/audio/${book}/${fileName}`;
+    }
+  }
+}
+
+fs.mkdirSync(path.join(database, "audio"), { recursive: true });
+fs.writeFileSync(
+  path.join(database, "audio", "audio-index.json"),
+  JSON.stringify(bundle.audio, null, 2),
+  "utf8",
+);
 
 const output = [
   "window.HYMN_DB = ",
