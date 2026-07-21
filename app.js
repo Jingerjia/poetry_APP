@@ -113,7 +113,7 @@ async function audioIndex() {
 }
 
 function songButton(song) {
-  const snippet = song.snippet ? `<span class="song-snippet">${escapeHtml(song.snippet)}</span>` : '';
+  const snippet = song.snippet ? `<span class="song-snippet">${song.snippet}</span>` : '';
   return `<button class="song-item"><span class="song-number">${displayNumber(song.number)}</span><span class="song-copy"><span class="song-title">${escapeHtml(song.title)}</span><span class="song-book">${collections[song.collection]}</span>${snippet}</span></button>`;
 }
 
@@ -183,18 +183,37 @@ function songNumberInput() {
   return String(Number(digits));
 }
 
+function compactLyricText(value) {
+  return Array.from(String(value).normalize('NFKC'))
+    .filter((char) => /\p{Script=Han}/u.test(char))
+    .join('');
+}
+
+function searchNeedles(query) {
+  const full = normalizeText(query);
+  const terms = query.trim().split(/\s+/).map(normalizeText).filter(Boolean);
+  return [full, ...terms].filter(Boolean);
+}
+
 function snippetFor(song, query) {
-  const source = `${song.title}\n${song.text || ''}`.replace(/\s+/g, ' ').trim();
+  const source = compactLyricText(`${song.title}\n${song.text || ''}`);
   if (!query.trim()) return '';
-  const needles = [normalizeText(query), ...query.trim().split(/\s+/).map(normalizeText)].filter(Boolean);
+  const needles = searchNeedles(query);
   const mapped = normalizedWithMap(source);
-  const match = needles.map((needle) => mapped.normalized.indexOf(needle)).find((index) => index >= 0);
-  const index = match ?? -1;
-  if (index < 0) return source.slice(0, 90);
+  const matched = needles
+    .map((needle) => ({ needle, index: mapped.normalized.indexOf(needle) }))
+    .filter((match) => match.index >= 0)
+    .sort((a, b) => b.needle.length - a.needle.length)[0];
+  if (!matched) return '';
+  const { needle, index } = matched;
   const originalIndex = mapped.map[index] || 0;
-  const start = Math.max(0, originalIndex - 28);
-  const end = Math.min(mapped.chars.length, originalIndex + 62);
-  return `${start ? '\u2026' : ''}${mapped.chars.slice(start, end).join('')}${end < mapped.chars.length ? '\u2026' : ''}`;
+  const originalEnd = mapped.map[index + needle.length - 1] ?? originalIndex;
+  const start = Math.max(0, originalIndex - 10);
+  const end = Math.min(mapped.chars.length, originalEnd + 28);
+  const before = mapped.chars.slice(start, originalIndex).join('');
+  const hit = mapped.chars.slice(originalIndex, originalEnd + 1).join('');
+  const after = mapped.chars.slice(originalEnd + 1, end).join('');
+  return `${start ? '\u2026' : ''}${escapeHtml(before)}<mark>${escapeHtml(hit)}</mark>${escapeHtml(after)}${end < mapped.chars.length ? '\u2026' : ''}`;
 }
 
 async function search(query = '') {
