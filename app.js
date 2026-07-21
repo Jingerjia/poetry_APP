@@ -14,6 +14,8 @@ let currentIndex = 0;
 let touchX = 0;
 let favoriteState = loadFavorites();
 let activeFavoriteGroupId = favoriteState.groups[0]?.id || 'default';
+let historyTimer = null;
+let pendingHistoryId = '';
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[c]));
@@ -101,6 +103,22 @@ function rememberSong(song) {
   const items = [summary, ...loadHistory().filter((item) => item.id !== summary.id)];
   saveHistory(items);
   renderHistory();
+}
+
+function cancelHistoryTimer() {
+  if (historyTimer) clearTimeout(historyTimer);
+  historyTimer = null;
+  pendingHistoryId = '';
+}
+
+function scheduleHistoryRemember(song) {
+  cancelHistoryTimer();
+  pendingHistoryId = song.id;
+  historyTimer = setTimeout(() => {
+    const current = currentSongs[currentIndex];
+    if (!$('viewer').hidden && current?.id === pendingHistoryId) rememberSong(current);
+    cancelHistoryTimer();
+  }, 30000);
 }
 
 const variantGroups = [
@@ -226,6 +244,15 @@ function renderHistory() {
   bindSongs($('history-list'), items);
 }
 
+function showHomePanel(panelId) {
+  $('home-tabs').querySelectorAll('.home-tab').forEach((button) => {
+    button.classList.toggle('active', button.dataset.panel === panelId);
+  });
+  document.querySelectorAll('.home-panel').forEach((panel) => {
+    panel.hidden = panel.id !== panelId;
+  });
+}
+
 function favoriteRow(song, index) {
   return `<div class="favorite-row">${songButton(song)}<button class="remove-favorite" data-index="${index}" aria-label="remove">\u00d7</button></div>`;
 }
@@ -245,6 +272,8 @@ function renderFavoriteGroups() {
   });
   $('favorite-groups').querySelectorAll('.group-delete').forEach((button) => {
     button.onclick = () => {
+      const target = favoriteState.groups.find((item) => item.id === button.dataset.id);
+      if (target && !confirm(`\u522a\u9664\u7fa4\u7d44\u300c${target.name}\u300d\uff1f`)) return;
       favoriteState.groups = favoriteState.groups.filter((item) => item.id !== button.dataset.id);
       if (!favoriteState.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = favoriteState.groups[0].id;
       saveFavorites();
@@ -334,6 +363,7 @@ function importUserData(file) {
       const payload = JSON.parse(String(reader.result));
       const importedHistory = normalizeSongList(payload.history);
       const importedFavorites = normalizeFavoriteState(payload.favorites);
+      if (!confirm('\u532f\u5165\u5f8c\u6703\u8986\u84cb\u76ee\u524d\u9019\u53f0\u88dd\u7f6e\u7684\u6700\u8fd1\u958b\u555f\u8207\u6700\u611b\u7fa4\u7d44\uff0c\u8981\u7e7c\u7e8c\u55ce\uff1f')) return;
       saveHistory(importedHistory);
       favoriteState = importedFavorites;
       activeFavoriteGroupId = favoriteState.groups[0].id;
@@ -507,7 +537,6 @@ async function resetPlayer(song) {
 
 async function renderSong() {
   const song = currentSongs[currentIndex];
-  rememberSong(song);
   $('viewer-number').textContent = `${collections[song.collection]} ${displayNumber(song.number)}`;
   $('viewer-title').textContent = song.title;
   $('song-page').src = song.images ? song.images[0] : song.image;
@@ -515,6 +544,7 @@ async function renderSong() {
   $('previous-song').disabled = !currentIndex;
   $('next-song').disabled = currentIndex === currentSongs.length - 1;
   renderFavoriteTools();
+  scheduleHistoryRemember(song);
   await resetPlayer(song);
 }
 
@@ -559,6 +589,9 @@ function bindPlayer() {
 }
 
 function bindUI() {
+  $('home-tabs').querySelectorAll('.home-tab').forEach((button) => {
+    button.onclick = () => showHomePanel(button.dataset.panel);
+  });
   $('collections').querySelectorAll('.collection').forEach((button) => {
     button.onclick = () => selectBook(button.dataset.book);
   });
@@ -581,11 +614,19 @@ function bindUI() {
   $('search-toggle').onclick = () => toggleSearch(true);
   $('close-search').onclick = () => toggleSearch(false);
   $('search-input').oninput = (event) => search(event.target.value);
-  $('close-viewer').onclick = () => { $('audio').pause(); $('viewer').hidden = true; };
+  $('close-viewer').onclick = () => { cancelHistoryTimer(); $('audio').pause(); $('viewer').hidden = true; };
   $('previous-song').onclick = () => moveSong(-1);
   $('next-song').onclick = () => moveSong(1);
   $('page-area').ontouchstart = (event) => { touchX = event.changedTouches[0].screenX; };
   $('page-area').ontouchend = (event) => { const delta = event.changedTouches[0].screenX - touchX; if (Math.abs(delta) > 55) moveSong(delta > 0 ? -1 : 1); };
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelHistoryTimer();
+    } else if (!$('viewer').hidden) {
+      scheduleHistoryRemember(currentSongs[currentIndex]);
+    }
+  });
+  window.addEventListener('pagehide', cancelHistoryTimer);
   bindPlayer();
 }
 
