@@ -17,6 +17,7 @@ let favoriteState = loadFavorites();
 let activeFavoriteGroupId = favoriteState.groups[0]?.id || 'default';
 let historyTimer = null;
 let pendingHistoryId = '';
+let setAudioProgress = () => {};
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[c]));
@@ -585,7 +586,7 @@ async function resetPlayer(song) {
   audio.pause();
   audio.removeAttribute('src');
   audio.load();
-  $('audio-progress').value = 0;
+  setAudioProgress(0);
   $('audio-current').textContent = '0:00';
   $('audio-duration').textContent = '0:00';
   $('play-toggle').textContent = '\u25b6';
@@ -627,12 +628,34 @@ function moveSong(change) {
 
 function bindPlayer() {
   const audio = $('audio');
+  const progress = $('audio-progress');
+  const progressFill = $('audio-progress-fill');
+  const setProgress = (value) => {
+    const clamped = Math.min(1000, Math.max(0, Math.round(Number(value) || 0)));
+    progress.dataset.value = String(clamped);
+    progress.setAttribute('aria-valuenow', String(clamped));
+    progressFill.style.width = `${clamped / 10}%`;
+  };
+  setAudioProgress = setProgress;
   const seekAudio = (value) => {
     if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
     const wasPaused = audio.paused;
-    audio.currentTime = (Number(value) / 1000) * audio.duration;
+    const clamped = Math.min(1000, Math.max(0, Math.round(Number(value) || 0)));
+    setProgress(clamped);
+    audio.currentTime = (clamped / 1000) * audio.duration;
     $('audio-current').textContent = formatTime(audio.currentTime);
     if (wasPaused) audio.pause();
+  };
+  const pointerX = (event) => event.clientX ?? event.touches?.[0]?.clientX ?? event.changedTouches?.[0]?.clientX;
+  const seekFromPointer = (event) => {
+    if (!Number.isFinite(audio.duration) || audio.duration <= 0) return;
+    const x = pointerX(event);
+    if (!Number.isFinite(x)) return;
+    const rect = progress.getBoundingClientRect();
+    if (!rect.width) return;
+    const ratio = Math.min(1, Math.max(0, (x - rect.left) / rect.width));
+    const value = Math.round(ratio * 1000);
+    seekAudio(value);
   };
   $('play-toggle').onclick = async () => {
     if (!audio.src) return;
@@ -648,10 +671,29 @@ function bindPlayer() {
   audio.onloadedmetadata = () => { $('audio-duration').textContent = formatTime(audio.duration); };
   audio.ontimeupdate = () => {
     $('audio-current').textContent = formatTime(audio.currentTime);
-    if (Number.isFinite(audio.duration) && audio.duration > 0) $('audio-progress').value = Math.round((audio.currentTime / audio.duration) * 1000);
+    if (Number.isFinite(audio.duration) && audio.duration > 0) setProgress((audio.currentTime / audio.duration) * 1000);
   };
-  $('audio-progress').oninput = (event) => seekAudio(event.target.value);
-  $('audio-progress').onchange = (event) => seekAudio(event.target.value);
+  progress.onclick = seekFromPointer;
+  progress.onpointerdown = (event) => {
+    progress.setPointerCapture?.(event.pointerId);
+    seekFromPointer(event);
+  };
+  progress.onpointermove = (event) => {
+    if (event.buttons) seekFromPointer(event);
+  };
+  progress.ontouchstart = (event) => {
+    event.preventDefault();
+    seekFromPointer(event);
+  };
+  progress.ontouchmove = (event) => {
+    event.preventDefault();
+    seekFromPointer(event);
+  };
+  progress.onkeydown = (event) => {
+    const current = Number(progress.dataset.value || 0);
+    if (event.key === 'ArrowLeft') seekAudio(current - 20);
+    if (event.key === 'ArrowRight') seekAudio(current + 20);
+  };
   $('audio-speed').onchange = (event) => { audio.playbackRate = Number(event.target.value); };
 }
 

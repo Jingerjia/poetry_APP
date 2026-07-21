@@ -1,14 +1,17 @@
 package com.local.poetryapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
 import android.os.Bundle;
 import android.os.Build;
 import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -69,6 +72,28 @@ public class MainActivity extends Activity {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
                 return assetLoader.shouldInterceptRequest(Uri.parse(url));
+            }
+        });
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                new AlertDialog.Builder(MainActivity.this)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> result.confirm())
+                    .setOnCancelListener(dialog -> result.cancel())
+                    .show();
+                return true;
+            }
+
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
+                new AlertDialog.Builder(MainActivity.this)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> result.confirm())
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> result.cancel())
+                    .setOnCancelListener(dialog -> result.cancel())
+                    .show();
+                return true;
             }
         });
         webView.loadUrl("https://appassets.androidplatform.net/assets/index.html");
