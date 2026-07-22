@@ -12,6 +12,7 @@ let browseCollection = 'hymns';
 let digits = '';
 let currentSongs = [];
 let currentIndex = 0;
+let currentPageIndex = 0;
 let touchX = 0;
 let favoriteState = loadFavorites();
 let activeFavoriteGroupId = favoriteState.groups[0]?.id || 'default';
@@ -642,12 +643,16 @@ async function resetPlayer(song) {
 
 async function renderSong() {
   const song = currentSongs[currentIndex];
+  const images = song.images?.length ? song.images : [song.image];
+  currentPageIndex = Math.min(currentPageIndex, images.length - 1);
   $('viewer-number').textContent = `${collections[song.collection]} ${displayNumber(song.number)}`;
   $('viewer-title').textContent = song.title;
-  $('song-page').src = song.images ? song.images[0] : song.image;
-  $('page-indicator').textContent = `${currentIndex + 1} / ${currentSongs.length}`;
-  $('previous-song').disabled = !currentIndex;
-  $('next-song').disabled = currentIndex === currentSongs.length - 1;
+  $('song-page').src = images[currentPageIndex];
+  $('page-indicator').textContent = images.length > 1
+    ? `${currentPageIndex + 1}/${images.length} · ${currentIndex + 1}/${currentSongs.length}`
+    : `${currentIndex + 1} / ${currentSongs.length}`;
+  $('previous-song').disabled = !currentIndex && currentPageIndex === 0;
+  $('next-song').disabled = currentIndex === currentSongs.length - 1 && currentPageIndex === images.length - 1;
   renderFavoriteTools();
   scheduleHistoryRemember(song);
   await resetPlayer(song);
@@ -656,15 +661,29 @@ async function renderSong() {
 function openSong(song, songs) {
   currentSongs = songs;
   currentIndex = Math.max(0, songs.findIndex((item) => item.id === song.id));
+  currentPageIndex = 0;
   $('search').hidden = true;
   $('viewer').hidden = false;
   renderSong();
 }
 
 function moveSong(change) {
+  const song = currentSongs[currentIndex];
+  const images = song?.images?.length ? song.images : [song?.image];
+  if (song && change > 0 && currentPageIndex < images.length - 1) {
+    currentPageIndex += 1;
+    renderSong();
+    return;
+  }
+  if (song && change < 0 && currentPageIndex > 0) {
+    currentPageIndex -= 1;
+    renderSong();
+    return;
+  }
   const index = currentIndex + change;
   if (index >= 0 && index < currentSongs.length) {
     currentIndex = index;
+    currentPageIndex = change > 0 ? 0 : ((currentSongs[currentIndex].images?.length || 1) - 1);
     renderSong();
   }
 }

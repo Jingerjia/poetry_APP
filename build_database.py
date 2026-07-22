@@ -26,8 +26,27 @@ BOOKS = {
 }
 BLUE_BOOK_KEY = "blue-poems"
 BLUE_BOOK_LABEL = "\u85cd\u672c"
-BLUE_BOOK_PAGE_RANGE = range(130, 266)
-BLUE_BOOK_SKIP_PAGES = {152}
+BLUE_BOOK_PAGE_GROUPS = {
+    1: [130], 2: [131, 132], 3: [133], 4: [134, 135], 5: [136], 6: [137],
+    7: [138, 139], 8: [140], 9: [141, 142], 10: [143, 144], 11: [145],
+    12: [146], 13: [147], 14: [148], 15: [149, 150], 16: [151],
+    17: [153, 154], 18: [155], 19: [156], 20: [157, 158], 21: [159, 160],
+    22: [161], 23: [162, 163], 24: [164], 25: [165], 26: [166], 27: [167],
+    28: [168, 169], 29: [170], 30: [171], 31: [172, 173], 32: [174, 175],
+    33: [176], 34: [177], 35: [178], 36: [179], 37: [180], 38: [181],
+    39: [182], 40: [183, 184], 41: [185, 186], 42: [187], 43: [188],
+    44: [189, 190], 45: [191, 192], 46: [193, 194], 47: [195, 196],
+    48: [197], 49: [198], 50: [199, 200], 51: [201], 52: [202, 203],
+    53: [204], 54: [205], 55: [206, 207], 56: [208, 209], 57: [210],
+    58: [211, 212], 59: [213, 214], 60: [215], 61: [216], 62: [217, 218],
+    63: [219, 220], 64: [221, 222], 65: [223, 224], 66: [225, 226],
+    67: [227, 228], 68: [229, 230], 69: [231, 232], 70: [233, 234],
+    71: [235], 72: [236, 237], 73: [238], 74: [239, 240], 75: [241, 242],
+    76: [243, 244], 77: [245, 246], 78: [247], 79: [248, 249], 80: [250],
+    81: [251], 82: [252], 83: [253], 84: [254], 85: [255], 86: [256],
+    87: [257], 88: [258], 89: [259], 90: [260], 91: [261], 92: [262, 263],
+    93: [264], 94: [265],
+}
 MANUAL_SKIP_HEADINGS = {
     # The supplement PDF has a stray duplicated 133 heading before 131/132.
     ("supplement", 72, 133),
@@ -277,25 +296,19 @@ def blue_pdf_path() -> Path:
 
 def export_blue_book():
     doc = fitz.open(blue_pdf_path())
-    starts = []
-    for page_number in BLUE_BOOK_PAGE_RANGE:
-        if page_number in BLUE_BOOK_SKIP_PAGES:
-            continue
-        page = doc[page_number - 1]
-        if "Guitar: Capo" in page.get_text("text"):
-            continue
-        starts.append(page_number)
 
     public_songs = []
     search_songs = []
-    for number, page_number in enumerate(starts, 1):
+    for number, page_numbers in BLUE_BOOK_PAGE_GROUPS.items():
         song_dir = OUT / "songs" / BLUE_BOOK_KEY / number_folder(number)
         song_dir.mkdir(parents=True, exist_ok=True)
-        page = doc[page_number - 1]
-        destination = song_dir / "01.jpg"
-        pix = page.get_pixmap(matrix=fitz.Matrix(1.35, 1.35), alpha=False)
-        pix.save(destination, jpg_quality=82)
-        images = [destination.relative_to(ROOT).as_posix()]
+        images = []
+        for image_index, page_number in enumerate(page_numbers, 1):
+            page = doc[page_number - 1]
+            destination = song_dir / f"{image_index:02d}.jpg"
+            pix = page.get_pixmap(matrix=fitz.Matrix(1.35, 1.35), alpha=False)
+            pix.save(destination, jpg_quality=82)
+            images.append(destination.relative_to(ROOT).as_posix())
         title = f"\u85cd\u672c\u65b0\u8a69 {number:03d}"
         record = {
             "id": f"{BLUE_BOOK_KEY}-{number}",
@@ -303,9 +316,11 @@ def export_blue_book():
             "number": number,
             "title": title,
             "images": images,
+            "image": images[0],
             "text": "",
             "lyricText": "",
             "lyricVerses": [],
+            "sourcePdfPages": page_numbers,
         }
         write_json(song_dir / "song.json", record)
         public_songs.append(
