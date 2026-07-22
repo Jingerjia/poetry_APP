@@ -1,4 +1,4 @@
-const collections = { hymns: '\u8a69\u6b4c', supplement: '\u88dc\u5145', 'new-songs': '\u65b0\u6b4c', 'new-poems': '\u65b0\u8a69' };
+const collections = { hymns: '\u8a69\u6b4c', supplement: '\u88dc\u5145', 'new-songs': '\u65b0\u6b4c', 'new-poems': '\u65b0\u8a69', 'blue-poems': '\u85cd\u672c' };
 const $ = (id) => document.getElementById(id);
 const indexCache = new Map();
 const searchCache = new Map();

@@ -24,6 +24,14 @@ BOOKS = {
     "new-songs": ("\u65b0\u6b4c\u980c\u8a60.pdf", "\u65b0\u6b4c", 1),
     "new-poems": ("\u65b0\u8a69.pdf", "\u65b0\u8a69", 1),
 }
+BLUE_BOOK_KEY = "blue-poems"
+BLUE_BOOK_LABEL = "\u85cd\u672c"
+BLUE_BOOK_PAGE_RANGE = range(130, 266)
+BLUE_BOOK_SKIP_PAGES = {152}
+MANUAL_SKIP_HEADINGS = {
+    # The supplement PDF has a stray duplicated 133 heading before 131/132.
+    ("supplement", 72, 133),
+}
 SEARCH_SHARD_SIZE = 50
 APPENDIX_OFFSET = 780000
 HAN_RE = re.compile(r"[\u4e00-\u9fff]")
@@ -183,17 +191,30 @@ def number_folder(number) -> str:
     return f"A{int(str(number).replace(chr(0x9644), '')):03d}"
 
 
+def first_text_line(page) -> str:
+    for line in page.get_text("text").splitlines():
+        line = line.strip()
+        if line:
+            return line
+    return ""
+
+
 def export_book(key: str, filename: str, label: str, first_score_page: int):
     doc = fitz.open(PDF_DIR / filename)
     starts = []
+    seen_numbers = set()
     for page_index in range(first_score_page, doc.page_count):
         found = read_heading(doc[page_index].get_text("text"))
         if found:
             number, title, sort_key = found
-            # This rejects repeated headers inside multi-page songs. It does not
-            # assume that every hundred-number range is complete.
-            if not starts or sort_key > starts[-1]["sortKey"]:
+            page_number = page_index + 1
+            if (key, page_number, number) in MANUAL_SKIP_HEADINGS:
+                continue
+            # Reject repeated headers inside multi-page songs, but do not assume
+            # the PDF itself is sorted by hymn number.
+            if number not in seen_numbers:
                 starts.append({"number": number, "title": title, "sortKey": sort_key, "start": page_index})
+                seen_numbers.add(number)
 
     public_songs = []
     search_songs = []
@@ -247,6 +268,65 @@ def export_book(key: str, filename: str, label: str, first_score_page: int):
     print(f"Built {label}: {len(public_songs)} songs, {len(shard_paths)} search files")
 
 
+def blue_pdf_path() -> Path:
+    matches = [path for path in PDF_DIR.glob("*.pdf") if "\u85cd\u672c" in path.name]
+    if not matches:
+        raise FileNotFoundError("blue poem PDF not found")
+    return matches[0]
+
+
+def export_blue_book():
+    doc = fitz.open(blue_pdf_path())
+    starts = []
+    for page_number in BLUE_BOOK_PAGE_RANGE:
+        if page_number in BLUE_BOOK_SKIP_PAGES:
+            continue
+        page = doc[page_number - 1]
+        if "Guitar: Capo" in page.get_text("text"):
+            continue
+        starts.append(page_number)
+
+    public_songs = []
+    search_songs = []
+    for number, page_number in enumerate(starts, 1):
+        song_dir = OUT / "songs" / BLUE_BOOK_KEY / number_folder(number)
+        song_dir.mkdir(parents=True, exist_ok=True)
+        page = doc[page_number - 1]
+        destination = song_dir / "01.jpg"
+        pix = page.get_pixmap(matrix=fitz.Matrix(1.35, 1.35), alpha=False)
+        pix.save(destination, jpg_quality=82)
+        images = [destination.relative_to(ROOT).as_posix()]
+        title = f"\u85cd\u672c\u65b0\u8a69 {number:03d}"
+        record = {
+            "id": f"{BLUE_BOOK_KEY}-{number}",
+            "collection": BLUE_BOOK_KEY,
+            "number": number,
+            "title": title,
+            "images": images,
+            "text": "",
+            "lyricText": "",
+            "lyricVerses": [],
+        }
+        write_json(song_dir / "song.json", record)
+        public_songs.append(
+            {field: record[field] for field in ("id", "collection", "number", "title")}
+            | {"image": images[0], "data": (song_dir / "song.json").relative_to(ROOT).as_posix()}
+        )
+        search_songs.append(record)
+
+    shard_paths = []
+    for shard_number, start in enumerate(range(0, len(search_songs), SEARCH_SHARD_SIZE), 1):
+        path = OUT / "search" / BLUE_BOOK_KEY / f"part-{shard_number:02d}.json"
+        write_json(path, search_songs[start : start + SEARCH_SHARD_SIZE])
+        shard_paths.append(path.relative_to(ROOT).as_posix())
+    write_json(
+        OUT / "indexes" / f"{BLUE_BOOK_KEY}.json",
+        {"collection": BLUE_BOOK_KEY, "label": BLUE_BOOK_LABEL, "songs": public_songs, "searchFiles": shard_paths},
+    )
+    doc.close()
+    print(f"Built {BLUE_BOOK_LABEL}: {len(public_songs)} songs, {len(shard_paths)} search files")
+
+
 def main():
     OUT.mkdir(exist_ok=True)
     for directory in (OUT / "indexes", OUT / "search", OUT / "songs"):
@@ -254,12 +334,13 @@ def main():
             shutil.rmtree(directory)
     for key, (filename, label, first_score_page) in BOOKS.items():
         export_book(key, filename, label, first_score_page)
+    export_blue_book()
     if LEGACY_PAGES.exists():
         shutil.rmtree(LEGACY_PAGES)
     catalog = OUT / "catalog.json"
     if catalog.exists():
         catalog.unlink()
-    write_json(OUT / "manifest.json", {"version": 2, "books": list(BOOKS)})
+    write_json(OUT / "manifest.json", {"version": 2, "books": list(BOOKS) + [BLUE_BOOK_KEY]})
     print("Offline database complete:", OUT)
 
 

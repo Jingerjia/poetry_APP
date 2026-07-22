@@ -3,7 +3,7 @@ const path = require("path");
 
 const root = __dirname;
 const database = path.join(root, "database");
-const books = ["hymns", "supplement", "new-songs", "new-poems"];
+const books = ["hymns", "supplement", "new-songs", "new-poems", "blue-poems"];
 const audioBooks = ["hymns", "supplement"];
 const bundle = { indexes: {}, search: {}, audio: {} };
 
