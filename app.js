@@ -546,7 +546,7 @@ function fixedBrowseGroups(book, songs) {
   const ranges = [];
   if (book === 'hymns') {
     ranges.push([1, 52], [53, 127], [128, 194], [195, 250], [251, 300]);
-    for (let start = 301; start <= max; start += 100) ranges.push([start, Math.min(start + 99, max)]);
+    for (let start = 301; start <= max; start += 50) ranges.push([start, Math.min(start + 49, max)]);
   } else if (book === 'new-songs') {
     ranges.push([1, 50], [51, 100], [101, 142]);
   } else if (book === 'new-poems') {

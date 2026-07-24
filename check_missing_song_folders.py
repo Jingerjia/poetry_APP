@@ -46,16 +46,36 @@ def song_title(book: str, number: int) -> str:
 
 def find_missing(book: str, max_gap: int) -> list[tuple[int, int, list[int]]]:
     book_dir = SONGS_DIR / book
+
     numbers = sorted(
         number
         for child in book_dir.iterdir()
         if child.is_dir() and (number := folder_number(child)) is not None
     )
-    missing = []
+
+    missing: list[tuple[int, int, list[int]]] = []
+
     for previous, current in zip(numbers, numbers[1:]):
         gap = current - previous
-        if 1 < gap <= max_gap:
-            missing.append((previous, current, list(range(previous + 1, current))))
+
+        # 沒有缺號
+        if gap <= 1:
+            continue
+
+        # 百位數不同時豁免，例如 240 -> 301
+        if previous // 100 != current // 100:
+            continue
+
+        # 只回報不超過 max_gap 的缺號
+        if gap <= max_gap:
+            missing.append(
+                (
+                    previous,
+                    current,
+                    list(range(previous + 1, current)),
+                )
+            )
+
     return missing
 
 
