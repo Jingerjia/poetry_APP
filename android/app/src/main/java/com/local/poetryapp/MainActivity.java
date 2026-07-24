@@ -34,6 +34,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -140,7 +141,7 @@ public class MainActivity extends Activity {
             releaseNativeAudio();
             try {
                 mediaPlayer = new MediaPlayer();
-                File downloaded = downloadedAudioFile(assetPath);
+                File downloaded = availableDownloadedAudioFile(assetPath);
                 if (downloaded.exists() && downloaded.length() > 64000) {
                     mediaPlayer.setDataSource(downloaded.getAbsolutePath());
                 } else {
@@ -202,6 +203,36 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public String readUserStore(String key) {
+            try {
+                File file = userStoreFile(key);
+                if (!file.exists()) return "";
+                try (InputStream input = new FileInputStream(file)) {
+                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                    byte[] chunk = new byte[8192];
+                    int read;
+                    while ((read = input.read(chunk)) != -1) buffer.write(chunk, 0, read);
+                    return new String(buffer.toByteArray(), StandardCharsets.UTF_8);
+                }
+            } catch (Exception error) {
+                return "";
+            }
+        }
+
+        @JavascriptInterface
+        public void writeUserStore(String key, String text) {
+            try {
+                File file = userStoreFile(key);
+                File parent = file.getParentFile();
+                if (parent != null) parent.mkdirs();
+                try (FileOutputStream output = new FileOutputStream(file)) {
+                    output.write((text == null ? "" : text).getBytes(StandardCharsets.UTF_8));
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        @JavascriptInterface
         public void downloadMissingAudio(String itemsJson) {
             new Thread(() -> {
                 int downloaded = 0;
@@ -247,6 +278,38 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public void deleteDownloadedAudio() {
+            new Thread(() -> {
+                int deleted = 0;
+                boolean ok = true;
+                try {
+                    deleted += deleteTree(downloadedAudioRoot());
+                    deleted += deleteTree(legacyDownloadedAudioRoot());
+                } catch (Exception error) {
+                    ok = false;
+                }
+                int deletedDone = deleted;
+                boolean okDone = ok;
+                webView.post(() -> webView.evaluateJavascript(
+                    "window.nativeAudioDeleteDone && window.nativeAudioDeleteDone(" + deletedDone + "," + okDone + ")",
+                    null
+                ));
+            }).start();
+        }
+
+        @JavascriptInterface
+        public void saveImage(String assetPath, String fileName) {
+            new Thread(() -> {
+                boolean ok = saveAssetImageToDownloads(assetPath, fileName);
+                runOnUiThread(() -> Toast.makeText(
+                    MainActivity.this,
+                    ok ? "\u5df2\u5132\u5b58\u5230 Download/Poetry_APP" : "\u5132\u5b58\u5716\u7247\u5931\u6557",
+                    Toast.LENGTH_SHORT
+                ).show());
+            }).start();
+        }
+
+        @JavascriptInterface
         public void exportUserData(String text) {
             String exportText = text == null ? "" : text;
             new Thread(() -> {
@@ -287,18 +350,78 @@ public class MainActivity extends Activity {
         }
     }
 
+    private File userStoreFile(String key) {
+        String safeKey = key == null ? "store" : key.replaceAll("[^A-Za-z0-9._-]", "_");
+        return new File(new File(getFilesDir(), "user-data"), safeKey + ".json");
+    }
+
+    private File downloadedAudioRoot() {
+        File root = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
+        if (root == null) root = getFilesDir();
+        return new File(root, "Poetry_APP_Audio");
+    }
+
+    private File legacyDownloadedAudioRoot() {
+        return new File(new File(getFilesDir(), "database"), "audio");
+    }
+
     private File downloadedAudioFile(String assetPath) {
-        return new File(getFilesDir(), assetPath);
+        return new File(downloadedAudioRoot(), assetPath);
+    }
+
+    private File legacyDownloadedAudioFile(String assetPath) {
+        String prefix = "database/audio/";
+        String relative = assetPath != null && assetPath.startsWith(prefix) ? assetPath.substring(prefix.length()) : assetPath;
+        return new File(legacyDownloadedAudioRoot(), relative);
+    }
+
+    private File availableDownloadedAudioFile(String assetPath) {
+        File downloaded = downloadedAudioFile(assetPath);
+        if (downloaded.exists() && downloaded.length() > 64000) return downloaded;
+        File legacy = legacyDownloadedAudioFile(assetPath);
+        if (legacy.exists() && legacy.length() > 64000) {
+            try {
+                File parent = downloaded.getParentFile();
+                if (parent != null) parent.mkdirs();
+                copyFile(legacy, downloaded);
+                return downloaded;
+            } catch (Exception ignored) {
+                return legacy;
+            }
+        }
+        return downloaded;
     }
 
     private boolean audioAvailable(String assetPath) {
-        File downloaded = downloadedAudioFile(assetPath);
+        File downloaded = availableDownloadedAudioFile(assetPath);
         if (downloaded.exists() && downloaded.length() > 64000) return true;
         try (AssetFileDescriptor descriptor = getAssets().openFd(assetPath)) {
             return descriptor.getLength() > 64000;
         } catch (Exception error) {
             return false;
         }
+    }
+
+    private void copyFile(File source, File target) throws Exception {
+        try (InputStream input = new FileInputStream(source); OutputStream output = new FileOutputStream(target)) {
+            byte[] chunk = new byte[8192];
+            int read;
+            while ((read = input.read(chunk)) != -1) output.write(chunk, 0, read);
+        }
+    }
+
+    private int deleteTree(File file) {
+        if (file == null || !file.exists()) return 0;
+        int count = 0;
+        if (file.isDirectory()) {
+            File[] children = file.listFiles();
+            if (children != null) {
+                for (File child : children) count += deleteTree(child);
+            }
+        }
+        if (file.isFile() && file.getName().toLowerCase().endsWith(".mp3")) count++;
+        file.delete();
+        return count;
     }
 
     private Uri defaultBackupFolderUri() {
@@ -335,6 +458,52 @@ public class MainActivity extends Activity {
         } catch (Exception error) {
             return false;
         }
+    }
+
+    private boolean saveAssetImageToDownloads(String assetPath, String fileName) {
+        try {
+            String safeName = sanitizeFileName(fileName);
+            if (safeName.isEmpty()) safeName = "poetry-page.jpg";
+            if (!safeName.toLowerCase().endsWith(".jpg") && !safeName.toLowerCase().endsWith(".jpeg") && !safeName.toLowerCase().endsWith(".png")) {
+                safeName += ".jpg";
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.MediaColumns.DISPLAY_NAME, safeName);
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+                values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Poetry_APP");
+                values.put(MediaStore.MediaColumns.IS_PENDING, 1);
+                Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+                if (uri == null) return false;
+                try (InputStream input = getAssets().open(assetPath); OutputStream output = getContentResolver().openOutputStream(uri)) {
+                    if (output == null) return false;
+                    byte[] chunk = new byte[8192];
+                    int read;
+                    while ((read = input.read(chunk)) != -1) output.write(chunk, 0, read);
+                }
+                values.clear();
+                values.put(MediaStore.MediaColumns.IS_PENDING, 0);
+                getContentResolver().update(uri, values, null, null);
+                return true;
+            }
+            File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Poetry_APP");
+            if (!folder.exists() && !folder.mkdirs()) return false;
+            try (InputStream input = getAssets().open(assetPath); OutputStream output = new FileOutputStream(new File(folder, safeName))) {
+                byte[] chunk = new byte[8192];
+                int read;
+                while ((read = input.read(chunk)) != -1) output.write(chunk, 0, read);
+            }
+            return true;
+        } catch (Exception error) {
+            return false;
+        }
+    }
+
+    private String sanitizeFileName(String fileName) {
+        String value = fileName == null ? "" : fileName.trim();
+        value = value.replaceAll("[\\\\/:*?\"<>|\\r\\n\\t]", "_");
+        if (value.length() > 90) value = value.substring(0, 90);
+        return value;
     }
 
     private boolean downloadAudioFile(String collection, String number, String assetPath) {

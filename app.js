@@ -21,6 +21,17 @@ let pendingHistoryId = '';
 let setAudioProgress = () => {};
 let nativeAudioDuration = 0;
 let nativeAudioPlaying = false;
+let imageScale = 1;
+let imagePanX = 0;
+let imagePanY = 0;
+let longPressTimer = null;
+let touchMode = '';
+let pinchStartDistance = 0;
+let pinchStartScale = 1;
+let dragStartX = 0;
+let dragStartY = 0;
+let dragStartPanX = 0;
+let dragStartPanY = 0;
 
 function hasNativeAudio() {
   return !!window.AndroidBridge?.loadAudio;
@@ -31,6 +42,14 @@ function escapeHtml(value) {
 }
 
 function readStore(key, fallback) {
+  if (key === favoritesKey && window.AndroidBridge?.readUserStore) {
+    try {
+      const nativeValue = window.AndroidBridge.readUserStore(key);
+      if (nativeValue) return JSON.parse(nativeValue);
+    } catch (error) {
+      console.warn('native storage read failed', key, error);
+    }
+  }
   try {
     const value = JSON.parse(localStorage.getItem(key));
     return value || fallback;
@@ -41,6 +60,13 @@ function readStore(key, fallback) {
 }
 
 function writeStore(key, value) {
+  if (key === favoritesKey && window.AndroidBridge?.writeUserStore) {
+    try {
+      window.AndroidBridge.writeUserStore(key, JSON.stringify(value));
+    } catch (error) {
+      console.warn('native storage write failed', key, error);
+    }
+  }
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
@@ -394,7 +420,6 @@ function userDataPayload() {
     app: 'hymn-library',
     version: 1,
     exportedAt: new Date().toISOString(),
-    history: normalizeSongList(loadHistory()),
     favorites: normalizeFavoriteState(favoriteState),
   };
 }
@@ -419,14 +444,11 @@ function exportUserData() {
 function applyImportedUserData(text) {
   try {
     const payload = JSON.parse(String(text));
-    const importedHistory = normalizeSongList(payload.history);
-    const importedFavorites = normalizeFavoriteState(payload.favorites);
-    if (!confirm('\u532f\u5165\u5f8c\u6703\u8986\u84cb\u76ee\u524d\u9019\u53f0\u88dd\u7f6e\u7684\u6700\u8fd1\u958b\u555f\u8207\u6700\u611b\u7fa4\u7d44\uff0c\u8981\u7e7c\u7e8c\u55ce\uff1f')) return;
-    saveHistory(importedHistory);
+    const importedFavorites = normalizeFavoriteState(payload.favorites || payload);
+    if (!confirm('\u532f\u5165\u5f8c\u6703\u8986\u84cb\u76ee\u524d\u9019\u53f0\u88dd\u7f6e\u7684\u6700\u611b\u7fa4\u7d44\uff0c\u6700\u8fd1\u958b\u555f\u4e0d\u6703\u6539\u8b8a\uff0c\u8981\u7e7c\u7e8c\u55ce\uff1f')) return;
     favoriteState = importedFavorites;
     activeFavoriteGroupId = favoriteState.groups[0].id;
     saveFavorites();
-    renderHistory();
     renderFavorites();
     alert('\u532f\u5165\u5b8c\u6210');
   } catch (error) {
@@ -627,6 +649,20 @@ async function updateAudioLibrary() {
   }
 }
 
+async function showAudioLibraryMenu() {
+  if (!window.AndroidBridge?.downloadMissingAudio) return;
+  const action = prompt('\u97f3\u6a94\u7ba1\u7406\n1. \u4e0b\u8f09\u97f3\u6a94\n2. \u522a\u9664\u5df2\u4e0b\u8f09\u97f3\u6a94\n\n\u8acb\u8f38\u5165 1 \u6216 2', '1');
+  if (action === '1') {
+    await updateAudioLibrary();
+  } else if (action === '2' && window.AndroidBridge?.deleteDownloadedAudio) {
+    if (!confirm('\u78ba\u5b9a\u8981\u522a\u9664\u5df2\u4e0b\u8f09\u7684\u97f3\u6a94\uff1f\u522a\u9664\u5f8c\u9700\u8981\u91cd\u65b0\u4e0b\u8f09\u624d\u80fd\u96e2\u7dda\u64ad\u653e\u3002')) return;
+    const button = $('audio-library-download');
+    button.disabled = true;
+    button.textContent = '\u522a\u9664\u4e2d...';
+    window.AndroidBridge.deleteDownloadedAudio();
+  }
+}
+
 function formatTime(seconds) {
   if (!Number.isFinite(seconds)) return '0:00';
   const minutes = Math.floor(seconds / 60);
@@ -668,6 +704,7 @@ async function renderSong() {
   $('viewer-number').textContent = `${collections[song.collection]} ${displayNumber(song.number)}`;
   $('viewer-title').textContent = song.title;
   $('song-page').src = images[currentPageIndex];
+  resetImageZoom();
   $('page-indicator').textContent = images.length > 1
     ? `${currentPageIndex + 1}/${images.length} · ${currentIndex + 1}/${currentSongs.length}`
     : `${currentIndex + 1} / ${currentSongs.length}`;
@@ -805,6 +842,126 @@ function bindPlayer() {
   };
 }
 
+function resetImageZoom() {
+  imageScale = 1;
+  imagePanX = 0;
+  imagePanY = 0;
+  const area = $('page-area');
+  area.classList.remove('zoomed', 'zooming');
+  const img = $('song-page');
+  img.style.setProperty('--zoom', '1');
+  img.style.setProperty('--pan-x', '0px');
+  img.style.setProperty('--pan-y', '0px');
+}
+
+function applyImageZoom() {
+  const area = $('page-area');
+  const img = $('song-page');
+  img.style.setProperty('--zoom', String(imageScale));
+  img.style.setProperty('--pan-x', `${imagePanX}px`);
+  img.style.setProperty('--pan-y', `${imagePanY}px`);
+  area.classList.toggle('zoomed', imageScale > 1.02);
+}
+
+function touchDistance(touches) {
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.hypot(dx, dy);
+}
+
+function clearLongPress() {
+  if (longPressTimer) clearTimeout(longPressTimer);
+  longPressTimer = null;
+}
+
+function currentImagePath() {
+  const song = currentSongs[currentIndex];
+  const images = song?.images?.length ? song.images : [song?.image];
+  return images[currentPageIndex] || '';
+}
+
+function currentImageFileName() {
+  const song = currentSongs[currentIndex] || {};
+  const safeTitle = String(song.title || 'song').replace(/[\\/:*?"<>|]/g, '').slice(0, 40);
+  return `${collections[song.collection] || 'song'}-${displayNumber(song.number || '')}-${currentPageIndex + 1}-${safeTitle}.jpg`;
+}
+
+function saveCurrentImage() {
+  const path = currentImagePath();
+  if (!path || !confirm('\u8981\u5c07\u9019\u5f35\u5716\u7247\u5132\u5b58\u5230 Download/Poetry_APP \u55ce\uff1f')) return;
+  if (window.AndroidBridge?.saveImage) {
+    window.AndroidBridge.saveImage(path, currentImageFileName());
+    return;
+  }
+  const link = document.createElement('a');
+  link.href = path;
+  link.download = currentImageFileName();
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+function bindImageGestures() {
+  const area = $('page-area');
+  area.ontouchstart = (event) => {
+    clearLongPress();
+    if (event.touches.length === 2) {
+      touchMode = 'pinch';
+      area.classList.add('zooming');
+      pinchStartDistance = touchDistance(event.touches);
+      pinchStartScale = imageScale;
+      event.preventDefault();
+      return;
+    }
+    touchMode = imageScale > 1.02 ? 'pan' : 'swipe';
+    touchX = event.changedTouches[0].screenX;
+    dragStartX = event.touches[0].clientX;
+    dragStartY = event.touches[0].clientY;
+    dragStartPanX = imagePanX;
+    dragStartPanY = imagePanY;
+    longPressTimer = setTimeout(saveCurrentImage, 650);
+  };
+  area.ontouchmove = (event) => {
+    if (event.touches.length === 2 && touchMode === 'pinch') {
+      clearLongPress();
+      const ratio = touchDistance(event.touches) / Math.max(1, pinchStartDistance);
+      imageScale = Math.min(4, Math.max(1, pinchStartScale * ratio));
+      if (imageScale <= 1.02) {
+        imageScale = 1;
+        imagePanX = 0;
+        imagePanY = 0;
+      }
+      applyImageZoom();
+      event.preventDefault();
+      return;
+    }
+    if (event.touches.length === 1) {
+      const dx = event.touches[0].clientX - dragStartX;
+      const dy = event.touches[0].clientY - dragStartY;
+      if (Math.hypot(dx, dy) > 10) clearLongPress();
+      if (touchMode === 'pan') {
+        imagePanX = dragStartPanX + dx;
+        imagePanY = dragStartPanY + dy;
+        applyImageZoom();
+        event.preventDefault();
+      }
+    }
+  };
+  area.ontouchend = (event) => {
+    clearLongPress();
+    area.classList.remove('zooming');
+    if (touchMode === 'swipe' && imageScale <= 1.02) {
+      const delta = event.changedTouches[0].screenX - touchX;
+      if (Math.abs(delta) > 55) moveSong(delta > 0 ? -1 : 1);
+    }
+    if (event.touches.length === 0) touchMode = '';
+  };
+  area.oncontextmenu = (event) => {
+    event.preventDefault();
+    saveCurrentImage();
+  };
+}
+
 function bindUI() {
   $('home-tabs').querySelectorAll('.home-tab').forEach((button) => {
     button.onclick = () => showHomePanel(button.dataset.panel);
@@ -834,7 +991,7 @@ function bindUI() {
   };
   if (window.AndroidBridge?.downloadMissingAudio) {
     $('audio-library-download').hidden = false;
-    $('audio-library-download').onclick = updateAudioLibrary;
+    $('audio-library-download').onclick = showAudioLibraryMenu;
   }
   $('favorite-group-select').onchange = (event) => { activeFavoriteGroupId = event.target.value; renderFavorites(); };
   $('toggle-favorite').onclick = toggleCurrentFavorite;
@@ -845,8 +1002,7 @@ function bindUI() {
   $('close-viewer').onclick = closeViewer;
   $('previous-song').onclick = () => moveSong(-1);
   $('next-song').onclick = () => moveSong(1);
-  $('page-area').ontouchstart = (event) => { touchX = event.changedTouches[0].screenX; };
-  $('page-area').ontouchend = (event) => { const delta = event.changedTouches[0].screenX - touchX; if (Math.abs(delta) > 55) moveSong(delta > 0 ? -1 : 1); };
+  bindImageGestures();
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       cancelHistoryTimer();
@@ -888,7 +1044,14 @@ window.nativeAudioDownloadDone = (downloaded, skipped, failed) => {
   button.disabled = false;
   button.textContent = failed ? '\u66f4\u65b0\u5b8c\u6210\u6709\u5931\u6557' : '\u97f3\u6a94\u5df2\u66f4\u65b0';
   if (!$('viewer').hidden) resetPlayer(currentSongs[currentIndex]);
-  setTimeout(() => { button.textContent = '\u4e0b\u8f09\u97f3\u6a94'; }, 2200);
+  setTimeout(() => { button.textContent = '\u97f3\u6a94'; }, 2200);
+};
+window.nativeAudioDeleteDone = (deleted, ok) => {
+  const button = $('audio-library-download');
+  button.disabled = false;
+  button.textContent = ok ? `\u5df2\u522a\u9664 ${deleted}` : '\u522a\u9664\u5931\u6557';
+  if (!$('viewer').hidden) resetPlayer(currentSongs[currentIndex]);
+  setTimeout(() => { button.textContent = '\u97f3\u6a94'; }, 2200);
 };
 bindUI();
 document.addEventListener('keydown', (event) => {
