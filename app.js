@@ -6,6 +6,7 @@ let audioIndexPromise = null;
 const dbErrorMessage = '\u8cc7\u6599\u5eab\u8f09\u5165\u5931\u6557\uff0c\u8acb\u78ba\u8a8d database/web-db.js \u8207 database \u8cc7\u6599\u593e\u5b58\u5728';
 const historyKey = 'hymn-library-history-v1';
 const favoritesKey = 'hymn-library-favorites-v1';
+const playerEnabledKey = 'hymn-library-player-enabled-v1';
 
 let collection = 'hymns';
 let browseCollection = 'hymns';
@@ -21,6 +22,9 @@ let pendingHistoryId = '';
 let setAudioProgress = () => {};
 let nativeAudioDuration = 0;
 let nativeAudioPlaying = false;
+let playerEnabled = readStore(playerEnabledKey, true) !== false;
+let activeBrowseGroup = '';
+let suppressSaveDialogUntil = 0;
 let imageScale = 1;
 let imagePanX = 0;
 let imagePanY = 0;
@@ -42,7 +46,7 @@ function escapeHtml(value) {
 }
 
 function readStore(key, fallback) {
-  if (key === favoritesKey && window.AndroidBridge?.readUserStore) {
+  if ((key === favoritesKey || key === historyKey || key === playerEnabledKey) && window.AndroidBridge?.readUserStore) {
     try {
       const nativeValue = window.AndroidBridge.readUserStore(key);
       if (nativeValue) return JSON.parse(nativeValue);
@@ -60,7 +64,7 @@ function readStore(key, fallback) {
 }
 
 function writeStore(key, value) {
-  if (key === favoritesKey && window.AndroidBridge?.writeUserStore) {
+  if ((key === favoritesKey || key === historyKey || key === playerEnabledKey) && window.AndroidBridge?.writeUserStore) {
     try {
       window.AndroidBridge.writeUserStore(key, JSON.stringify(value));
     } catch (error) {
@@ -316,6 +320,10 @@ function closeViewer() {
 }
 
 function appBack() {
+  if (!$('audio-actions').hidden) {
+    closeAudioLibraryMenu();
+    return true;
+  }
   if (!$('search').hidden) {
     toggleSearch(false);
     return true;
@@ -477,6 +485,58 @@ function renderBrowseCollections() {
   $('browse-collections').querySelectorAll('.collection').forEach((button) => button.classList.toggle('active', button.dataset.book === browseCollection));
 }
 
+function browseGroupLabel(book, start, end, index) {
+  if (book === 'hymns') {
+    if (start === 1 && end === 52) return '1~52 敬拜父';
+    if (start === 53 && end === 127) return '53~127 讚美主1';
+    if (start === 128 && end === 194) return '128~194 讚美主2';
+    if (start === 195 && end === 300) return '195~300 群組4';
+  }
+  return `${start}~${end}`;
+}
+
+function fixedBrowseGroups(book, songs) {
+  const numbers = songs.map((song) => Number(song.number)).filter(Number.isFinite);
+  if (!numbers.length) return [];
+  const existing = new Set(numbers);
+  const min = Math.min(...numbers);
+  const max = Math.max(...numbers);
+  const ranges = [];
+  if (book === 'hymns') {
+    ranges.push([1, 52], [53, 127], [128, 194], [195, 300]);
+    for (let start = 301; start <= max; start += 100) ranges.push([start, Math.min(start + 99, max)]);
+  } else if (book === 'supplement') {
+    let start = min;
+    let previous = min;
+    for (const number of numbers.slice(1)) {
+      const crossesHundred = Math.floor((previous - 1) / 100) !== Math.floor((number - 1) / 100);
+      if (number - previous > 40 || crossesHundred) {
+        ranges.push([start, previous]);
+        start = number;
+      }
+      previous = number;
+    }
+    ranges.push([start, previous]);
+  } else {
+    for (let start = Math.floor((min - 1) / 100) * 100 + 1; start <= max; start += 100) {
+      ranges.push([start, Math.min(start + 99, max)]);
+    }
+  }
+  return ranges
+    .map(([start, end], index) => {
+      const groupSongs = songs.filter((song) => {
+        const number = Number(song.number);
+        return number >= start && number <= end;
+      });
+      return groupSongs.length ? { id: `${start}-${end}`, start, end, label: browseGroupLabel(book, start, end, index), songs: groupSongs } : null;
+    })
+    .filter(Boolean);
+}
+
+function withPreview(song) {
+  return { ...song, snippet: previewSnippet(song) };
+}
+
 function updateDisplay() {
   $('number-display').textContent = digits || '\u8f38\u5165\u7de8\u865f';
   $('open-song').disabled = !digits;
@@ -507,17 +567,30 @@ async function selectBook(key) {
 async function loadFeatured() {
   try {
     const index = await bookIndex(browseCollection);
-    const songs = index.songs.slice(0, 9).map((song) => ({ ...song, snippet: previewSnippet(song) }));
+    const groups = fixedBrowseGroups(browseCollection, index.songs);
+    if (!groups.some((group) => group.id === activeBrowseGroup)) activeBrowseGroup = groups[0]?.id || '';
+    $('browse-groups').innerHTML = groups.map((group) => `<button class="group-chip ${group.id === activeBrowseGroup ? 'active' : ''}" data-id="${escapeHtml(group.id)}">${escapeHtml(group.label)}</button>`).join('');
+    $('browse-groups').querySelectorAll('button').forEach((button) => {
+      button.onclick = () => {
+        activeBrowseGroup = button.dataset.id;
+        loadFeatured();
+      };
+    });
+    const group = groups.find((item) => item.id === activeBrowseGroup) || groups[0];
+    const details = await Promise.all((group?.songs || index.songs).map(fullSong));
+    const songs = details.map(withPreview);
     $('featured').innerHTML = songs.map(songButton).join('');
     bindSongs($('featured'), songs);
   } catch (error) {
     console.error(error);
+    $('browse-groups').innerHTML = '';
     $('featured').innerHTML = `<p class="empty">${dbErrorMessage}</p>`;
   }
 }
 
 async function selectBrowseBook(key) {
   browseCollection = key;
+  activeBrowseGroup = '';
   renderBrowseCollections();
   await loadFeatured();
 }
@@ -598,7 +671,6 @@ async function search(query = '') {
     const songs = rows
       .map((song) => ({ song, normalized: normalizeText(`${song.number} ${song.title} ${songSearchText(song)}`) }))
       .filter(({ normalized }) => !normalizedQuery || normalized.includes(normalizedQuery) || terms.every((term) => normalized.includes(term)))
-      .slice(0, 50)
       .map(({ song }) => ({ ...song, snippet: snippetFor(song, query) }));
     $('search-results').innerHTML = songs.length ? songs.map(songButton).join('') : '<p class="empty">\u6c92\u6709\u7b26\u5408\u7684\u8a69\u6b4c</p>';
     bindSongs($('search-results'), songs);
@@ -636,6 +708,7 @@ async function updateAudioLibrary() {
   if (!window.AndroidBridge?.downloadMissingAudio) return;
   const ok = confirm('\u662f\u5426\u66f4\u65b0\u97f3\u6a94\uff1f\u5df2\u6709\u7684\u97f3\u6a94\u6703\u81ea\u52d5\u8df3\u904e\u3002');
   if (!ok) return;
+  closeAudioLibraryMenu();
   const button = $('audio-library-download');
   button.disabled = true;
   button.textContent = '\u6e96\u5099\u4e2d...';
@@ -649,18 +722,23 @@ async function updateAudioLibrary() {
   }
 }
 
+function closeAudioLibraryMenu() {
+  $('audio-actions').hidden = true;
+}
+
 async function showAudioLibraryMenu() {
   if (!window.AndroidBridge?.downloadMissingAudio) return;
-  const action = prompt('\u97f3\u6a94\u7ba1\u7406\n1. \u4e0b\u8f09\u97f3\u6a94\n2. \u522a\u9664\u5df2\u4e0b\u8f09\u97f3\u6a94\n\n\u8acb\u8f38\u5165 1 \u6216 2', '1');
-  if (action === '1') {
-    await updateAudioLibrary();
-  } else if (action === '2' && window.AndroidBridge?.deleteDownloadedAudio) {
-    if (!confirm('\u78ba\u5b9a\u8981\u522a\u9664\u5df2\u4e0b\u8f09\u7684\u97f3\u6a94\uff1f\u522a\u9664\u5f8c\u9700\u8981\u91cd\u65b0\u4e0b\u8f09\u624d\u80fd\u96e2\u7dda\u64ad\u653e\u3002')) return;
-    const button = $('audio-library-download');
-    button.disabled = true;
-    button.textContent = '\u522a\u9664\u4e2d...';
-    window.AndroidBridge.deleteDownloadedAudio();
-  }
+  $('audio-actions').hidden = false;
+}
+
+function deleteAudioLibrary() {
+  if (!window.AndroidBridge?.deleteDownloadedAudio) return;
+  if (!confirm('\u78ba\u5b9a\u8981\u522a\u9664\u5df2\u4e0b\u8f09\u7684\u97f3\u6a94\uff1f\u522a\u9664\u5f8c\u9700\u8981\u91cd\u65b0\u4e0b\u8f09\u624d\u80fd\u96e2\u7dda\u64ad\u653e\u3002')) return;
+  closeAudioLibraryMenu();
+  const button = $('audio-library-download');
+  button.disabled = true;
+  button.textContent = '\u522a\u9664\u4e2d...';
+  window.AndroidBridge.deleteDownloadedAudio();
 }
 
 function formatTime(seconds) {
@@ -683,7 +761,9 @@ async function resetPlayer(song) {
   $('audio-current').textContent = '0:00';
   $('audio-duration').textContent = '0:00';
   $('play-toggle').textContent = '\u25b6';
-  $('player').hidden = !path;
+  $('player').hidden = !path || !playerEnabled;
+  renderPlayerToggle();
+  if (!playerEnabled) return;
   if (path) {
     if (hasNativeAudio()) {
       nativeAudioDuration = window.AndroidBridge.loadAudio(path, Number($('audio-speed').value));
@@ -744,6 +824,20 @@ async function moveSong(change) {
     currentPageIndex = change > 0 ? 0 : ((currentSongs[currentIndex].images?.length || 1) - 1);
     renderSong();
   }
+}
+
+function renderPlayerToggle() {
+  const button = $('toggle-player-enabled');
+  button.classList.toggle('active', playerEnabled);
+  button.textContent = playerEnabled ? '\u25b6' : '\u25b7';
+  button.title = playerEnabled ? '\u95dc\u9589\u64ad\u653e\u5217' : '\u958b\u555f\u64ad\u653e\u5217';
+}
+
+async function togglePlayerEnabled() {
+  playerEnabled = !playerEnabled;
+  writeStore(playerEnabledKey, playerEnabled);
+  renderPlayerToggle();
+  if (!$('viewer').hidden) await resetPlayer(currentSongs[currentIndex]);
 }
 
 function bindPlayer() {
@@ -887,8 +981,10 @@ function currentImageFileName() {
 }
 
 function saveCurrentImage() {
+  if (Date.now() < suppressSaveDialogUntil) return;
+  suppressSaveDialogUntil = Date.now() + 1400;
   const path = currentImagePath();
-  if (!path || !confirm('\u8981\u5c07\u9019\u5f35\u5716\u7247\u5132\u5b58\u5230 Download/Poetry_APP \u55ce\uff1f')) return;
+  if (!path || !confirm('\u662f\u5426\u5132\u5b58\u9019\u5f35\u5716\u7247?')) return;
   if (window.AndroidBridge?.saveImage) {
     window.AndroidBridge.saveImage(path, currentImageFileName());
     return;
@@ -977,6 +1073,7 @@ function bindUI() {
   });
   $('open-song').onclick = openByNumber;
   $('browse-all').onclick = () => toggleSearch(true);
+  $('search').onclick = (event) => { if (event.target === $('search')) toggleSearch(false); };
   $('clear-history').onclick = () => { saveHistory([]); renderHistory(); };
   $('add-group').onclick = addFavoriteGroup;
   $('new-group-name').onkeydown = (event) => { if (event.key === 'Enter') addFavoriteGroup(); };
@@ -993,8 +1090,12 @@ function bindUI() {
     $('audio-library-download').hidden = false;
     $('audio-library-download').onclick = showAudioLibraryMenu;
   }
+  $('audio-actions').onclick = (event) => { if (event.target === $('audio-actions')) closeAudioLibraryMenu(); };
+  $('download-audio-action').onclick = updateAudioLibrary;
+  $('delete-audio-action').onclick = deleteAudioLibrary;
   $('favorite-group-select').onchange = (event) => { activeFavoriteGroupId = event.target.value; renderFavorites(); };
   $('toggle-favorite').onclick = toggleCurrentFavorite;
+  $('toggle-player-enabled').onclick = togglePlayerEnabled;
   $('search-toggle').onclick = () => toggleSearch(true);
   $('search-field').onclick = () => toggleSearch(true);
   $('close-search').onclick = () => toggleSearch(false);
@@ -1061,6 +1162,7 @@ document.addEventListener('keydown', (event) => {
 renderCollections();
 renderBrowseCollections();
 updateDisplay();
+renderPlayerToggle();
 renderHistory();
 renderFavorites();
 loadFeatured();
