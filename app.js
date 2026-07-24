@@ -521,7 +521,8 @@ function importUserDataFromText(text) {
 
 function renderCollections() {
   $('collections').querySelectorAll('.collection').forEach((button) => button.classList.toggle('active', button.dataset.book === collection));
-  $('selection-title').textContent = '\u8a69\u6b4c\u9078\u96c6';
+  const title = $('selection-title');
+  if (title) title.textContent = '\u8a69\u6b4c\u9078\u96c6';
 }
 
 function renderBrowseCollections() {

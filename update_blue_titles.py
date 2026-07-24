@@ -1,6 +1,5 @@
 from pathlib import Path
 import json
-import re
 
 
 ROOT = Path("database/songs/blue-poems")
@@ -16,34 +15,18 @@ def write_json(path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 
 
-def title_from_lyrics(items):
-    verse = ""
-    for item in items:
-        if "verse_no" in item:
-            verse = str(item.get("lyrics") or "")
-            break
-    parts = [part.strip() for part in re.split(r"[，,。！？!；;：:\s]+", verse) if part.strip()]
-    if not parts:
-        return ""
-    title = parts[0]
-    index = 1
-    while len(title) < 4 and index < len(parts):
-        title += parts[index]
-        index += 1
-    return title[:18]
-
-
 def main():
+    title_rows = read_json(Path("blue_titles.json"))
+    titles_by_number = {str(row["id"]): str(row["title"]) for row in title_rows}
     titles = {}
     for folder in sorted(ROOT.glob("[0-9][0-9][0-9][0-9]")):
-        lyrics_path = folder / "lyrics.json"
         song_path = folder / "song.json"
-        if not lyrics_path.exists() or not song_path.exists():
-            continue
-        title = title_from_lyrics(read_json(lyrics_path))
-        if not title:
+        if not song_path.exists():
             continue
         data = read_json(song_path)
+        title = titles_by_number.get(str(data.get("number")))
+        if not title:
+            continue
         data["title"] = title
         write_json(song_path, data)
         titles[data["id"]] = title
