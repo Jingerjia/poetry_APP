@@ -247,6 +247,25 @@ function bindSongs(parent, songs) {
   parent.querySelectorAll('.song-item').forEach((button, index) => button.onclick = () => openSong(songs[index], songs));
 }
 
+async function fullSong(song) {
+  if (!song || song.images?.length) return song;
+  if (song.data) {
+    try {
+      return { ...song, ...(await readJson(song.data)) };
+    } catch (error) {
+      console.warn('song detail unavailable', song.data, error);
+    }
+  }
+  try {
+    const rows = await searchRows(song.collection);
+    const detail = rows.find((item) => item.id === song.id);
+    if (detail) return { ...song, ...detail };
+  } catch (error) {
+    console.warn('song search detail unavailable', song.id, error);
+  }
+  return song;
+}
+
 function renderHistory() {
   const items = loadHistory();
   $('history-list').innerHTML = items.length ? items.map(songButton).join('') : '<p class="empty">\u9084\u6c92\u6709\u958b\u555f\u904e\u8a69\u6b4c</p>';
@@ -642,7 +661,8 @@ async function resetPlayer(song) {
 }
 
 async function renderSong() {
-  const song = currentSongs[currentIndex];
+  const song = await fullSong(currentSongs[currentIndex]);
+  currentSongs[currentIndex] = song;
   const images = song.images?.length ? song.images : [song.image];
   currentPageIndex = Math.min(currentPageIndex, images.length - 1);
   $('viewer-number').textContent = `${collections[song.collection]} ${displayNumber(song.number)}`;
@@ -667,8 +687,9 @@ function openSong(song, songs) {
   renderSong();
 }
 
-function moveSong(change) {
-  const song = currentSongs[currentIndex];
+async function moveSong(change) {
+  const song = await fullSong(currentSongs[currentIndex]);
+  currentSongs[currentIndex] = song;
   const images = song?.images?.length ? song.images : [song?.image];
   if (song && change > 0 && currentPageIndex < images.length - 1) {
     currentPageIndex += 1;
