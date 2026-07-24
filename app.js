@@ -320,6 +320,10 @@ function closeViewer() {
 }
 
 function appBack() {
+  if (!$('group-manager').hidden) {
+    closeGroupManager();
+    return true;
+  }
   if (!$('audio-actions').hidden) {
     closeAudioLibraryMenu();
     return true;
@@ -347,23 +351,12 @@ function favoriteRow(song, index) {
 function renderFavoriteGroups() {
   const group = activeFavoriteGroup();
   activeFavoriteGroupId = group.id;
-  $('favorite-groups').innerHTML = favoriteState.groups.map((item) => [
-    `<button class="group-chip${item.id === activeFavoriteGroupId ? ' active' : ''}" data-id="${escapeHtml(item.id)}">${escapeHtml(item.name)}</button>`,
-    favoriteState.groups.length > 1 ? `<button class="group-delete" data-id="${escapeHtml(item.id)}" aria-label="delete">\u00d7</button>` : '',
-  ].join('')).join('');
+  $('favorite-group-jump').innerHTML = favoriteState.groups.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join('');
+  $('favorite-group-jump').value = activeFavoriteGroupId;
+  $('favorite-groups').innerHTML = favoriteState.groups.map((item) => `<button class="group-chip${item.id === activeFavoriteGroupId ? ' active' : ''}" data-id="${escapeHtml(item.id)}">${escapeHtml(item.name)}</button>`).join('');
   $('favorite-groups').querySelectorAll('.group-chip').forEach((button) => {
     button.onclick = () => {
       activeFavoriteGroupId = button.dataset.id;
-      renderFavorites();
-    };
-  });
-  $('favorite-groups').querySelectorAll('.group-delete').forEach((button) => {
-    button.onclick = () => {
-      const target = favoriteState.groups.find((item) => item.id === button.dataset.id);
-      if (target && !confirm(`\u522a\u9664\u7fa4\u7d44\u300c${target.name}\u300d\uff1f`)) return;
-      favoriteState.groups = favoriteState.groups.filter((item) => item.id !== button.dataset.id);
-      if (!favoriteState.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = favoriteState.groups[0].id;
-      saveFavorites();
       renderFavorites();
     };
   });
@@ -376,11 +369,52 @@ function renderFavoriteList() {
   $('favorite-list').querySelectorAll('.remove-favorite').forEach((button) => {
     button.onclick = (event) => {
       event.stopPropagation();
+      const song = group.songs[Number(button.dataset.index)];
+      if (song && !confirm(`\u5f9e\u300c${group.name}\u300d\u79fb\u9664\u300c${song.title}\u300d\uff1f`)) return;
       group.songs.splice(Number(button.dataset.index), 1);
       saveFavorites();
       renderFavorites();
     };
   });
+}
+
+function renderManagedGroups() {
+  $('managed-groups').innerHTML = favoriteState.groups.map((group, index) => `
+    <div class="managed-group">
+      <span>${escapeHtml(group.name)}</span>
+      <button data-action="up" data-index="${index}" ${index === 0 ? 'disabled' : ''}>\u2191</button>
+      <button data-action="down" data-index="${index}" ${index === favoriteState.groups.length - 1 ? 'disabled' : ''}>\u2193</button>
+      <button data-action="delete" data-index="${index}" ${favoriteState.groups.length <= 1 ? 'disabled' : ''}>\u522a\u9664</button>
+    </div>
+  `).join('');
+  $('managed-groups').querySelectorAll('button').forEach((button) => {
+    button.onclick = () => {
+      const index = Number(button.dataset.index);
+      const action = button.dataset.action;
+      if (action === 'up' && index > 0) {
+        [favoriteState.groups[index - 1], favoriteState.groups[index]] = [favoriteState.groups[index], favoriteState.groups[index - 1]];
+      } else if (action === 'down' && index < favoriteState.groups.length - 1) {
+        [favoriteState.groups[index + 1], favoriteState.groups[index]] = [favoriteState.groups[index], favoriteState.groups[index + 1]];
+      } else if (action === 'delete') {
+        const target = favoriteState.groups[index];
+        if (!target || !confirm(`\u522a\u9664\u7fa4\u7d44\u300c${target.name}\u300d\uff1f\u7fa4\u7d44\u5167\u7684\u6700\u611b\u4e5f\u6703\u4e00\u8d77\u79fb\u9664\u3002`)) return;
+        favoriteState.groups.splice(index, 1);
+        if (!favoriteState.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = favoriteState.groups[0].id;
+      }
+      saveFavorites();
+      renderFavorites();
+      renderManagedGroups();
+    };
+  });
+}
+
+function openGroupManager() {
+  renderManagedGroups();
+  $('group-manager').hidden = false;
+}
+
+function closeGroupManager() {
+  $('group-manager').hidden = true;
 }
 
 function renderFavoriteTools() {
@@ -410,6 +444,7 @@ function addFavoriteGroup() {
   input.value = '';
   saveFavorites();
   renderFavorites();
+  renderManagedGroups();
 }
 
 function toggleCurrentFavorite() {
@@ -430,6 +465,14 @@ function userDataPayload() {
     exportedAt: new Date().toISOString(),
     favorites: normalizeFavoriteState(favoriteState),
   };
+}
+
+function hydratePersistentState() {
+  favoriteState = loadFavorites();
+  activeFavoriteGroupId = favoriteState.groups.some((group) => group.id === activeFavoriteGroupId)
+    ? activeFavoriteGroupId
+    : favoriteState.groups[0].id;
+  playerEnabled = readStore(playerEnabledKey, true) !== false;
 }
 
 function exportUserData() {
@@ -490,7 +533,6 @@ function browseGroupLabel(book, start, end, index) {
     if (start === 1 && end === 52) return '1~52 敬拜父';
     if (start === 53 && end === 127) return '53~127 讚美主1';
     if (start === 128 && end === 194) return '128~194 讚美主2';
-    if (start === 195 && end === 300) return '195~300 群組4';
   }
   return `${start}~${end}`;
 }
@@ -498,13 +540,18 @@ function browseGroupLabel(book, start, end, index) {
 function fixedBrowseGroups(book, songs) {
   const numbers = songs.map((song) => Number(song.number)).filter(Number.isFinite);
   if (!numbers.length) return [];
-  const existing = new Set(numbers);
   const min = Math.min(...numbers);
   const max = Math.max(...numbers);
   const ranges = [];
   if (book === 'hymns') {
-    ranges.push([1, 52], [53, 127], [128, 194], [195, 300]);
+    ranges.push([1, 52], [53, 127], [128, 194], [195, 250], [251, 300]);
     for (let start = 301; start <= max; start += 100) ranges.push([start, Math.min(start + 99, max)]);
+  } else if (book === 'new-songs') {
+    ranges.push([1, 50], [51, 100], [101, 142]);
+  } else if (book === 'new-poems') {
+    ranges.push([1, 50], [51, 76]);
+  } else if (book === 'blue-poems') {
+    ranges.push([1, 50], [51, 94]);
   } else if (book === 'supplement') {
     let start = min;
     let previous = min;
@@ -1077,6 +1124,13 @@ function bindUI() {
   $('clear-history').onclick = () => { saveHistory([]); renderHistory(); };
   $('add-group').onclick = addFavoriteGroup;
   $('new-group-name').onkeydown = (event) => { if (event.key === 'Enter') addFavoriteGroup(); };
+  $('manage-groups').onclick = openGroupManager;
+  $('close-group-manager').onclick = closeGroupManager;
+  $('group-manager').onclick = (event) => { if (event.target === $('group-manager')) closeGroupManager(); };
+  $('favorite-group-jump').onchange = (event) => {
+    activeFavoriteGroupId = event.target.value;
+    renderFavorites();
+  };
   $('export-data').onclick = exportUserData;
   $('import-data').onclick = () => {
     if (window.AndroidBridge?.importUserData) window.AndroidBridge.importUserData();
@@ -1159,6 +1213,7 @@ document.addEventListener('keydown', (event) => {
   if (!$('viewer').hidden && event.key === 'ArrowLeft') moveSong(-1);
   if (!$('viewer').hidden && event.key === 'ArrowRight') moveSong(1);
 });
+hydratePersistentState();
 renderCollections();
 renderBrowseCollections();
 updateDisplay();
