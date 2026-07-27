@@ -1,1 +1,22 @@
-{"id":"supplement-907","collection":"supplement","number":907,"title":"別了！世界","images":["database/songs/supplement/0907/01.jpg"],"text":"0907 別了！世界 G 4/4 G D G C zg’a L xa a d’s L xa s xdcxs’a L xa d g’h;; 別 了!世 界,別 了!世 界,讓 這 世 界 過 去！ G D B7 Em C D G h’g L xd d a’s L xa s xdcxs’a L vh zh zg’a;; 主 快 來 了,主 快 來 了!我 還 留 戀 甚 麼？ G D G C h’g L xd d a’slxa s h’g L xd d g’h;; 別 了!安 逸,別 了！糜 爛,別 了!屬 地 享 受； G D B7 C D G h’g L xd d a’s L xa s xdcxs’a L vh zh zg’a;;/ 別 了!所 有 纏 累 重 量!從 此 不 再 回 頭！ 註：「安逸」、「糜爛」，可以自行更改，如「錢財」、「地位」、「電視」等。","lyricText":"別了世界 別了世界 讓這世界過去 主快來了 主快來了 我還留戀甚麼 別了安逸 別了糜爛 別了屬地享受 別了所有纏累重量 從此不再回頭","lyricVerses":["別了世界 別了世界 讓這世界過去 主快來了 主快來了 我還留戀甚麼 別了安逸 別了糜爛 別了屬地享受 別了所有纏累重量 從此不再回頭"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/907"}
+{
+  "id": "supplement-907",
+  "collection": "supplement",
+  "number": 907,
+  "title": "別了！世界",
+  "images": [
+    "database/songs/supplement/0907/01.jpg"
+  ],
+  "text": "0907 別了！世界 G 4/4 G D G C zg’a L xa a d’s L xa s xdcxs’a L xa d g’h;; 別 了!世 界,別 了!世 界,讓 這 世 界 過 去！ G D B7 Em C D G h’g L xd d a’s L xa s xdcxs’a L vh zh zg’a;; 主 快 來 了,主 快 來 了!我 還 留 戀 甚 麼？ G D G C h’g L xd d a’slxa s h’g L xd d g’h;; 別 了!安 逸,別 了！糜 爛,別 了!屬 地 享 受； G D B7 C D G h’g L xd d a’s L xa s xdcxs’a L vh zh zg’a;;/ 別 了!所 有 纏 累 重 量!從 此 不 再 回 頭！ 註：「安逸」、「糜爛」，可以自行更改，如「錢財」、「地位」、「電視」等。",
+  "lyricText": "別了世界 別了世界 讓這世界過去 主快來了 主快來了 我還留戀甚麼 別了安逸 別了糜爛 別了屬地享受 別了所有纏累重量 從此不再回頭",
+  "lyricVerses": [
+    "別了世界 別了世界 讓這世界過去 主快來了 主快來了 我還留戀甚麼 別了安逸 別了糜爛 別了屬地享受 別了所有纏累重量 從此不再回頭"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/907",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "別了！世界，\n別了！世界，\n讓這世界過去！\n主快來了，主快來了！\n我還留戀甚麼？\n別了！安逸，\n別了！糜爛，\n別了！屬地享受；\n別了！所有纏累重量！\n從此不再回頭！"
+    }
+  ]
+}

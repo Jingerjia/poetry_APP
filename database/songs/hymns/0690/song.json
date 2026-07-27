@@ -1,1 +1,22 @@
-{"id":"hymns-690","collection":"hymns","number":690,"title":"福音－愛與恩","images":["database/songs/hymns/0690/01.jpg"],"text":"690 福音－愛與恩 Eb 4/4 C Am F C Em Dm d xdlbs a a’f f d;’d xslba g d’s;;k’ 愛 何 奇 妙,恩 何 深 廣， 神 差 愛 子 來 此； C C7 F Em C G C d xdlbs a a’h h g;’a xalbs d s’a;;k’ 罪 的 審 判 歸 祂 身 上， 祂 為 你 我 代 死。 G G7 C Dm C s xsL bd f h’gL xf d;’s xsL bd f h’gL xf d;’ 愛 路,恩 門,今 正 齊 開， 無 別 拯 救 捨 此 以 外， Am E7 F C Am G7 C ra xralbra j j’h h g;’a xalbs d s’a;;k/ 神 心 依 依 等 待 你 來， 切 莫 拒 祂 恩 愛。","lyricText":"愛何奇妙 恩何深廣 神差愛子來此 罪的審判歸祂身上 祂為你我代死 愛路恩門 今正齊開 無別拯救舍此以外 神心依依等待你來 切莫拒祂恩愛","lyricVerses":["愛何奇妙 恩何深廣 神差愛子來此 罪的審判歸祂身上 祂為你我代死 愛路恩門 今正齊開 無別拯救舍此以外 神心依依等待你來 切莫拒祂恩愛"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ch/690"}
+{
+  "id": "hymns-690",
+  "collection": "hymns",
+  "number": 690,
+  "title": "福音－愛與恩",
+  "images": [
+    "database/songs/hymns/0690/01.jpg"
+  ],
+  "text": "690 福音－愛與恩 Eb 4/4 C Am F C Em Dm d xdlbs a a’f f d;’d xslba g d’s;;k’ 愛 何 奇 妙,恩 何 深 廣， 神 差 愛 子 來 此； C C7 F Em C G C d xdlbs a a’h h g;’a xalbs d s’a;;k’ 罪 的 審 判 歸 祂 身 上， 祂 為 你 我 代 死。 G G7 C Dm C s xsL bd f h’gL xf d;’s xsL bd f h’gL xf d;’ 愛 路,恩 門,今 正 齊 開， 無 別 拯 救 捨 此 以 外， Am E7 F C Am G7 C ra xralbra j j’h h g;’a xalbs d s’a;;k/ 神 心 依 依 等 待 你 來， 切 莫 拒 祂 恩 愛。",
+  "lyricText": "愛何奇妙 恩何深廣 神差愛子來此 罪的審判歸祂身上 祂為你我代死 愛路恩門 今正齊開 無別拯救舍此以外 神心依依等待你來 切莫拒祂恩愛",
+  "lyricVerses": [
+    "愛何奇妙 恩何深廣 神差愛子來此 罪的審判歸祂身上 祂為你我代死 愛路恩門 今正齊開 無別拯救舍此以外 神心依依等待你來 切莫拒祂恩愛"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ch/690",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "愛何奇妙，恩何深廣，\n神差愛子來此；\n罪的審判歸祂身上，\n祂為你我代死。\n愛路，恩門，今正齊開，\n無別拯救舍此以外，\n神心依依等待你來，\n切莫拒祂恩愛。"
+    }
+  ]
+}

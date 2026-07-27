@@ -1,1 +1,28 @@
-{"id":"supplement-215","collection":"supplement","number":215,"title":"你們來喫","images":["database/songs/supplement/0215/01.jpg"],"text":"0215 你們來喫 C 4/4 G7 C bg bg xra’xjlbj xj xj xj xf bf bf xh’g ; ; 一) “你 們 來 喫,”主 正 在 呼 召,“你 們 來 喫。” 二) “你 們 來 喫,”主 正 在 呼 召,“你 們 來 喫。” F D7 G7 xg xg’xhlbh xh xh xh xh xj xra’rs ; ; 我 們 可 以 隨 時 隨 刻 喫 喝 主！ 我 們 若 是 隨 時 隨 刻 喫 喝 主， E7 Am F xg xg’xrdlbrd xrd xrs ra xd xd’xralbra xra xj h 祂 是 “日 用 的 飲 食,”祂 纔 能 叫 人 滿 足。 祂 就 作 我 們 生 命, 一 直 到 生 命 滿 出！ G7 C bh bh xra’xjlbj xj xh xg xg bj bj xrs’ra ; ;/ “你 們 來 喫,”主 正 在 呼 召,“你 們 來 喫。” “你 們 來 喫,”主 正 在 呼 召,“你 們 來 喫。”","lyricText":"你們來喫 主正在呼召 你們來喫 我們可以隨時隨刻喫喝主 祂是日用的飲食 祂纔能叫人滿足 你們來喫 主正在呼召 你們來喫\n你們來喫 主正在呼召 你們來喫 我們若是隨時隨刻喫喝主 祂就作我們生命 直到生命滿出 你們來喫 主正在呼召 你們來喫","lyricVerses":["你們來喫 主正在呼召 你們來喫 我們可以隨時隨刻喫喝主 祂是日用的飲食 祂纔能叫人滿足 你們來喫 主正在呼召 你們來喫","你們來喫 主正在呼召 你們來喫 我們若是隨時隨刻喫喝主 祂就作我們生命 直到生命滿出 你們來喫 主正在呼召 你們來喫"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/215"}
+{
+  "id": "supplement-215",
+  "collection": "supplement",
+  "number": 215,
+  "title": "你們來喫",
+  "images": [
+    "database/songs/supplement/0215/01.jpg"
+  ],
+  "text": "0215 你們來喫 C 4/4 G7 C bg bg xra’xjlbj xj xj xj xf bf bf xh’g ; ; 一) “你 們 來 喫,”主 正 在 呼 召,“你 們 來 喫。” 二) “你 們 來 喫,”主 正 在 呼 召,“你 們 來 喫。” F D7 G7 xg xg’xhlbh xh xh xh xh xj xra’rs ; ; 我 們 可 以 隨 時 隨 刻 喫 喝 主！ 我 們 若 是 隨 時 隨 刻 喫 喝 主， E7 Am F xg xg’xrdlbrd xrd xrs ra xd xd’xralbra xra xj h 祂 是 “日 用 的 飲 食,”祂 纔 能 叫 人 滿 足。 祂 就 作 我 們 生 命, 一 直 到 生 命 滿 出！ G7 C bh bh xra’xjlbj xj xh xg xg bj bj xrs’ra ; ;/ “你 們 來 喫,”主 正 在 呼 召,“你 們 來 喫。” “你 們 來 喫,”主 正 在 呼 召,“你 們 來 喫。”",
+  "lyricText": "你們來喫 主正在呼召 你們來喫 我們可以隨時隨刻喫喝主 祂是日用的飲食 祂纔能叫人滿足 你們來喫 主正在呼召 你們來喫\n你們來喫 主正在呼召 你們來喫 我們若是隨時隨刻喫喝主 祂就作我們生命 直到生命滿出 你們來喫 主正在呼召 你們來喫",
+  "lyricVerses": [
+    "你們來喫 主正在呼召 你們來喫 我們可以隨時隨刻喫喝主 祂是日用的飲食 祂纔能叫人滿足 你們來喫 主正在呼召 你們來喫",
+    "你們來喫 主正在呼召 你們來喫 我們若是隨時隨刻喫喝主 祂就作我們生命 直到生命滿出 你們來喫 主正在呼召 你們來喫"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/215",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "『你們來喫，』\n主正在呼召，\n『你們來喫。』\n我們可以隨時隨刻\n喫喝主！\n祂是『日用的飲食，』\n祂纔能叫人滿足。\n『你們來喫，』\n主正在呼召，\n『你們來喫。』"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "『你們來喫，』\n主正在呼召，\n『你們來喫。』\n我們若是隨時隨刻\n喫喝主，\n祂就作我們生命，\n一直到生命滿出！\n『你們來喫，』\n主正在呼召，\n『你們來喫。』"
+    }
+  ]
+}

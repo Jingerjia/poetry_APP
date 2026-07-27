@@ -1,1 +1,22 @@
-{"id":"supplement-229","collection":"supplement","number":229,"title":"主名何甘甜","images":["database/songs/supplement/0229/01.jpg"],"text":"0229 主名何甘甜 F 3/4 C G7 xaL ba’a zg xdL bd’d a xaL bd’gL xg xfL bd’s; 哦,主 耶 穌！哦,主 耶 穌！呼 喊 你 名 何 甘 甜！ G7 C G7 C xsL bd’f f xdL bs’d a xaL bd’s zg vjtyL ubs’a;/ 比 酒 更 美，比 蜜 更 甜；哦,主 耶 穌！阿 們。","lyricText":"哦主耶穌 哦主耶穌 呼喊你名何甘甜 比酒更美 比蜜更甜 哦主耶穌 阿們","lyricVerses":["哦主耶穌 哦主耶穌 呼喊你名何甘甜 比酒更美 比蜜更甜 哦主耶穌 阿們"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/229"}
+{
+  "id": "supplement-229",
+  "collection": "supplement",
+  "number": 229,
+  "title": "主名何甘甜",
+  "images": [
+    "database/songs/supplement/0229/01.jpg"
+  ],
+  "text": "0229 主名何甘甜 F 3/4 C G7 xaL ba’a zg xdL bd’d a xaL bd’gL xg xfL bd’s; 哦,主 耶 穌！哦,主 耶 穌！呼 喊 你 名 何 甘 甜！ G7 C G7 C xsL bd’f f xdL bs’d a xaL bd’s zg vjtyL ubs’a;/ 比 酒 更 美，比 蜜 更 甜；哦,主 耶 穌！阿 們。",
+  "lyricText": "哦主耶穌 哦主耶穌 呼喊你名何甘甜 比酒更美 比蜜更甜 哦主耶穌 阿們",
+  "lyricVerses": [
+    "哦主耶穌 哦主耶穌 呼喊你名何甘甜 比酒更美 比蜜更甜 哦主耶穌 阿們"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/229",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "哦，主耶穌！\n哦，主耶穌！\n呼喊你名何甘甜！\n比酒更美，比蜜更甜；\n哦，主耶穌！阿們。"
+    }
+  ]
+}

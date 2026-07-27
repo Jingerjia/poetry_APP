@@ -1,1 +1,33 @@
-{"id":"new-songs-130","collection":"new-songs","number":130,"title":"為耶路撒冷求平安","images":["database/songs/new-songs/0130/01.jpg"],"text":"新歌頌詠.docx 130 為耶路撒冷求平安 (詩一二二2, 6~7) G 6/8 慢板 G Em G C D7 vgcvgcvh zgxtuvd’vgcvgxca dl’dl al’stylusxk’ (一)你們要 為 耶路撒 冷 求 平 安, (二)我們的 腳 站在你 的 門 內, C D7 Am D7 Em G vhcvhxcs sxtuxvh’vhcvhxcd sl’sl dl’atyluaxk’ 你們要 為 耶路撒 冷 求 平 安; 我們的 腳 站在你 的 門 內; G C G C G Em Bm ,xgcxdcxhgtuxd’xacxacxfdl’xacvhxcazgtuxa’xdcxscxdgl’ 耶路撒冷, 耶路撒冷, 愛你的人 必然興旺; C G C G Am6 Em D7 G xhcxgcxtylucbddxs’xavctyhucxazg’vhsxds’xdcxtysucxdal. 願你 城中 平 安, 願你宮內 興 旺! 註：舊約的耶路撒冷豫表新約中神的召會，並遙指終極總結的新耶路撒冷。","lyricText":"你們要為耶路撒冷求平安 你們要為耶路撒冷求平安 副耶路撒冷 耶路撒冷 愛你的人必然興旺 願你城中平安 願你宮內興旺 我們的腳站在你的門內 我們的腳站在你的門內\n註舊約的耶路撒冷豫表新約中神的召會 並遙指終極總結的新耶路撒冷","lyricVerses":["你們要為耶路撒冷求平安 你們要為耶路撒冷求平安 副耶路撒冷 耶路撒冷 愛你的人必然興旺 願你城中平安 願你宮內興旺 我們的腳站在你的門內 我們的腳站在你的門內","註舊約的耶路撒冷豫表新約中神的召會 並遙指終極總結的新耶路撒冷"],"onlineLyricsSource":"https://flowingstream.org/hymn/c130/"}
+{
+  "id": "new-songs-130",
+  "collection": "new-songs",
+  "number": 130,
+  "title": "為耶路撒冷求平安",
+  "images": [
+    "database/songs/new-songs/0130/01.jpg"
+  ],
+  "text": "新歌頌詠.docx 130 為耶路撒冷求平安 (詩一二二2, 6~7) G 6/8 慢板 G Em G C D7 vgcvgcvh zgxtuvd’vgcvgxca dl’dl al’stylusxk’ (一)你們要 為 耶路撒 冷 求 平 安, (二)我們的 腳 站在你 的 門 內, C D7 Am D7 Em G vhcvhxcs sxtuxvh’vhcvhxcd sl’sl dl’atyluaxk’ 你們要 為 耶路撒 冷 求 平 安; 我們的 腳 站在你 的 門 內; G C G C G Em Bm ,xgcxdcxhgtuxd’xacxacxfdl’xacvhxcazgtuxa’xdcxscxdgl’ 耶路撒冷, 耶路撒冷, 愛你的人 必然興旺; C G C G Am6 Em D7 G xhcxgcxtylucbddxs’xavctyhucxazg’vhsxds’xdcxtysucxdal. 願你 城中 平 安, 願你宮內 興 旺! 註：舊約的耶路撒冷豫表新約中神的召會，並遙指終極總結的新耶路撒冷。",
+  "lyricText": "你們要為耶路撒冷求平安 你們要為耶路撒冷求平安 副耶路撒冷 耶路撒冷 愛你的人必然興旺 願你城中平安 願你宮內興旺 我們的腳站在你的門內 我們的腳站在你的門內\n註舊約的耶路撒冷豫表新約中神的召會 並遙指終極總結的新耶路撒冷",
+  "lyricVerses": [
+    "你們要為耶路撒冷求平安 你們要為耶路撒冷求平安 副耶路撒冷 耶路撒冷 愛你的人必然興旺 願你城中平安 願你宮內興旺 我們的腳站在你的門內 我們的腳站在你的門內",
+    "註舊約的耶路撒冷豫表新約中神的召會 並遙指終極總結的新耶路撒冷"
+  ],
+  "onlineLyricsSource": "https://flowingstream.org/hymn/c130/",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "你們要為耶路撒冷求平安，\n你們要為耶路撒冷求平安；"
+    },
+    {
+      "type": "chorus",
+      "number": "",
+      "text": "耶路撒冷，耶路撒冷，愛你的人必然興旺；\n願你城中平安，願你宮內興旺！"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "我們的腳站在你的門內，\n我們的腳站在你的門內；"
+    }
+  ]
+}

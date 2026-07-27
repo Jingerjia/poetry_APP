@@ -1,1 +1,22 @@
-{"id":"new-poems-29","collection":"new-poems","number":29,"title":"祝福","images":["database/songs/new-poems/0029/01.jpg"],"text":"新詩.docx 029 祝福 C 3/4 C G7 C Am D7 E7 zg’a::’studf’dty:y:y’ud;d’d::’d;qf’qgty::y’uqg; 我 所 親 愛 的, 願 神 祝 福 你, F C Em Dm G7 C qg’h::’g:d’gdty;y’ud:d’f::’zj;s’aty::y’ua::’ 使 你 平 安 喜樂, 康 壯 有 活 力; C Am Em G7 F ,d;;’dfh’gty;y;y’ug;k’g::’jtuhg’hty:y:y’uh::’ 願 基督的 恩, 父 神 的 愛, D G7 D7 G7 h;;’qfgh’jty;y;y’uj;k’rs::’ra;h’gty:y:y’ug; 聖 靈的交 通, 與 你 同 在。 C G7 C Am D7 E7 zg’a::’studf’dty:y:y’ud;d’d::’d;qf’qgty::y’uqg; 我 所 親 愛 的, 願 神 祝 福 你, F C Em Dm G7 C qg’h::’g:d’gdty:y’ud:d’f::’zj:s’aty::y’ua:: . 使 你 平 安 喜樂, 康 壯 有 活 力;","lyricText":"我所親愛的 願神祝福你 使你平安喜樂 康壯有活力 願基督的恩 父神的愛 聖靈的交通 與你同在 我所親愛的 願神祝福你 使你平安喜樂 康壯有活力","lyricVerses":["我所親愛的 願神祝福你 使你平安喜樂 康壯有活力 願基督的恩 父神的愛 聖靈的交通 與你同在 我所親愛的 願神祝福你 使你平安喜樂 康壯有活力"],"onlineLyricsSource":"https://flowingstream.org/hymn/d029/"}
+{
+  "id": "new-poems-29",
+  "collection": "new-poems",
+  "number": 29,
+  "title": "祝福",
+  "images": [
+    "database/songs/new-poems/0029/01.jpg"
+  ],
+  "text": "新詩.docx 029 祝福 C 3/4 C G7 C Am D7 E7 zg’a::’studf’dty:y:y’ud;d’d::’d;qf’qgty::y’uqg; 我 所 親 愛 的, 願 神 祝 福 你, F C Em Dm G7 C qg’h::’g:d’gdty;y’ud:d’f::’zj;s’aty::y’ua::’ 使 你 平 安 喜樂, 康 壯 有 活 力; C Am Em G7 F ,d;;’dfh’gty;y;y’ug;k’g::’jtuhg’hty:y:y’uh::’ 願 基督的 恩, 父 神 的 愛, D G7 D7 G7 h;;’qfgh’jty;y;y’uj;k’rs::’ra;h’gty:y:y’ug; 聖 靈的交 通, 與 你 同 在。 C G7 C Am D7 E7 zg’a::’studf’dty:y:y’ud;d’d::’d;qf’qgty::y’uqg; 我 所 親 愛 的, 願 神 祝 福 你, F C Em Dm G7 C qg’h::’g:d’gdty:y’ud:d’f::’zj:s’aty::y’ua:: . 使 你 平 安 喜樂, 康 壯 有 活 力;",
+  "lyricText": "我所親愛的 願神祝福你 使你平安喜樂 康壯有活力 願基督的恩 父神的愛 聖靈的交通 與你同在 我所親愛的 願神祝福你 使你平安喜樂 康壯有活力",
+  "lyricVerses": [
+    "我所親愛的 願神祝福你 使你平安喜樂 康壯有活力 願基督的恩 父神的愛 聖靈的交通 與你同在 我所親愛的 願神祝福你 使你平安喜樂 康壯有活力"
+  ],
+  "onlineLyricsSource": "https://flowingstream.org/hymn/d029/",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "我所親愛的，願神祝福你，\n使你平安喜樂，康壯有活力；\n願基督的恩，父神的愛，\n聖靈的交通，與你同在。\n我所親愛的，願神祝福你，\n使你平安喜樂，康壯有活力。"
+    }
+  ]
+}

@@ -1,1 +1,28 @@
-{"id":"supplement-918","collection":"supplement","number":918,"title":"更親、更近、更甘甜","images":["database/songs/supplement/0918/01.jpg"],"text":"0918 更親、更近、更甘甜 Db 4/4 F G C Am E7 F a’s a f d’s ; a d’g ra j qg’h;; 一) 時 日 或 許 更 黑 暗, 長 夜 更 令 人 倦, 二) 我 們 等 候 親 愛 主—盼 望!喜 樂!友 伴! C E7 Am G C G h’g d d s’a ; s d’d d s a’s;; 一 事 我 心 深 確 知, 儘 管 我 主 遲 延: 一 心 只 想 迎 見 祂—也 許 在 日 盡 前, F E Am G C G s’f d h j’ra ; rs g’rd L rxd rs ra’j;; 祂 必 顯 為 更 親 近, 交 通 必 更 甘 甜, 就 在 隱 密 轉 角 處, 祂 的 榮 身 要 顯; C E7 Am G C G7 C h’g d d s’a ; s d’d d s L xa’a;;/ 更 親､更 近､更 甘 甜, 我 主 與 我 之 間。 等 候 就 要 成 過 去, 安 息 就 要 完 全。","lyricText":"時日或許更黑暗 長夜更令人倦 事我心深確知 儘管我主遲延祂必顯為更親近 交通必更甘甜 更親更近 更甘甜我主與我之間\n我們等候親愛主盼望 喜樂友伴 心只想迎見祂也許在日盡前 就在隱密轉角處 祂的榮身要顯 等候就要成過去 安息就要完全","lyricVerses":["時日或許更黑暗 長夜更令人倦 事我心深確知 儘管我主遲延祂必顯為更親近 交通必更甘甜 更親更近 更甘甜我主與我之間","我們等候親愛主盼望 喜樂友伴 心只想迎見祂也許在日盡前 就在隱密轉角處 祂的榮身要顯 等候就要成過去 安息就要完全"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/918"}
+{
+  "id": "supplement-918",
+  "collection": "supplement",
+  "number": 918,
+  "title": "更親、更近、更甘甜",
+  "images": [
+    "database/songs/supplement/0918/01.jpg"
+  ],
+  "text": "0918 更親、更近、更甘甜 Db 4/4 F G C Am E7 F a’s a f d’s ; a d’g ra j qg’h;; 一) 時 日 或 許 更 黑 暗, 長 夜 更 令 人 倦, 二) 我 們 等 候 親 愛 主—盼 望!喜 樂!友 伴! C E7 Am G C G h’g d d s’a ; s d’d d s a’s;; 一 事 我 心 深 確 知, 儘 管 我 主 遲 延: 一 心 只 想 迎 見 祂—也 許 在 日 盡 前, F E Am G C G s’f d h j’ra ; rs g’rd L rxd rs ra’j;; 祂 必 顯 為 更 親 近, 交 通 必 更 甘 甜, 就 在 隱 密 轉 角 處, 祂 的 榮 身 要 顯; C E7 Am G C G7 C h’g d d s’a ; s d’d d s L xa’a;;/ 更 親､更 近､更 甘 甜, 我 主 與 我 之 間。 等 候 就 要 成 過 去, 安 息 就 要 完 全。",
+  "lyricText": "時日或許更黑暗 長夜更令人倦 事我心深確知 儘管我主遲延祂必顯為更親近 交通必更甘甜 更親更近 更甘甜我主與我之間\n我們等候親愛主盼望 喜樂友伴 心只想迎見祂也許在日盡前 就在隱密轉角處 祂的榮身要顯 等候就要成過去 安息就要完全",
+  "lyricVerses": [
+    "時日或許更黑暗 長夜更令人倦 事我心深確知 儘管我主遲延祂必顯為更親近 交通必更甘甜 更親更近 更甘甜我主與我之間",
+    "我們等候親愛主盼望 喜樂友伴 心只想迎見祂也許在日盡前 就在隱密轉角處 祂的榮身要顯 等候就要成過去 安息就要完全"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/918",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "時日或許更黑暗，長夜更令人倦，\n一事我心深確知，儘管我主遲延：\n祂必顯為更親近，交通必更甘甜，\n更親、更近、更甘甜，我主與我之間。"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "我們等候親愛主─盼望！喜樂！友伴！\n一心只想迎見祂─也許在日盡前，\n就在隱密轉角處，祂的榮身要顯；\n等候就要成過去，安息就要完全。"
+    }
+  ]
+}

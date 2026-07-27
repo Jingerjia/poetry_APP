@@ -1,1 +1,22 @@
-{"id":"supplement-236","collection":"supplement","number":236,"title":"終日將祂名呼喊","images":["database/songs/supplement/0236/01.jpg"],"text":"0236 終日將祂名呼喊 Eb 4/4 C F D F vgLmg’a zg a d’g ; ;xgLbg’h g f d’zh;; 自從 基 督 釋 放 我， 我心 充 滿 了 喜 樂。 Dm F G7 C vhLmh’s zh s f’h ; ;xhLbqh’j h g f’d;; 自從 基 督 釋 放 我， 我口 高 聲 唱 新 歌。 C C7 F vgLmg’a zg a d’g ; ;xgLbg’h g d a’h;; 終日 將 祂 名 呼 喊， 我過 天 上 的 生 活， F G G7 C xhxj’ra hh xhxqh’j gg xgxd’f g h j’ra;;/ 何等 的 平安!何等 的 豐滿!自從 基 督 釋 放 我！","lyricText":"自從基督釋放我 我心充滿了喜樂 自從基督釋放我 我口高聲唱新歌 終日將祂名呼喊 我過天上的生活 何等的平安 何等的豐滿 自從基督釋放我","lyricVerses":["自從基督釋放我 我心充滿了喜樂 自從基督釋放我 我口高聲唱新歌 終日將祂名呼喊 我過天上的生活 何等的平安 何等的豐滿 自從基督釋放我"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/236"}
+{
+  "id": "supplement-236",
+  "collection": "supplement",
+  "number": 236,
+  "title": "終日將祂名呼喊",
+  "images": [
+    "database/songs/supplement/0236/01.jpg"
+  ],
+  "text": "0236 終日將祂名呼喊 Eb 4/4 C F D F vgLmg’a zg a d’g ; ;xgLbg’h g f d’zh;; 自從 基 督 釋 放 我， 我心 充 滿 了 喜 樂。 Dm F G7 C vhLmh’s zh s f’h ; ;xhLbqh’j h g f’d;; 自從 基 督 釋 放 我， 我口 高 聲 唱 新 歌。 C C7 F vgLmg’a zg a d’g ; ;xgLbg’h g d a’h;; 終日 將 祂 名 呼 喊， 我過 天 上 的 生 活， F G G7 C xhxj’ra hh xhxqh’j gg xgxd’f g h j’ra;;/ 何等 的 平安!何等 的 豐滿!自從 基 督 釋 放 我！",
+  "lyricText": "自從基督釋放我 我心充滿了喜樂 自從基督釋放我 我口高聲唱新歌 終日將祂名呼喊 我過天上的生活 何等的平安 何等的豐滿 自從基督釋放我",
+  "lyricVerses": [
+    "自從基督釋放我 我心充滿了喜樂 自從基督釋放我 我口高聲唱新歌 終日將祂名呼喊 我過天上的生活 何等的平安 何等的豐滿 自從基督釋放我"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/236",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "自從基督釋放我，\n我心充滿了喜樂。\n自從基督釋放我，\n我口高聲唱新歌。\n終日將祂名呼喊，\n我過天上的生活，\n何等的平安！\n何等的豐滿！\n自從基督釋放我！"
+    }
+  ]
+}

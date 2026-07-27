@@ -1,1 +1,22 @@
-{"id":"supplement-124","collection":"supplement","number":124,"title":"是生命使我們高聲喊","images":["database/songs/supplement/0124/01.jpg"],"text":"0124 是生命使我們高聲喊 G 4/4 G D7 xaxs’d d d L xd’xfxdqxsxd a xaxa’xsxstus;xaxs’ 是生 命,生 命 使 我們高聲 喊,阿利 路亞！ 讚美 G D7 d;;xaxs’d d d L xd’xfxd qxsxd a xaxa’s f 主！ 是生 命,生 命 使 我們 高聲 喊,阿利 路 亞！ G C A7 d s’a;;zg ’a a a zj’zh zh zh a’s s 讚 美 主！ 我 們 心 中 充 滿 喜 樂,主 在 我 D7 G D7 G D7 G s a’zj s g zg’a;s;’d a g g’a;;/ 們 裏 面 活 著,主 在 我 們 裏 面 活 著！","lyricText":"是生命生命使我們高聲喊 阿利路亞 讚美主是生命 生命使我們高聲喊 阿利路亞 讚美主我們心中充滿喜樂 主在我們裡面活著 主在我們裡面活著","lyricVerses":["是生命生命使我們高聲喊 阿利路亞 讚美主是生命 生命使我們高聲喊 阿利路亞 讚美主我們心中充滿喜樂 主在我們裡面活著 主在我們裡面活著"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/124"}
+{
+  "id": "supplement-124",
+  "collection": "supplement",
+  "number": 124,
+  "title": "是生命使我們高聲喊",
+  "images": [
+    "database/songs/supplement/0124/01.jpg"
+  ],
+  "text": "0124 是生命使我們高聲喊 G 4/4 G D7 xaxs’d d d L xd’xfxdqxsxd a xaxa’xsxstus;xaxs’ 是生 命,生 命 使 我們高聲 喊,阿利 路亞！ 讚美 G D7 d;;xaxs’d d d L xd’xfxd qxsxd a xaxa’s f 主！ 是生 命,生 命 使 我們 高聲 喊,阿利 路 亞！ G C A7 d s’a;;zg ’a a a zj’zh zh zh a’s s 讚 美 主！ 我 們 心 中 充 滿 喜 樂,主 在 我 D7 G D7 G D7 G s a’zj s g zg’a;s;’d a g g’a;;/ 們 裏 面 活 著,主 在 我 們 裏 面 活 著！",
+  "lyricText": "是生命生命使我們高聲喊 阿利路亞 讚美主是生命 生命使我們高聲喊 阿利路亞 讚美主我們心中充滿喜樂 主在我們裡面活著 主在我們裡面活著",
+  "lyricVerses": [
+    "是生命生命使我們高聲喊 阿利路亞 讚美主是生命 生命使我們高聲喊 阿利路亞 讚美主我們心中充滿喜樂 主在我們裡面活著 主在我們裡面活著"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/124",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "是生命，生命\n使我們高聲喊，\n阿利路亞！讚美主！\n是生命，生命，\n使我們高聲喊，\n阿利路亞！讚美主！\n我們心中充滿喜樂，\n主在我們裡面活著，\n主在我們裡面活著！"
+    }
+  ]
+}

@@ -1,1 +1,22 @@
-{"id":"supplement-11","collection":"supplement","number":11,"title":"在你有赦免之恩","images":["database/songs/supplement/0011/01.jpg"],"text":"0011 在你有赦免之恩 F 4/4 (詩篇一三○篇) C C7 F C G C zg’d d d s’xaxsxavhzg ;’zja s;’asdl 主，你 若 究 察 我們的眾罪， 誰還 能 站得住？ C7 F C F C G C vg’d d d s’xaxsxavhzg f’d;d s’a;; 主，你 若 究 察 我們的眾罪,誰 能 站 得 住？ G C zg’axaxaxavja’s ; ;zg’sxsxsxsxas’d;; 但 在你有赦免之 恩， 但 在你有赦免之 恩， C C7 F C G C zg’dxdxdxdxsd’f ; ;f’d ; d s’a;;/ 但 在你有赦免之 恩， 要 人 敬 畏 你。","lyricText":"主你若究察我們的眾罪 誰還能站得住 主你若究察我們的眾罪 誰能站得住 但在你有赦免之恩 但在你有赦免之恩 但在你有赦免之恩 要人敬畏你","lyricVerses":["主你若究察我們的眾罪 誰還能站得住 主你若究察我們的眾罪 誰能站得住 但在你有赦免之恩 但在你有赦免之恩 但在你有赦免之恩 要人敬畏你"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/11"}
+{
+  "id": "supplement-11",
+  "collection": "supplement",
+  "number": 11,
+  "title": "在你有赦免之恩",
+  "images": [
+    "database/songs/supplement/0011/01.jpg"
+  ],
+  "text": "0011 在你有赦免之恩 F 4/4 (詩篇一三○篇) C C7 F C G C zg’d d d s’xaxsxavhzg ;’zja s;’asdl 主，你 若 究 察 我們的眾罪， 誰還 能 站得住？ C7 F C F C G C vg’d d d s’xaxsxavhzg f’d;d s’a;; 主，你 若 究 察 我們的眾罪,誰 能 站 得 住？ G C zg’axaxaxavja’s ; ;zg’sxsxsxsxas’d;; 但 在你有赦免之 恩， 但 在你有赦免之 恩， C C7 F C G C zg’dxdxdxdxsd’f ; ;f’d ; d s’a;;/ 但 在你有赦免之 恩， 要 人 敬 畏 你。",
+  "lyricText": "主你若究察我們的眾罪 誰還能站得住 主你若究察我們的眾罪 誰能站得住 但在你有赦免之恩 但在你有赦免之恩 但在你有赦免之恩 要人敬畏你",
+  "lyricVerses": [
+    "主你若究察我們的眾罪 誰還能站得住 主你若究察我們的眾罪 誰能站得住 但在你有赦免之恩 但在你有赦免之恩 但在你有赦免之恩 要人敬畏你"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/11",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "主，你若究察\n我們的眾罪，\n誰還能站得住？\n主，你若究察\n我們的眾罪，\n誰能站得住？\n但在你有赦免之恩，\n但在你有赦免之恩，\n但在你有赦免之恩，\n要人敬畏你。"
+    }
+  ]
+}

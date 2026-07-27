@@ -1,1 +1,40 @@
-{"id":"supplement-209","collection":"supplement","number":209,"title":"生命樹","images":["database/songs/supplement/0209/01.jpg"],"text":"0209 生命樹 G 3/4 G C G zg’a ; xdcxtua’d ; s’a ; zh’zg ; zg’a ; 一) 生 命 樹 果， 甘 甜 之 至， 生 命 二) 是 神 領 我 到 生 命 樹， 享 受 三) 基 督 是 我 生 命 供 應， 祂 作 四) 我 今 盡 情 喫 生 命 樹， 因 為 D7 G G7 xdcxtua’d ; s’g ; d’gtyluxd xgcxtud’a ; zg ’ 全 豐 全 足。 前 我 死 枯， 如 基 督 自 己。 其 中 滋 味， 開 我 的 食 物； 祂 是 惟 一 純 喫 就 是 路！ 生 命 藉 喫 加 C G Em D7 G zhtyluxa xacvtuh’zg ; zg’a ; xdcxtua’d ; s’a;/ 今 活 著； 前 餓， 如 今 喫 喝。 口 一 喫， 就 覺 甘 甜 無 比！ 淨 享 受， 祂 外 再 無 滿 足。 我 裏 頭， 使 我 憑 祂 而 活。","lyricText":"生命樹果 甘甜之至 生命全豐全足 前我死枯 如今活著 前餓如今喫喝\n是神領我到生命樹 享受基督自己 其中滋味 開口一喫 就覺甘甜無比\n基督是我生命供應 祂作我的食物 祂是惟一純淨享受 祂外再無滿足\n我今盡情喫生命樹 因為喫就是路 生命藉喫加我裡頭 使我憑祂而活","lyricVerses":["生命樹果 甘甜之至 生命全豐全足 前我死枯 如今活著 前餓如今喫喝","是神領我到生命樹 享受基督自己 其中滋味 開口一喫 就覺甘甜無比","基督是我生命供應 祂作我的食物 祂是惟一純淨享受 祂外再無滿足","我今盡情喫生命樹 因為喫就是路 生命藉喫加我裡頭 使我憑祂而活"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/209"}
+{
+  "id": "supplement-209",
+  "collection": "supplement",
+  "number": 209,
+  "title": "生命樹",
+  "images": [
+    "database/songs/supplement/0209/01.jpg"
+  ],
+  "text": "0209 生命樹 G 3/4 G C G zg’a ; xdcxtua’d ; s’a ; zh’zg ; zg’a ; 一) 生 命 樹 果， 甘 甜 之 至， 生 命 二) 是 神 領 我 到 生 命 樹， 享 受 三) 基 督 是 我 生 命 供 應， 祂 作 四) 我 今 盡 情 喫 生 命 樹， 因 為 D7 G G7 xdcxtua’d ; s’g ; d’gtyluxd xgcxtud’a ; zg ’ 全 豐 全 足。 前 我 死 枯， 如 基 督 自 己。 其 中 滋 味， 開 我 的 食 物； 祂 是 惟 一 純 喫 就 是 路！ 生 命 藉 喫 加 C G Em D7 G zhtyluxa xacvtuh’zg ; zg’a ; xdcxtua’d ; s’a;/ 今 活 著； 前 餓， 如 今 喫 喝。 口 一 喫， 就 覺 甘 甜 無 比！ 淨 享 受， 祂 外 再 無 滿 足。 我 裏 頭， 使 我 憑 祂 而 活。",
+  "lyricText": "生命樹果 甘甜之至 生命全豐全足 前我死枯 如今活著 前餓如今喫喝\n是神領我到生命樹 享受基督自己 其中滋味 開口一喫 就覺甘甜無比\n基督是我生命供應 祂作我的食物 祂是惟一純淨享受 祂外再無滿足\n我今盡情喫生命樹 因為喫就是路 生命藉喫加我裡頭 使我憑祂而活",
+  "lyricVerses": [
+    "生命樹果 甘甜之至 生命全豐全足 前我死枯 如今活著 前餓如今喫喝",
+    "是神領我到生命樹 享受基督自己 其中滋味 開口一喫 就覺甘甜無比",
+    "基督是我生命供應 祂作我的食物 祂是惟一純淨享受 祂外再無滿足",
+    "我今盡情喫生命樹 因為喫就是路 生命藉喫加我裡頭 使我憑祂而活"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/209",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "生命樹果，甘甜之至，\n生命全豐全足。\n前我死枯，如今活著；\n前餓，如今喫喝。"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "是神領我到生命樹，\n享受基督自己。\n其中滋味，開口一喫，\n就覺甘甜無比！"
+    },
+    {
+      "type": "verse",
+      "number": "3",
+      "text": "基督是我生命供應，\n祂作我的食物；\n祂是惟一純淨享受，\n祂外再無滿足。"
+    },
+    {
+      "type": "verse",
+      "number": "4",
+      "text": "我今盡情喫生命樹，\n因為喫就是路！\n生命藉喫加我裡頭，\n使我憑祂而活。"
+    }
+  ]
+}

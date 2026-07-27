@@ -1,1 +1,22 @@
-{"id":"supplement-119","collection":"supplement","number":119,"title":"主是賜生命者","images":["database/songs/supplement/0119/01.jpg"],"text":"0119 主是賜生命者 C 4/4 C Em F C ralxra ra ra’j ; g k’h ; ra ra’g ; ; 主 是 賜 生 命 者, 賜 我 生 命; F C Am D7 G g'f f g f’d g ra ra’ra h j ra’rs;;;’ 當 每 一 次 我 呼 喊 祂,祂 就 釋 放 我 靈。 C Em F C ralxra ra ra’j ; g k’h ; ra ra’g ; ; 主 是 賜 生 命 者, 住 在 我 裏; F C Am D7 G7 C g'f f g f’d g ra ra’h ra j rs’ra;;;/ 祂 不 僅 是 一 個 名 字,乃 是 我 的 實 際。","lyricText":"主是賜生命者 賜我生命 當每一次我呼喊祂 祂就釋放我靈 主是賜生命者 住在我裡 祂不僅是一個名字 乃是我的實際","lyricVerses":["主是賜生命者 賜我生命 當每一次我呼喊祂 祂就釋放我靈 主是賜生命者 住在我裡 祂不僅是一個名字 乃是我的實際"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/119"}
+{
+  "id": "supplement-119",
+  "collection": "supplement",
+  "number": 119,
+  "title": "主是賜生命者",
+  "images": [
+    "database/songs/supplement/0119/01.jpg"
+  ],
+  "text": "0119 主是賜生命者 C 4/4 C Em F C ralxra ra ra’j ; g k’h ; ra ra’g ; ; 主 是 賜 生 命 者, 賜 我 生 命; F C Am D7 G g'f f g f’d g ra ra’ra h j ra’rs;;;’ 當 每 一 次 我 呼 喊 祂,祂 就 釋 放 我 靈。 C Em F C ralxra ra ra’j ; g k’h ; ra ra’g ; ; 主 是 賜 生 命 者, 住 在 我 裏; F C Am D7 G7 C g'f f g f’d g ra ra’h ra j rs’ra;;;/ 祂 不 僅 是 一 個 名 字,乃 是 我 的 實 際。",
+  "lyricText": "主是賜生命者 賜我生命 當每一次我呼喊祂 祂就釋放我靈 主是賜生命者 住在我裡 祂不僅是一個名字 乃是我的實際",
+  "lyricVerses": [
+    "主是賜生命者 賜我生命 當每一次我呼喊祂 祂就釋放我靈 主是賜生命者 住在我裡 祂不僅是一個名字 乃是我的實際"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/119",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "主是賜生命者，\n賜我生命；\n當每一次我呼喊祂，\n祂就釋放我靈。\n主是賜生命者，\n住在我裡；\n祂不僅是一個名字，\n乃是我的實際。"
+    }
+  ]
+}

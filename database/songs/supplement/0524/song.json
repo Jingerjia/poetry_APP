@@ -1,1 +1,22 @@
-{"id":"supplement-524","collection":"supplement","number":524,"title":"我們一生一定永定","images":["database/songs/supplement/0524/01.jpg"],"text":"0524 我們一生一定永定 Am 3/4 Am E7 Am E7 d’xh L bj ra xjyt L buh’xj L bqg d qxg L bd’h h qxg L bd’ 我 們 一 生 一 定 永 定,阿 利 路 亞！阿 利 Am E7 Am h h d’xh L bj ra xjyt L buh’xj L bqg d qxg L bd’h h 路 亞!基 督 召 會 是 我 永 分。阿 利 路 亞！ E7 Am G7 C G Am qxg L bd’h h j’xra L bj ra rd’rxd L brs j L rxs’rxa L bj 阿 利 路 亞!不 在 世 界 流 蕩 飄 泊,安 家 在 E7 Am E7 Am xh L bj xra L bh’xj L bqg d qxg L bd’h h xqg L bd’h h/ 召 會,享 受 祂 豐 富。阿 利 路 亞!阿 利 路 亞！","lyricText":"我們一生一定永定 阿利路亞 阿利路亞 基督召會是我永分 阿利路亞 阿利路亞 不在世界流蕩飄泊 安家在召會 享受祂豐富 阿利路亞 阿利路亞","lyricVerses":["我們一生一定永定 阿利路亞 阿利路亞 基督召會是我永分 阿利路亞 阿利路亞 不在世界流蕩飄泊 安家在召會 享受祂豐富 阿利路亞 阿利路亞"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/524"}
+{
+  "id": "supplement-524",
+  "collection": "supplement",
+  "number": 524,
+  "title": "我們一生一定永定",
+  "images": [
+    "database/songs/supplement/0524/01.jpg"
+  ],
+  "text": "0524 我們一生一定永定 Am 3/4 Am E7 Am E7 d’xh L bj ra xjyt L buh’xj L bqg d qxg L bd’h h qxg L bd’ 我 們 一 生 一 定 永 定,阿 利 路 亞！阿 利 Am E7 Am h h d’xh L bj ra xjyt L buh’xj L bqg d qxg L bd’h h 路 亞!基 督 召 會 是 我 永 分。阿 利 路 亞！ E7 Am G7 C G Am qxg L bd’h h j’xra L bj ra rd’rxd L brs j L rxs’rxa L bj 阿 利 路 亞!不 在 世 界 流 蕩 飄 泊,安 家 在 E7 Am E7 Am xh L bj xra L bh’xj L bqg d qxg L bd’h h xqg L bd’h h/ 召 會,享 受 祂 豐 富。阿 利 路 亞!阿 利 路 亞！",
+  "lyricText": "我們一生一定永定 阿利路亞 阿利路亞 基督召會是我永分 阿利路亞 阿利路亞 不在世界流蕩飄泊 安家在召會 享受祂豐富 阿利路亞 阿利路亞",
+  "lyricVerses": [
+    "我們一生一定永定 阿利路亞 阿利路亞 基督召會是我永分 阿利路亞 阿利路亞 不在世界流蕩飄泊 安家在召會 享受祂豐富 阿利路亞 阿利路亞"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/524",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "我們一生一定永定，\n阿利路亞！阿利路亞！\n基督召會是我永分。\n阿利路亞！阿利路亞！\n不在世界流蕩飄泊，\n安家在召會，\n享受祂豐富。\n阿利路亞！阿利路亞！"
+    }
+  ]
+}

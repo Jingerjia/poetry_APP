@@ -1,1 +1,22 @@
-{"id":"supplement-106","collection":"supplement","number":106,"title":"祂是賜生命的靈","images":["database/songs/supplement/0106/01.jpg"],"text":"0106 祂是賜生命的靈 G 4/4 G D D7 G d d dlxf’d s s ;’f f flxg’f d d;’ 我 愛 我 的 主 耶 穌， 祂 是 賜 生 命 的 靈； G G7 C G D G g g gxdtucxa’f f zh ;’zg a xdxas’a ; ;k/ 我 已 與祂 合 為 一， 二 靈 成為一 靈！","lyricText":"我愛我的主耶穌 祂是賜生命的靈 我已與祂合為一 靈成為一靈","lyricVerses":["我愛我的主耶穌 祂是賜生命的靈 我已與祂合為一 靈成為一靈"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/106"}
+{
+  "id": "supplement-106",
+  "collection": "supplement",
+  "number": 106,
+  "title": "祂是賜生命的靈",
+  "images": [
+    "database/songs/supplement/0106/01.jpg"
+  ],
+  "text": "0106 祂是賜生命的靈 G 4/4 G D D7 G d d dlxf’d s s ;’f f flxg’f d d;’ 我 愛 我 的 主 耶 穌， 祂 是 賜 生 命 的 靈； G G7 C G D G g g gxdtucxa’f f zh ;’zg a xdxas’a ; ;k/ 我 已 與祂 合 為 一， 二 靈 成為一 靈！",
+  "lyricText": "我愛我的主耶穌 祂是賜生命的靈 我已與祂合為一 靈成為一靈",
+  "lyricVerses": [
+    "我愛我的主耶穌 祂是賜生命的靈 我已與祂合為一 靈成為一靈"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/106",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "我愛我的主耶穌，\n祂是賜生命的靈；\n我已與祂合為一，\n二靈成為一靈！"
+    }
+  ]
+}

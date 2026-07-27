@@ -1,1 +1,22 @@
-{"id":"hymns-705","collection":"hymns","number":705,"title":"福音－自由","images":["database/songs/hymns/0705/01.jpg"],"text":"705 福音－自由 G 2/4 G C D7 Em G7 C vg’xalba xa xd’xslba xs bdtynb ubs’xalba xd xg’hl 所 有 罪 人 都 是 罪 囚,已 中 死 亡 毒 鉤； G Em Am D C D7 G xh’xglbd xd xa’xslba xs bdtynb bus’xalmh vh vg’al 除 信 主 是 自 有 永 有,必 在 罪 中 死 休。 G Em C D7 G G7 C xh’xglbd xd xa’xslba xs xh’xglbd xd xg’hl 神 的 兒 子 自 有 永 有，惟 祂 能 釋 罪 囚， G Em C D7 C D7 G xh’xglbd xd xa’xslba xs bdtynb bus’xalmh vh vg’al 能 使 罪 囚 得 著 自 由,自 由 直 到 永 久。","lyricText":"所有罪人都是罪囚 已中死亡毒鉤 除信主是自有永有 必在罪中死休 神的兒子自有永有 惟祂能釋罪囚 能使罪囚得著自由 自由直到永久","lyricVerses":["所有罪人都是罪囚 已中死亡毒鉤 除信主是自有永有 必在罪中死休 神的兒子自有永有 惟祂能釋罪囚 能使罪囚得著自由 自由直到永久"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ch/705"}
+{
+  "id": "hymns-705",
+  "collection": "hymns",
+  "number": 705,
+  "title": "福音－自由",
+  "images": [
+    "database/songs/hymns/0705/01.jpg"
+  ],
+  "text": "705 福音－自由 G 2/4 G C D7 Em G7 C vg’xalba xa xd’xslba xs bdtynb ubs’xalba xd xg’hl 所 有 罪 人 都 是 罪 囚,已 中 死 亡 毒 鉤； G Em Am D C D7 G xh’xglbd xd xa’xslba xs bdtynb bus’xalmh vh vg’al 除 信 主 是 自 有 永 有,必 在 罪 中 死 休。 G Em C D7 G G7 C xh’xglbd xd xa’xslba xs xh’xglbd xd xg’hl 神 的 兒 子 自 有 永 有，惟 祂 能 釋 罪 囚， G Em C D7 C D7 G xh’xglbd xd xa’xslba xs bdtynb bus’xalmh vh vg’al 能 使 罪 囚 得 著 自 由,自 由 直 到 永 久。",
+  "lyricText": "所有罪人都是罪囚 已中死亡毒鉤 除信主是自有永有 必在罪中死休 神的兒子自有永有 惟祂能釋罪囚 能使罪囚得著自由 自由直到永久",
+  "lyricVerses": [
+    "所有罪人都是罪囚 已中死亡毒鉤 除信主是自有永有 必在罪中死休 神的兒子自有永有 惟祂能釋罪囚 能使罪囚得著自由 自由直到永久"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ch/705",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "所有罪人都是罪囚，\n已中死亡毒鉤；\n除信主是自有永有，\n必在罪中死休。\n神的兒子自有永有，\n惟祂能釋罪囚，\n能使罪囚得著自由，\n自由直到永久。"
+    }
+  ]
+}

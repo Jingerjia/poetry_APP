@@ -1,1 +1,22 @@
-{"id":"supplement-8","collection":"supplement","number":8,"title":"在祂的聖山上","images":["database/songs/supplement/0008/01.jpg"],"text":"0008 在祂的聖山上 F 4/4 (詩篇四十八篇) C G7 C G7 d ; s a’d ; ;d’d df d’s;;xscxtud’ 主 本 為 大！ 在 我 們神 城 內， 在 C f f d s’f;;xfxf’ff g L xf’xfcxtudd;;’ 祂 的 聖 山 上， 理當 受大 大 的 讚 美！ G7 C C7 F xdxdxdxdsa’d d ;d’dxdxdfg’f; ; ;’ 錫安山座落在 北 面， 居 高華美勝一 切， C G7 C h h j h’gxgxghg’xfxfhgf’dty yfy ug;’ 乃 是 我 們 大君的京城，為全地所喜 悅， F C G7 C h h j h’gxgxghg’xfxfhgf’d; ; ;/ 乃 是 我 們 大君的京城，為全地所喜 悅。","lyricText":"主本為大 在我們神城內 在祂的聖山上 理當受大大的讚美 錫安山座落在北面 居高華美勝一切 乃是我們大君的京城 為全地所喜悅 乃是我們大君的京城 為全地所喜悅","lyricVerses":["主本為大 在我們神城內 在祂的聖山上 理當受大大的讚美 錫安山座落在北面 居高華美勝一切 乃是我們大君的京城 為全地所喜悅 乃是我們大君的京城 為全地所喜悅"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/8"}
+{
+  "id": "supplement-8",
+  "collection": "supplement",
+  "number": 8,
+  "title": "在祂的聖山上",
+  "images": [
+    "database/songs/supplement/0008/01.jpg"
+  ],
+  "text": "0008 在祂的聖山上 F 4/4 (詩篇四十八篇) C G7 C G7 d ; s a’d ; ;d’d df d’s;;xscxtud’ 主 本 為 大！ 在 我 們神 城 內， 在 C f f d s’f;;xfxf’ff g L xf’xfcxtudd;;’ 祂 的 聖 山 上， 理當 受大 大 的 讚 美！ G7 C C7 F xdxdxdxdsa’d d ;d’dxdxdfg’f; ; ;’ 錫安山座落在 北 面， 居 高華美勝一 切， C G7 C h h j h’gxgxghg’xfxfhgf’dty yfy ug;’ 乃 是 我 們 大君的京城，為全地所喜 悅， F C G7 C h h j h’gxgxghg’xfxfhgf’d; ; ;/ 乃 是 我 們 大君的京城，為全地所喜 悅。",
+  "lyricText": "主本為大 在我們神城內 在祂的聖山上 理當受大大的讚美 錫安山座落在北面 居高華美勝一切 乃是我們大君的京城 為全地所喜悅 乃是我們大君的京城 為全地所喜悅",
+  "lyricVerses": [
+    "主本為大 在我們神城內 在祂的聖山上 理當受大大的讚美 錫安山座落在北面 居高華美勝一切 乃是我們大君的京城 為全地所喜悅 乃是我們大君的京城 為全地所喜悅"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/8",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "主本為大！\n在我們神城內，\n在祂的聖山上，\n理當受大大的讚美！\n錫安山座落在北面，\n居高華美勝一切，\n乃是我們大君的京城，\n為全地所喜悅，\n乃是我們大君的京城，\n為全地所喜悅。"
+    }
+  ]
+}

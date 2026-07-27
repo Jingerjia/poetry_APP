@@ -1,1 +1,34 @@
-{"id":"supplement-717","collection":"supplement","number":717,"title":"豫嘗那日","images":["database/songs/supplement/0717/01.jpg"],"text":"0717 豫嘗那日 Em 4/4 Em C B7 Em G zd’zhxvhcvj a zh’axacxs d d’h ; ;g’d;; 一) 自 從過教 會,生 活何美 麗,豫 嘗 那 日； 二) 今 天的教 會,就 是那美 地,流 奶 與 蜜； 三) 建 造的教 會,就 是神居 所,讓 祂 安 息； Em C B7 Em B7 Em d’hxdcxs a s’dxacvj zh zd’zh;;vjcxa’zh;;/ 新 耶路撒 冷,新 耶路撒 冷,安 息 的滿 足。 盡 情的享 受,盡 情的享 受,豐 盛 的生 命。 為 祂掌王 權,為 祂掌王 權,完 成 神旨 意。","lyricText":"自從過召會 生活何美麗 豫嘗那日 新耶路撒冷 新耶路撒冷 安息的滿足\n今日的召會就是那美地流奶與蜜 盡情的享受 盡情的享受 豐盛的生命\n建造的召會就是神居所 讓祂安息 為祂掌王權 為祂掌王權 完成神旨意","lyricVerses":["自從過召會 生活何美麗 豫嘗那日 新耶路撒冷 新耶路撒冷 安息的滿足","今日的召會就是那美地流奶與蜜 盡情的享受 盡情的享受 豐盛的生命","建造的召會就是神居所 讓祂安息 為祂掌王權 為祂掌王權 完成神旨意"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/717"}
+{
+  "id": "supplement-717",
+  "collection": "supplement",
+  "number": 717,
+  "title": "豫嘗那日",
+  "images": [
+    "database/songs/supplement/0717/01.jpg"
+  ],
+  "text": "0717 豫嘗那日 Em 4/4 Em C B7 Em G zd’zhxvhcvj a zh’axacxs d d’h ; ;g’d;; 一) 自 從過教 會,生 活何美 麗,豫 嘗 那 日； 二) 今 天的教 會,就 是那美 地,流 奶 與 蜜； 三) 建 造的教 會,就 是神居 所,讓 祂 安 息； Em C B7 Em B7 Em d’hxdcxs a s’dxacvj zh zd’zh;;vjcxa’zh;;/ 新 耶路撒 冷,新 耶路撒 冷,安 息 的滿 足。 盡 情的享 受,盡 情的享 受,豐 盛 的生 命。 為 祂掌王 權,為 祂掌王 權,完 成 神旨 意。",
+  "lyricText": "自從過召會 生活何美麗 豫嘗那日 新耶路撒冷 新耶路撒冷 安息的滿足\n今日的召會就是那美地流奶與蜜 盡情的享受 盡情的享受 豐盛的生命\n建造的召會就是神居所 讓祂安息 為祂掌王權 為祂掌王權 完成神旨意",
+  "lyricVerses": [
+    "自從過召會 生活何美麗 豫嘗那日 新耶路撒冷 新耶路撒冷 安息的滿足",
+    "今日的召會就是那美地流奶與蜜 盡情的享受 盡情的享受 豐盛的生命",
+    "建造的召會就是神居所 讓祂安息 為祂掌王權 為祂掌王權 完成神旨意"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/717",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "自從『過召會』，\n生活何美麗，豫嘗那日；\n新耶路撒冷，\n新耶路撒冷，\n安息的滿足。"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "今日的召會就是那美地\n─流奶與蜜。\n盡情的享受，\n盡情的享受，\n豐盛的生命。"
+    },
+    {
+      "type": "verse",
+      "number": "3",
+      "text": "建造的召會就是神居所，\n讓祂安息；為祂掌王權，\n為祂掌王權，\n完成神旨意。"
+    }
+  ]
+}

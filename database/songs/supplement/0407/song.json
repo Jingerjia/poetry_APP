@@ -1,1 +1,22 @@
-{"id":"supplement-407","collection":"supplement","number":407,"title":"答應主呼召","images":["database/songs/supplement/0407/01.jpg"],"text":"0407 答應主呼召 F 4/4 C F C vg vh’a a a xd xs’xa L bs xa vh zg 哦,讓 我 們 將 昨 日 的 事 丟 背 後， Am D G vgtyc cvuh’a a d xa xd’xd xs xs xd s 努 力 面 前 向 著 標 竿 一 直 跑! C C7 F C xd xf’xg g xd a L xd’xs a vh zg 讓 我 們 在 流 中 跟 隨 主 行 動, Em G7 C vg vh’xa a xd g L xh’xd d xs ia / 為 著 主 的 恢 復 答 應 主 呼 召。","lyricText":"哦讓我們將昨日的事丟背後 努力面前向著標竿一直跑 讓我們在流中跟隨主行動 為著主的恢復答應主呼召","lyricVerses":["哦讓我們將昨日的事丟背後 努力面前向著標竿一直跑 讓我們在流中跟隨主行動 為著主的恢復答應主呼召"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/407"}
+{
+  "id": "supplement-407",
+  "collection": "supplement",
+  "number": 407,
+  "title": "答應主呼召",
+  "images": [
+    "database/songs/supplement/0407/01.jpg"
+  ],
+  "text": "0407 答應主呼召 F 4/4 C F C vg vh’a a a xd xs’xa L bs xa vh zg 哦,讓 我 們 將 昨 日 的 事 丟 背 後， Am D G vgtyc cvuh’a a d xa xd’xd xs xs xd s 努 力 面 前 向 著 標 竿 一 直 跑! C C7 F C xd xf’xg g xd a L xd’xs a vh zg 讓 我 們 在 流 中 跟 隨 主 行 動, Em G7 C vg vh’xa a xd g L xh’xd d xs ia / 為 著 主 的 恢 復 答 應 主 呼 召。",
+  "lyricText": "哦讓我們將昨日的事丟背後 努力面前向著標竿一直跑 讓我們在流中跟隨主行動 為著主的恢復答應主呼召",
+  "lyricVerses": [
+    "哦讓我們將昨日的事丟背後 努力面前向著標竿一直跑 讓我們在流中跟隨主行動 為著主的恢復答應主呼召"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/407",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "",
+      "text": "哦，讓我們將\n昨日的事丟背後，\n努力面前\n向著標竿一直跑！\n讓我們在流中\n跟隨主行動，\n為著主的恢復\n答應主呼召。"
+    }
+  ]
+}

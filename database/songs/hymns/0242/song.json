@@ -1,1 +1,28 @@
-{"id":"hymns-242","collection":"hymns","number":242,"title":"得救的證實與快樂－生命改變","images":["database/songs/hymns/0242/01.jpg"],"text":"242 得救的證實與快樂－生命改變 Db 6/8 C G7 xg’gtyluxg xd xh’gtyluxg xf xd’ftyluxf xd xs’ 一) 喜 樂 滿 我 心！ 滿 我 心！ 滿 我 二) 聖 靈 充 滿 我！ 充 滿 我！ 充 滿 C dtyludxg’gtyluxgxd xh’gtylugxg’rxaxraxraxrIa xjxh’ 心！ 喜 樂 滿 我 心！ 主 將我石心,換成 我！ 聖 靈 充 滿 我！ 除 去我罪過,消滅 G7 F C jxjj xg’xhxhxhxra xjxh’xgxdxagtyly’ugytlugxd’ 了肉心;聖 靈來更新,使我 成為新人： 喜 我軟弱,使 我結義果,並過 聖潔生活： 聖 G7 C G C ftyluxf xd xs’dtyluxdxs xa’styluxsxa vj’atylua/ 樂 滿 我 心！ 滿 我 心！ 滿 我 心！ 靈 充 滿 我！ 充 滿 我！ 充 滿 我！","lyricText":"喜樂滿我心 滿我心滿我心 喜樂滿我心 主將我石心 換成了肉心 聖靈來更新 使我成為新人喜樂滿我心 滿我心滿我心\n聖靈充滿我 充滿我充滿我 聖靈充滿我 除去我罪過 消滅我軟弱 使我結義果 並過聖潔生活聖靈充滿我 充滿我充滿我","lyricVerses":["喜樂滿我心 滿我心滿我心 喜樂滿我心 主將我石心 換成了肉心 聖靈來更新 使我成為新人喜樂滿我心 滿我心滿我心","聖靈充滿我 充滿我充滿我 聖靈充滿我 除去我罪過 消滅我軟弱 使我結義果 並過聖潔生活聖靈充滿我 充滿我充滿我"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ch/242"}
+{
+  "id": "hymns-242",
+  "collection": "hymns",
+  "number": 242,
+  "title": "得救的證實與快樂－生命改變",
+  "images": [
+    "database/songs/hymns/0242/01.jpg"
+  ],
+  "text": "242 得救的證實與快樂－生命改變 Db 6/8 C G7 xg’gtyluxg xd xh’gtyluxg xf xd’ftyluxf xd xs’ 一) 喜 樂 滿 我 心！ 滿 我 心！ 滿 我 二) 聖 靈 充 滿 我！ 充 滿 我！ 充 滿 C dtyludxg’gtyluxgxd xh’gtylugxg’rxaxraxraxrIa xjxh’ 心！ 喜 樂 滿 我 心！ 主 將我石心,換成 我！ 聖 靈 充 滿 我！ 除 去我罪過,消滅 G7 F C jxjj xg’xhxhxhxra xjxh’xgxdxagtyly’ugytlugxd’ 了肉心;聖 靈來更新,使我 成為新人： 喜 我軟弱,使 我結義果,並過 聖潔生活： 聖 G7 C G C ftyluxf xd xs’dtyluxdxs xa’styluxsxa vj’atylua/ 樂 滿 我 心！ 滿 我 心！ 滿 我 心！ 靈 充 滿 我！ 充 滿 我！ 充 滿 我！",
+  "lyricText": "喜樂滿我心 滿我心滿我心 喜樂滿我心 主將我石心 換成了肉心 聖靈來更新 使我成為新人喜樂滿我心 滿我心滿我心\n聖靈充滿我 充滿我充滿我 聖靈充滿我 除去我罪過 消滅我軟弱 使我結義果 並過聖潔生活聖靈充滿我 充滿我充滿我",
+  "lyricVerses": [
+    "喜樂滿我心 滿我心滿我心 喜樂滿我心 主將我石心 換成了肉心 聖靈來更新 使我成為新人喜樂滿我心 滿我心滿我心",
+    "聖靈充滿我 充滿我充滿我 聖靈充滿我 除去我罪過 消滅我軟弱 使我結義果 並過聖潔生活聖靈充滿我 充滿我充滿我"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ch/242",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "喜樂滿我心！\n滿我心！滿我心！\n喜樂滿我心！\n主將我石心，\n換成了肉心；\n聖靈來更新，\n使我成為新人：\n喜樂滿我心！\n滿我心！滿我心！"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "聖靈充滿我！\n充滿我！充滿我！\n聖靈充滿我！\n除去我罪過，\n消滅我軟弱，\n使我結義果，\n並過聖潔生活：\n聖靈充滿我！\n充滿我！充滿我！"
+    }
+  ]
+}

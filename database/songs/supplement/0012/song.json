@@ -1,1 +1,22 @@
-{"id":"supplement-12","collection":"supplement","number":12,"title":"你們當稱頌耶和華","images":["database/songs/supplement/0012/01.jpg"],"text":"0012 你們當稱頌耶和華 C 4/4 (詩篇一三四篇) C G C G xgxf’d d g g’ra;;xjxh’gdxhxgxfxd’s ; ; 看哪，耶 和 華 僕 人， 夜間 站在祂的殿中 的， C G C G C xgxf’d ; f f’g L xh ra;’d ;xfxd s’a;;k’ 你們 當 稱 頌 耶 和 華！ 當 稱頌 祂 名。 F C D G C hxfxhraxjxh’h;g g’h;jra’rs;;g’rd rxd xrs 你們當向聖所 舉 手,稱 頌 耶和 華！ 願 造 天 地 F C G C ra;’h xhcxtuj ra;’g L xhrxaxrs rd’rs;raty;y’ura ; ;/ 的 耶 和 華， 從 錫安賜 福 給 你。","lyricText":"看哪耶和華僕人 夜間站在祂的殿中的 你們當稱頌耶和華 當稱頌祂名 你們當向聖所舉手 稱頌耶和華 願造天地的耶和華 從錫安賜福給你","lyricVerses":["看哪耶和華僕人 夜間站在祂的殿中的 你們當稱頌耶和華 當稱頌祂名 你們當向聖所舉手 稱頌耶和華 願造天地的耶和華 從錫安賜福給你"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/12"}
+{
+  "id": "supplement-12",
+  "collection": "supplement",
+  "number": 12,
+  "title": "你們當稱頌耶和華",
+  "images": [
+    "database/songs/supplement/0012/01.jpg"
+  ],
+  "text": "0012 你們當稱頌耶和華 C 4/4 (詩篇一三四篇) C G C G xgxf’d d g g’ra;;xjxh’gdxhxgxfxd’s ; ; 看哪，耶 和 華 僕 人， 夜間 站在祂的殿中 的， C G C G C xgxf’d ; f f’g L xh ra;’d ;xfxd s’a;;k’ 你們 當 稱 頌 耶 和 華！ 當 稱頌 祂 名。 F C D G C hxfxhraxjxh’h;g g’h;jra’rs;;g’rd rxd xrs 你們當向聖所 舉 手,稱 頌 耶和 華！ 願 造 天 地 F C G C ra;’h xhcxtuj ra;’g L xhrxaxrs rd’rs;raty;y’ura ; ;/ 的 耶 和 華， 從 錫安賜 福 給 你。",
+  "lyricText": "看哪耶和華僕人 夜間站在祂的殿中的 你們當稱頌耶和華 當稱頌祂名 你們當向聖所舉手 稱頌耶和華 願造天地的耶和華 從錫安賜福給你",
+  "lyricVerses": [
+    "看哪耶和華僕人 夜間站在祂的殿中的 你們當稱頌耶和華 當稱頌祂名 你們當向聖所舉手 稱頌耶和華 願造天地的耶和華 從錫安賜福給你"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/12",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "看哪，耶和華僕人，\n夜間站在祂的殿中的，\n你們當稱頌耶和華！\n當稱頌祂名。\n你們當向聖所舉手，\n稱頌耶和華！\n願造天地的耶和華，\n從錫安賜福給你。"
+    }
+  ]
+}

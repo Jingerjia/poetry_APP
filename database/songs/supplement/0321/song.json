@@ -1,1 +1,28 @@
-{"id":"supplement-321","collection":"supplement","number":321,"title":"我怎能離開主","images":["database/songs/supplement/0321/01.jpg"],"text":"0321 我怎能離開主 Bb 4/4 G C G D7 G rd ; ra h’g ra ra ;’rs ; ra rs ’rd h g ;’ 一) 我 怎 能 離 開 主, 怎 能 將 主 忘 記, 二) 我 怎 能 離 開 主, 怎 能 將 主 忘 記, G C G A D7 g ; qf g’h rf rd ;’rs ; rd rs ’g ; ; ;’ 當 主 愛 情 依 依, 在 我 胸 臆; 當 祂 愛 的 泉 源, 湧 流 我 裏; D7 G E Am D7 rs ; rd rs’ra h g ;’rd ; rf rd ’h rd rs ;’ 萬 事 都 要 逝 去, 只 有 愛 永 不 移, 將 我 全 人 浸 透, 使 我 全 人 復 甦, G D7 Em Am D7 G g ; h g’g rf rd ;’rs ; h j ’ra ; ; ;/ 除 了 主 還 有 誰, 使 我 歸 依。 除 了 主 還 有 誰, 使 我 歸 依。","lyricText":"我怎能離開主 怎能將主忘記 當主愛情依依 在我胸臆 萬事都要逝去 只有愛永不移 除了主還有誰 使我歸依\n我怎能離開主 怎能將主忘記 當祂愛的泉源 湧流我裡 將我全人浸透 使我全人復甦 除了主還有誰 使我歸依","lyricVerses":["我怎能離開主 怎能將主忘記 當主愛情依依 在我胸臆 萬事都要逝去 只有愛永不移 除了主還有誰 使我歸依","我怎能離開主 怎能將主忘記 當祂愛的泉源 湧流我裡 將我全人浸透 使我全人復甦 除了主還有誰 使我歸依"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/321"}
+{
+  "id": "supplement-321",
+  "collection": "supplement",
+  "number": 321,
+  "title": "我怎能離開主",
+  "images": [
+    "database/songs/supplement/0321/01.jpg"
+  ],
+  "text": "0321 我怎能離開主 Bb 4/4 G C G D7 G rd ; ra h’g ra ra ;’rs ; ra rs ’rd h g ;’ 一) 我 怎 能 離 開 主, 怎 能 將 主 忘 記, 二) 我 怎 能 離 開 主, 怎 能 將 主 忘 記, G C G A D7 g ; qf g’h rf rd ;’rs ; rd rs ’g ; ; ;’ 當 主 愛 情 依 依, 在 我 胸 臆; 當 祂 愛 的 泉 源, 湧 流 我 裏; D7 G E Am D7 rs ; rd rs’ra h g ;’rd ; rf rd ’h rd rs ;’ 萬 事 都 要 逝 去, 只 有 愛 永 不 移, 將 我 全 人 浸 透, 使 我 全 人 復 甦, G D7 Em Am D7 G g ; h g’g rf rd ;’rs ; h j ’ra ; ; ;/ 除 了 主 還 有 誰, 使 我 歸 依。 除 了 主 還 有 誰, 使 我 歸 依。",
+  "lyricText": "我怎能離開主 怎能將主忘記 當主愛情依依 在我胸臆 萬事都要逝去 只有愛永不移 除了主還有誰 使我歸依\n我怎能離開主 怎能將主忘記 當祂愛的泉源 湧流我裡 將我全人浸透 使我全人復甦 除了主還有誰 使我歸依",
+  "lyricVerses": [
+    "我怎能離開主 怎能將主忘記 當主愛情依依 在我胸臆 萬事都要逝去 只有愛永不移 除了主還有誰 使我歸依",
+    "我怎能離開主 怎能將主忘記 當祂愛的泉源 湧流我裡 將我全人浸透 使我全人復甦 除了主還有誰 使我歸依"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/321",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "我怎能離開主，\n怎能將主忘記，\n當主愛情依依，\n在我胸臆；\n萬事都要逝去，\n只有愛永不移，\n除了主還有誰，\n使我歸依。"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "我怎能離開主，\n怎能將主忘記，\n當祂愛的泉源，\n湧流我裡；\n將我全人浸透，\n使我全人復甦，\n除了主還有誰，\n使我歸依。"
+    }
+  ]
+}

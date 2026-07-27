@@ -1,1 +1,22 @@
-{"id":"supplement-531","collection":"supplement","number":531,"title":"我們在流中","images":["database/songs/supplement/0531/01.jpg"],"text":"0531 我們在流中 G 3/4 G D G Am D7 G ,vgvg’xabLa a xsxs’xdLbd d L xd’xsxd f zj’xsLba a . 我們 在流 中,我們 在流 中!哦，阿利 路 亞，在流 中！ G C Am D7 G xkxg’xgxd h L bgbg’xgxf f L xf’xfxs g L xf’xfxd d 哦，讚美 主,我們 在流 中!哦，阿利 路 亞，在流 中! D G Am D7 G zg’xaLba a xsxs’xdLbd d L xd’xsxd f zj’xsLba a / 哦，讚美 主,我們 在流 中!哦，阿利 路 亞，在流 中。","lyricText":"我們在流中 我們在流中 哦阿利路亞 在流中我們在流中 我們在流中 哦阿利路亞 在流中哦 讚美主我們在流中 哦阿利路亞 在流中哦 讚美主我們在流中 哦阿利路亞 在流中","lyricVerses":["我們在流中 我們在流中 哦阿利路亞 在流中我們在流中 我們在流中 哦阿利路亞 在流中哦 讚美主我們在流中 哦阿利路亞 在流中哦 讚美主我們在流中 哦阿利路亞 在流中"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/531"}
+{
+  "id": "supplement-531",
+  "collection": "supplement",
+  "number": 531,
+  "title": "我們在流中",
+  "images": [
+    "database/songs/supplement/0531/01.jpg"
+  ],
+  "text": "0531 我們在流中 G 3/4 G D G Am D7 G ,vgvg’xabLa a xsxs’xdLbd d L xd’xsxd f zj’xsLba a . 我們 在流 中,我們 在流 中!哦，阿利 路 亞，在流 中！ G C Am D7 G xkxg’xgxd h L bgbg’xgxf f L xf’xfxs g L xf’xfxd d 哦，讚美 主,我們 在流 中!哦，阿利 路 亞，在流 中! D G Am D7 G zg’xaLba a xsxs’xdLbd d L xd’xsxd f zj’xsLba a / 哦，讚美 主,我們 在流 中!哦，阿利 路 亞，在流 中。",
+  "lyricText": "我們在流中 我們在流中 哦阿利路亞 在流中我們在流中 我們在流中 哦阿利路亞 在流中哦 讚美主我們在流中 哦阿利路亞 在流中哦 讚美主我們在流中 哦阿利路亞 在流中",
+  "lyricVerses": [
+    "我們在流中 我們在流中 哦阿利路亞 在流中我們在流中 我們在流中 哦阿利路亞 在流中哦 讚美主我們在流中 哦阿利路亞 在流中哦 讚美主我們在流中 哦阿利路亞 在流中"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/531",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "我們在流中，\n我們在流中！\n哦，阿利路亞，在流中！\n我們在流中，\n我們在流中！\n哦，阿利路亞，在流中！\n哦，讚美主，\n我們在流中！\n哦，阿利路亞，在流中！\n哦，讚美主，\n我們在流中！\n哦，阿利路亞，在流中。"
+    }
+  ]
+}

@@ -7,6 +7,7 @@ const dbErrorMessage = '\u8cc7\u6599\u5eab\u8f09\u5165\u5931\u6557\uff0c\u8acb\u
 const historyKey = 'hymn-library-history-v1';
 const favoritesKey = 'hymn-library-favorites-v1';
 const playerEnabledKey = 'hymn-library-player-enabled-v1';
+const elderSettingsKey = 'hymn-library-elder-settings-v1';
 
 let collection = 'hymns';
 let browseCollection = 'hymns';
@@ -17,6 +18,9 @@ let currentPageIndex = 0;
 let touchX = 0;
 let favoriteState = loadFavorites();
 let activeFavoriteGroupId = favoriteState.groups[0]?.id || 'default';
+let favoriteEditMode = false;
+let favoriteDraft = null;
+let groupDraft = null;
 let historyTimer = null;
 let pendingHistoryId = '';
 let setAudioProgress = () => {};
@@ -25,6 +29,8 @@ let nativeAudioPlaying = false;
 let playerEnabled = readStore(playerEnabledKey, true) !== false;
 let activeBrowseGroup = '';
 let suppressSaveDialogUntil = 0;
+let elderSettings = loadElderSettings();
+let currentViewMode = elderSettings.defaultViewMode;
 let imageScale = 1;
 let imagePanX = 0;
 let imagePanY = 0;
@@ -46,7 +52,7 @@ function escapeHtml(value) {
 }
 
 function readStore(key, fallback) {
-  if ((key === favoritesKey || key === historyKey || key === playerEnabledKey) && window.AndroidBridge?.readUserStore) {
+  if ((key === favoritesKey || key === historyKey || key === playerEnabledKey || key === elderSettingsKey) && window.AndroidBridge?.readUserStore) {
     try {
       const nativeValue = window.AndroidBridge.readUserStore(key);
       if (nativeValue) return JSON.parse(nativeValue);
@@ -64,7 +70,7 @@ function readStore(key, fallback) {
 }
 
 function writeStore(key, value) {
-  if ((key === favoritesKey || key === historyKey || key === playerEnabledKey) && window.AndroidBridge?.writeUserStore) {
+  if ((key === favoritesKey || key === historyKey || key === playerEnabledKey || key === elderSettingsKey) && window.AndroidBridge?.writeUserStore) {
     try {
       window.AndroidBridge.writeUserStore(key, JSON.stringify(value));
     } catch (error) {
@@ -114,6 +120,50 @@ function saveFavorites() {
   writeStore(favoritesKey, favoriteState);
 }
 
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function loadElderSettings() {
+  const state = readStore(elderSettingsKey, {});
+  return {
+    songFontSize: clamp(Number(state.songFontSize) || 24, 18, 42),
+    uiFontScale: clamp(Number(state.uiFontScale) || 100, 90, 140),
+    defaultViewMode: state.defaultViewMode === 'text' ? 'text' : 'image',
+  };
+}
+
+function saveElderSettings() {
+  writeStore(elderSettingsKey, elderSettings);
+}
+
+function applyElderSettings() {
+  document.documentElement.style.setProperty('--song-font-size', `${elderSettings.songFontSize}px`);
+  document.documentElement.style.setProperty('--ui-font-scale', String(elderSettings.uiFontScale / 100));
+  const songSize = $('song-font-size');
+  const songOutput = $('song-font-output');
+  const uiSize = $('ui-font-size');
+  const uiOutput = $('ui-font-output');
+  const defaultView = $('default-view-mode');
+  if (songSize) songSize.value = elderSettings.songFontSize;
+  if (songOutput) songOutput.textContent = `${elderSettings.songFontSize}px`;
+  if (uiSize) uiSize.value = elderSettings.uiFontScale;
+  if (uiOutput) uiOutput.textContent = `${elderSettings.uiFontScale}%`;
+  if (defaultView) defaultView.value = elderSettings.defaultViewMode;
+}
+
+function updateSongFontSize(value) {
+  elderSettings.songFontSize = clamp(Math.round(Number(value) || elderSettings.songFontSize), 18, 42);
+  applyElderSettings();
+  saveElderSettings();
+}
+
+function updateUiFontScale(value) {
+  elderSettings.uiFontScale = clamp(Math.round(Number(value) || elderSettings.uiFontScale), 90, 140);
+  applyElderSettings();
+  saveElderSettings();
+}
+
 function normalizeSongList(value) {
   if (!Array.isArray(value)) return [];
   return value
@@ -133,8 +183,17 @@ function normalizeFavoriteState(value) {
   return { groups: normalized.length ? normalized : [{ id: 'default', name: '\u6211\u7684\u6700\u611b', songs: [] }] };
 }
 
+function cloneFavoriteState(state) {
+  return normalizeFavoriteState(JSON.parse(JSON.stringify(state)));
+}
+
+function favoriteSource() {
+  return favoriteEditMode && favoriteDraft ? favoriteDraft : favoriteState;
+}
+
 function activeFavoriteGroup() {
-  return favoriteState.groups.find((group) => group.id === activeFavoriteGroupId) || favoriteState.groups[0];
+  const source = favoriteSource();
+  return source.groups.find((group) => group.id === activeFavoriteGroupId) || source.groups[0];
 }
 
 function rememberSong(song) {
@@ -324,12 +383,20 @@ function appBack() {
     closeGroupManager();
     return true;
   }
+  if (!$('settings-panel').hidden) {
+    closeSettings();
+    return true;
+  }
   if (!$('audio-actions').hidden) {
     closeAudioLibraryMenu();
     return true;
   }
   if (!$('search').hidden) {
     toggleSearch(false);
+    return true;
+  }
+  if (favoriteEditMode) {
+    cancelFavoriteEdit();
     return true;
   }
   if (!$('viewer').hidden) {
@@ -344,17 +411,30 @@ function appBack() {
   return false;
 }
 
+function closeSettings() {
+  $('settings-panel').hidden = true;
+}
+
+function openSettings() {
+  applyElderSettings();
+  $('settings-panel').hidden = false;
+}
+
 function favoriteRow(song, index) {
   const last = index === activeFavoriteGroup().songs.length - 1;
-  return `<div class="favorite-row">${songButton(song)}<button class="move-favorite" data-action="up" data-index="${index}" ${index === 0 ? 'disabled' : ''}>\u2191</button><button class="move-favorite" data-action="down" data-index="${index}" ${last ? 'disabled' : ''}>\u2193</button><button class="remove-favorite" data-index="${index}" aria-label="remove">\u00d7</button></div>`;
+  const moveButtons = favoriteEditMode
+    ? `<button class="move-favorite" data-action="up" data-index="${index}" ${index === 0 ? 'disabled' : ''}>\u2191</button><button class="move-favorite" data-action="down" data-index="${index}" ${last ? 'disabled' : ''}>\u2193</button>`
+    : '';
+  return `<div class="favorite-row${favoriteEditMode ? ' editing' : ''}">${songButton(song)}${moveButtons}<button class="remove-favorite" data-index="${index}" aria-label="remove">\u00d7</button></div>`;
 }
 
 function renderFavoriteGroups() {
+  const source = favoriteSource();
   const group = activeFavoriteGroup();
   activeFavoriteGroupId = group.id;
-  $('favorite-group-jump').innerHTML = favoriteState.groups.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join('');
+  $('favorite-group-jump').innerHTML = source.groups.map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join('');
   $('favorite-group-jump').value = activeFavoriteGroupId;
-  $('favorite-groups').innerHTML = favoriteState.groups.map((item) => `<button class="group-chip${item.id === activeFavoriteGroupId ? ' active' : ''}" data-id="${escapeHtml(item.id)}">${escapeHtml(item.name)}</button>`).join('');
+  $('favorite-groups').innerHTML = source.groups.map((item) => `<button class="group-chip${item.id === activeFavoriteGroupId ? ' active' : ''}" data-id="${escapeHtml(item.id)}">${escapeHtml(item.name)}</button>`).join('');
   $('favorite-groups').querySelectorAll('.group-chip').forEach((button) => {
     button.onclick = () => {
       activeFavoriteGroupId = button.dataset.id;
@@ -366,7 +446,7 @@ function renderFavoriteGroups() {
 function renderFavoriteList() {
   const group = activeFavoriteGroup();
   $('favorite-list').innerHTML = group.songs.length ? group.songs.map(favoriteRow).join('') : '<p class="empty">\u9019\u500b\u7fa4\u7d44\u9084\u6c92\u6709\u8a69\u6b4c</p>';
-  bindSongs($('favorite-list'), group.songs);
+  if (!favoriteEditMode) bindSongs($('favorite-list'), group.songs);
   $('favorite-list').querySelectorAll('.move-favorite').forEach((button) => {
     button.onclick = (event) => {
       event.stopPropagation();
@@ -374,7 +454,6 @@ function renderFavoriteList() {
       const target = button.dataset.action === 'up' ? index - 1 : index + 1;
       if (target < 0 || target >= group.songs.length) return;
       [group.songs[index], group.songs[target]] = [group.songs[target], group.songs[index]];
-      saveFavorites();
       renderFavorites();
     };
   });
@@ -382,58 +461,81 @@ function renderFavoriteList() {
     button.onclick = (event) => {
       event.stopPropagation();
       const song = group.songs[Number(button.dataset.index)];
-      if (song && !confirm(`\u5f9e\u300c${group.name}\u300d\u79fb\u9664\u300c${song.title}\u300d\uff1f`)) return;
+      const quick = $('quick-delete-favorites')?.checked;
+      if (song && !quick && !confirm(`\u5f9e\u300c${group.name}\u300d\u79fb\u9664\u300c${song.title}\u300d\uff1f`)) return;
       group.songs.splice(Number(button.dataset.index), 1);
-      saveFavorites();
+      if (!favoriteEditMode) saveFavorites();
       renderFavorites();
     };
   });
 }
 
 function renderManagedGroups() {
-  $('managed-groups').innerHTML = favoriteState.groups.map((group, index) => `
+  const draft = groupDraft || cloneFavoriteState(favoriteState);
+  groupDraft = draft;
+  $('managed-groups').innerHTML = draft.groups.map((group, index) => `
     <div class="managed-group">
       <span>${escapeHtml(group.name)}</span>
-      <button data-action="rename" data-index="${index}">\u91cd\u547d\u540d</button>
+      <button data-action="songs" data-index="${index}">\u7BA1\u7406\u6211\u7684\u6700\u611B</button>
       <button data-action="up" data-index="${index}" ${index === 0 ? 'disabled' : ''}>\u2191</button>
-      <button data-action="down" data-index="${index}" ${index === favoriteState.groups.length - 1 ? 'disabled' : ''}>\u2193</button>
-      <button data-action="delete" data-index="${index}" ${favoriteState.groups.length <= 1 ? 'disabled' : ''}>\u522a\u9664</button>
+      <button data-action="down" data-index="${index}" ${index === draft.groups.length - 1 ? 'disabled' : ''}>\u2193</button>
+      <button data-action="delete" data-index="${index}" ${draft.groups.length <= 1 ? 'disabled' : ''}>&#x1F5D1;</button>
+      <button data-action="rename" data-index="${index}" aria-label="edit">\u270E</button>
     </div>
   `).join('');
   $('managed-groups').querySelectorAll('button').forEach((button) => {
     button.onclick = () => {
       const index = Number(button.dataset.index);
       const action = button.dataset.action;
+      if (action === 'songs') {
+        activeFavoriteGroupId = draft.groups[index]?.id || activeFavoriteGroupId;
+        favoriteDraft = normalizeFavoriteState(draft);
+        favoriteEditMode = true;
+        groupDraft = null;
+        $('group-manager').hidden = true;
+        renderFavorites();
+        return;
+      }
       if (action === 'rename') {
-        const target = favoriteState.groups[index];
+        const target = draft.groups[index];
         if (!target) return;
         const name = prompt('\u8f38\u5165\u65b0\u7fa4\u7d44\u540d\u7a31', target.name);
         if (!name || !name.trim()) return;
         target.name = name.trim();
       } else if (action === 'up' && index > 0) {
-        [favoriteState.groups[index - 1], favoriteState.groups[index]] = [favoriteState.groups[index], favoriteState.groups[index - 1]];
-      } else if (action === 'down' && index < favoriteState.groups.length - 1) {
-        [favoriteState.groups[index + 1], favoriteState.groups[index]] = [favoriteState.groups[index], favoriteState.groups[index + 1]];
+        [draft.groups[index - 1], draft.groups[index]] = [draft.groups[index], draft.groups[index - 1]];
+      } else if (action === 'down' && index < draft.groups.length - 1) {
+        [draft.groups[index + 1], draft.groups[index]] = [draft.groups[index], draft.groups[index + 1]];
       } else if (action === 'delete') {
-        const target = favoriteState.groups[index];
+        const target = draft.groups[index];
         if (!target || !confirm(`\u522a\u9664\u7fa4\u7d44\u300c${target.name}\u300d\uff1f\u7fa4\u7d44\u5167\u7684\u6700\u611b\u4e5f\u6703\u4e00\u8d77\u79fb\u9664\u3002`)) return;
-        favoriteState.groups.splice(index, 1);
-        if (!favoriteState.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = favoriteState.groups[0].id;
+        draft.groups.splice(index, 1);
+        if (!draft.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = draft.groups[0].id;
       }
-      saveFavorites();
-      renderFavorites();
       renderManagedGroups();
     };
   });
 }
 
 function openGroupManager() {
+  groupDraft = cloneFavoriteState(favoriteState);
   renderManagedGroups();
   $('group-manager').hidden = false;
 }
 
 function closeGroupManager() {
+  groupDraft = null;
   $('group-manager').hidden = true;
+}
+
+function saveGroupEdits() {
+  if (!groupDraft) return closeGroupManager();
+  favoriteState = normalizeFavoriteState(groupDraft);
+  if (!favoriteState.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = favoriteState.groups[0].id;
+  saveFavorites();
+  groupDraft = null;
+  $('group-manager').hidden = true;
+  renderFavorites();
 }
 
 function renderFavoriteTools() {
@@ -448,9 +550,37 @@ function renderFavoriteTools() {
 }
 
 function renderFavorites() {
+  $('favorite-edit-panel').hidden = !favoriteEditMode;
+  $('manage-favorites').textContent = favoriteEditMode ? '\u7DE8\u8F2F\u4E2D' : '\u7BA1\u7406\u6211\u7684\u6700\u611B';
+  $('manage-favorites').disabled = favoriteEditMode;
   renderFavoriteGroups();
   renderFavoriteList();
   renderFavoriteTools();
+}
+
+function beginFavoriteEdit() {
+  favoriteDraft = cloneFavoriteState(favoriteState);
+  favoriteEditMode = true;
+  renderFavorites();
+}
+
+function cancelFavoriteEdit() {
+  favoriteDraft = null;
+  favoriteEditMode = false;
+  $('quick-delete-favorites').checked = false;
+  renderFavorites();
+}
+
+function saveFavoriteEdits() {
+  if (favoriteDraft) {
+    favoriteState = normalizeFavoriteState(favoriteDraft);
+    if (!favoriteState.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = favoriteState.groups[0].id;
+    saveFavorites();
+  }
+  favoriteDraft = null;
+  favoriteEditMode = false;
+  $('quick-delete-favorites').checked = false;
+  renderFavorites();
 }
 
 function addFavoriteGroup() {
@@ -458,11 +588,12 @@ function addFavoriteGroup() {
   const name = input.value.trim();
   if (!name) return;
   const id = `group-${Date.now().toString(36)}`;
-  favoriteState.groups.push({ id, name, songs: [] });
+  const draft = groupDraft || favoriteState;
+  draft.groups.push({ id, name, songs: [] });
   activeFavoriteGroupId = id;
   input.value = '';
-  saveFavorites();
-  renderFavorites();
+  if (!groupDraft) saveFavorites();
+  if (!groupDraft) renderFavorites();
   renderManagedGroups();
 }
 
@@ -715,6 +846,75 @@ function previewSnippet(song) {
   return text ? `${escapeHtml(text)}${Array.from(source).length > 42 ? '\u2026' : ''}` : '';
 }
 
+function cleanLyricDisplayLine(value) {
+  let text = String(value || '').normalize('NFKC').trim();
+  if (!text || !/\p{Script=Han}/u.test(text)) return '';
+  text = text
+    .replace(/[A-Za-z][A-Za-z0-9'.,;:!?()[\]{}\/\\\-_ ]*/g, ' ')
+    .replace(/[|0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!/\p{Script=Han}/u.test(text)) return '';
+  if (!/[，。！？；：、,.!?;:]/.test(text)) {
+    text = text.replace(/\s+/g, '，');
+    if (!/[。！？!?]$/.test(text)) text += '。';
+  }
+  return text;
+}
+
+function songTextLines(song) {
+  const source = song.lyricText || song.text || '';
+  const lines = String(source)
+    .split(/\n+|(?=第[一二三四五六七八九十百\d]+節[:：])|(?=副歌[:：])/)
+    .map(cleanLyricDisplayLine)
+    .filter(Boolean);
+  const titleNormalized = normalizeText(song.title || '');
+  return lines.filter((line, index) => index || normalizeText(line) !== titleNormalized);
+}
+
+function fallbackStructuredLyrics(song) {
+  return songTextLines(song).map((text, index) => ({
+    type: 'verse',
+    number: String(index + 1),
+    text,
+  }));
+}
+
+function lyricSectionLabel(section, fallbackIndex) {
+  if (section.type === 'chorus') return `\u526f)${section.number || ''}`;
+  return String(section.number || fallbackIndex + 1);
+}
+
+function renderLyricSection(section, index) {
+  const text = String(section.text || '').trim();
+  if (!text) return '';
+  return `<section class="lyric-section"><h3>${escapeHtml(lyricSectionLabel(section, index))}</h3><p>${escapeHtml(text)}</p></section>`;
+}
+
+function renderSongText(song) {
+  const sections = Array.isArray(song.structuredLyrics) && song.structuredLyrics.length
+    ? song.structuredLyrics
+    : fallbackStructuredLyrics(song);
+  $('song-text').innerHTML = sections.length
+    ? sections.map(renderLyricSection).join('')
+    : '<p class="empty">\u9019\u9996\u76EE\u524D\u6C92\u6709\u6587\u5B57</p>';
+}
+
+function renderViewMode(song) {
+  const imageMode = currentViewMode !== 'text';
+  $('song-page').hidden = !imageMode;
+  $('song-text').hidden = imageMode;
+  $('page-area').classList.toggle('text-mode', !imageMode);
+  $('toggle-view-mode').textContent = imageMode ? '字' : '圖';
+  $('toggle-view-mode').title = imageMode ? '切換成文字' : '切換成歌譜';
+  if (!imageMode) renderSongText(song);
+}
+
+function toggleViewMode() {
+  currentViewMode = currentViewMode === 'text' ? 'image' : 'text';
+  renderSong();
+}
+
 function snippetFor(song, query) {
   const source = song.lyricText || compactLyricText(`${song.title}\n${song.text || ''}`);
   if (!query.trim()) return '';
@@ -858,6 +1058,7 @@ async function renderSong() {
   $('viewer-title').textContent = song.title;
   $('song-page').src = images[currentPageIndex];
   resetImageZoom();
+  renderViewMode(song);
   $('page-indicator').textContent = images.length > 1
     ? `${currentPageIndex + 1}/${images.length} · ${currentIndex + 1}/${currentSongs.length}`
     : `${currentIndex + 1} / ${currentSongs.length}`;
@@ -872,6 +1073,7 @@ function openSong(song, songs) {
   currentSongs = songs.map((item) => ({ ...item }));
   currentIndex = Math.max(0, songs.findIndex((item) => item.id === song.id));
   currentPageIndex = 0;
+  currentViewMode = elderSettings.defaultViewMode;
   $('search').hidden = true;
   $('viewer').hidden = false;
   renderSong();
@@ -1074,6 +1276,17 @@ function bindImageGestures() {
   const area = $('page-area');
   area.ontouchstart = (event) => {
     clearLongPress();
+    if (currentViewMode === 'text') {
+      if (event.touches.length === 2) {
+        touchMode = 'text-pinch';
+        pinchStartDistance = touchDistance(event.touches);
+        pinchStartScale = elderSettings.songFontSize;
+        event.preventDefault();
+      } else {
+        touchMode = 'text-scroll';
+      }
+      return;
+    }
     if (event.touches.length === 2) {
       touchMode = 'pinch';
       area.classList.add('zooming');
@@ -1091,6 +1304,12 @@ function bindImageGestures() {
     longPressTimer = setTimeout(saveCurrentImage, 650);
   };
   area.ontouchmove = (event) => {
+    if (touchMode === 'text-pinch' && event.touches.length === 2) {
+      const ratio = touchDistance(event.touches) / Math.max(1, pinchStartDistance);
+      updateSongFontSize(pinchStartScale * ratio);
+      event.preventDefault();
+      return;
+    }
     if (event.touches.length === 2 && touchMode === 'pinch') {
       clearLongPress();
       const ratio = touchDistance(event.touches) / Math.max(1, pinchStartDistance);
@@ -1119,6 +1338,10 @@ function bindImageGestures() {
   area.ontouchend = (event) => {
     clearLongPress();
     area.classList.remove('zooming');
+    if (touchMode === 'text-pinch' || touchMode === 'text-scroll') {
+      if (event.touches.length === 0) touchMode = '';
+      return;
+    }
     if (touchMode === 'swipe' && imageScale <= 1.02) {
       const delta = event.changedTouches[0].screenX - touchX;
       if (Math.abs(delta) > 55) moveSong(delta > 0 ? -1 : 1);
@@ -1127,7 +1350,7 @@ function bindImageGestures() {
   };
   area.oncontextmenu = (event) => {
     event.preventDefault();
-    saveCurrentImage();
+    if (currentViewMode !== 'text') saveCurrentImage();
   };
 }
 
@@ -1151,6 +1374,10 @@ function bindUI() {
   $('add-group').onclick = addFavoriteGroup;
   $('new-group-name').onkeydown = (event) => { if (event.key === 'Enter') addFavoriteGroup(); };
   $('manage-groups').onclick = openGroupManager;
+  $('manage-favorites').onclick = beginFavoriteEdit;
+  $('save-favorite-edits').onclick = saveFavoriteEdits;
+  $('cancel-favorite-edits').onclick = cancelFavoriteEdit;
+  $('save-group-edits').onclick = saveGroupEdits;
   $('close-group-manager').onclick = closeGroupManager;
   $('group-manager').onclick = (event) => { if (event.target === $('group-manager')) closeGroupManager(); };
   $('favorite-group-jump').onchange = (event) => {
@@ -1166,6 +1393,19 @@ function bindUI() {
     importUserData(event.target.files[0]);
     event.target.value = '';
   };
+  $('settings-toggle').onclick = openSettings;
+  $('close-settings').onclick = closeSettings;
+  $('settings-panel').onclick = (event) => { if (event.target === $('settings-panel')) closeSettings(); };
+  $('song-font-size').oninput = (event) => updateSongFontSize(event.target.value);
+  $('ui-font-size').oninput = (event) => updateUiFontScale(event.target.value);
+  $('default-view-mode').onchange = (event) => {
+    elderSettings.defaultViewMode = event.target.value === 'text' ? 'text' : 'image';
+    saveElderSettings();
+    if (!$('viewer').hidden) {
+      currentViewMode = elderSettings.defaultViewMode;
+      renderSong();
+    }
+  };
   if (window.AndroidBridge?.downloadMissingAudio) {
     $('audio-library-download').hidden = false;
     $('audio-library-download').onclick = showAudioLibraryMenu;
@@ -1176,6 +1416,7 @@ function bindUI() {
   $('favorite-group-select').onchange = (event) => { activeFavoriteGroupId = event.target.value; renderFavorites(); };
   $('toggle-favorite').onclick = toggleCurrentFavorite;
   $('toggle-player-enabled').onclick = togglePlayerEnabled;
+  $('toggle-view-mode').onclick = toggleViewMode;
   $('search-toggle').onclick = () => toggleSearch(true);
   $('search-field').onclick = () => toggleSearch(true);
   $('close-search').onclick = () => toggleSearch(false);
@@ -1234,6 +1475,7 @@ window.nativeAudioDeleteDone = (deleted, ok) => {
   if (!$('viewer').hidden) resetPlayer(currentSongs[currentIndex]);
   setTimeout(() => { button.textContent = '\u97f3\u6a94'; }, 2200);
 };
+applyElderSettings();
 bindUI();
 document.addEventListener('keydown', (event) => {
   if (!$('viewer').hidden && event.key === 'ArrowLeft') moveSong(-1);

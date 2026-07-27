@@ -1,1 +1,40 @@
-{"id":"supplement-105","collection":"supplement","number":105,"title":"基督是那賜生命的靈","images":["database/songs/supplement/0105/01.jpg"],"text":"0105 基督是那賜生命的靈 Ab 6/4 G C G A7 zg’d L xsa s azh’zgzd;;kzg’d L xsa a zja’ 一) 基 督 是那 賜 生命 的靈, 進 入 我靈 賜 我生 二) 如 今 主基 督 就是 那靈, 主 靈,我靈 聯 成一 D G C G A7 sty;y;us;zg’d L xsa sazh’zgzd;;kzg’zhsa 命; 基 督 是那 賜生命 的靈, 在 我靈裏 靈; 如 今 主基 督就是 那靈, 將 我變化 D7 G C D7 zj zh zj’aty;y;ua;;’zg;;a;;’zh;;s;;’ 引 導 供 應。 (副) 哦, 主! 阿 們! 成 主 榮 形。 D G zj zj zj zj zh zj’aty;us d ; ;’zg; ;a; ;’ 哦,主!阿 們!阿 利 路 亞! 哦, 主! C A7 D G zh; ; s; ;’zj zj zj zj zh zj’a; ; ia ; / 阿 們! 哦,主!阿 們!阿 利 路 亞!","lyricText":"基督是那賜生命的靈 進入我靈賜我生命 基督是那賜生命的靈 在我靈裡引導供應\n哦主阿們 哦主阿們 阿利路亞 哦主阿們 哦主阿們 阿利路亞\n如今主基督就是那靈 主靈我靈聯成一靈 如今主基督就是那靈 將我變化成主榮形\n哦主阿們 哦主阿們 阿利路亞 哦主阿們 哦主阿們 阿利路亞","lyricVerses":["基督是那賜生命的靈 進入我靈賜我生命 基督是那賜生命的靈 在我靈裡引導供應","哦主阿們 哦主阿們 阿利路亞 哦主阿們 哦主阿們 阿利路亞","如今主基督就是那靈 主靈我靈聯成一靈 如今主基督就是那靈 將我變化成主榮形","哦主阿們 哦主阿們 阿利路亞 哦主阿們 哦主阿們 阿利路亞"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/105"}
+{
+  "id": "supplement-105",
+  "collection": "supplement",
+  "number": 105,
+  "title": "基督是那賜生命的靈",
+  "images": [
+    "database/songs/supplement/0105/01.jpg"
+  ],
+  "text": "0105 基督是那賜生命的靈 Ab 6/4 G C G A7 zg’d L xsa s azh’zgzd;;kzg’d L xsa a zja’ 一) 基 督 是那 賜 生命 的靈, 進 入 我靈 賜 我生 二) 如 今 主基 督 就是 那靈, 主 靈,我靈 聯 成一 D G C G A7 sty;y;us;zg’d L xsa sazh’zgzd;;kzg’zhsa 命; 基 督 是那 賜生命 的靈, 在 我靈裏 靈; 如 今 主基 督就是 那靈, 將 我變化 D7 G C D7 zj zh zj’aty;y;ua;;’zg;;a;;’zh;;s;;’ 引 導 供 應。 (副) 哦, 主! 阿 們! 成 主 榮 形。 D G zj zj zj zj zh zj’aty;us d ; ;’zg; ;a; ;’ 哦,主!阿 們!阿 利 路 亞! 哦, 主! C A7 D G zh; ; s; ;’zj zj zj zj zh zj’a; ; ia ; / 阿 們! 哦,主!阿 們!阿 利 路 亞!",
+  "lyricText": "基督是那賜生命的靈 進入我靈賜我生命 基督是那賜生命的靈 在我靈裡引導供應\n哦主阿們 哦主阿們 阿利路亞 哦主阿們 哦主阿們 阿利路亞\n如今主基督就是那靈 主靈我靈聯成一靈 如今主基督就是那靈 將我變化成主榮形\n哦主阿們 哦主阿們 阿利路亞 哦主阿們 哦主阿們 阿利路亞",
+  "lyricVerses": [
+    "基督是那賜生命的靈 進入我靈賜我生命 基督是那賜生命的靈 在我靈裡引導供應",
+    "哦主阿們 哦主阿們 阿利路亞 哦主阿們 哦主阿們 阿利路亞",
+    "如今主基督就是那靈 主靈我靈聯成一靈 如今主基督就是那靈 將我變化成主榮形",
+    "哦主阿們 哦主阿們 阿利路亞 哦主阿們 哦主阿們 阿利路亞"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/105",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "基督是那賜生命的靈，\n進入我靈賜我生命；\n基督是那賜生命的靈，\n在我靈裡引導供應。"
+    },
+    {
+      "type": "chorus",
+      "number": "",
+      "text": "哦，主！阿們！\n哦，主！阿們！\n阿利路亞！\n哦，主！阿們！\n哦，主！阿們！\n阿利路亞！"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "如今主基督就是那靈，\n主靈，我靈聯成一靈；\n如今主基督就是那靈，\n將我變化成主榮形。"
+    },
+    {
+      "type": "chorus",
+      "number": "",
+      "text": "哦，主！阿們！\n哦，主！阿們！\n阿利路亞！\n哦，主！阿們！\n哦，主！阿們！\n阿利路亞！"
+    }
+  ]
+}

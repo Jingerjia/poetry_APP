@@ -1,1 +1,28 @@
-{"id":"hymns-264","collection":"hymns","number":264,"title":"得救的證實與快樂－一般","images":["database/songs/hymns/0264/01.jpg"],"text":"264 得救的證實與快樂－一般 D 4/4 C F C G d:xs xa xd xs’a ra xh raL’g xg xg d a’s::k’ 一) 真 奧 秘!真 奧 秘!主 基 督 與 罪 人 合 為 一。 二) 真 超 脫!真 超 脫!我 已 經 與 基 督 同 復 活； C F C G7 C d:xs xa xd xs’a ra xh raL’g xdL ba s s’a::k’ 或 人 事\\ 或 時 地,不 能 使 主 與 我 再 分 離。 是 罪 惡\\ 是 鬼 魔,從 今 後 都 不 能 再 纏 我； G7 C F C jlrxa rs g’glxh g ra’ra h f h’g;;k’ 阿 利 路 亞！阿 利 路 亞！榮 耀 的 奧 秘！ 阿 利 路 亞！阿 利 路 亞！榮 耀 的 超 脫！ C F C G7 C d:xs xa xd xs’a ra xh raL’g xdL ba s s’a::k/ 真 奧 秘!真 奧 秘!在 主 裡 我 與 神 永 合 一。 真 超 脫!真 超 脫!我 現 今 與 基 督 同 活 著。","lyricText":"真奧祕真奧祕 主基督與罪人合為一 或人事或時地 不能使主與我再分離 阿利路亞 阿利路亞 榮耀的奧祕 真奧祕真奧祕 在主裡我與神永合一\n真超脫真超脫 我已經與基督同復活 是罪惡是鬼魔 從今後都不能再纏我 阿利路亞 阿利路亞 榮耀的超脫 真超脫真超脫 我現今與基督同活著","lyricVerses":["真奧祕真奧祕 主基督與罪人合為一 或人事或時地 不能使主與我再分離 阿利路亞 阿利路亞 榮耀的奧祕 真奧祕真奧祕 在主裡我與神永合一","真超脫真超脫 我已經與基督同復活 是罪惡是鬼魔 從今後都不能再纏我 阿利路亞 阿利路亞 榮耀的超脫 真超脫真超脫 我現今與基督同活著"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ch/264"}
+{
+  "id": "hymns-264",
+  "collection": "hymns",
+  "number": 264,
+  "title": "得救的證實與快樂－一般",
+  "images": [
+    "database/songs/hymns/0264/01.jpg"
+  ],
+  "text": "264 得救的證實與快樂－一般 D 4/4 C F C G d:xs xa xd xs’a ra xh raL’g xg xg d a’s::k’ 一) 真 奧 秘!真 奧 秘!主 基 督 與 罪 人 合 為 一。 二) 真 超 脫!真 超 脫!我 已 經 與 基 督 同 復 活； C F C G7 C d:xs xa xd xs’a ra xh raL’g xdL ba s s’a::k’ 或 人 事\\ 或 時 地,不 能 使 主 與 我 再 分 離。 是 罪 惡\\ 是 鬼 魔,從 今 後 都 不 能 再 纏 我； G7 C F C jlrxa rs g’glxh g ra’ra h f h’g;;k’ 阿 利 路 亞！阿 利 路 亞！榮 耀 的 奧 秘！ 阿 利 路 亞！阿 利 路 亞！榮 耀 的 超 脫！ C F C G7 C d:xs xa xd xs’a ra xh raL’g xdL ba s s’a::k/ 真 奧 秘!真 奧 秘!在 主 裡 我 與 神 永 合 一。 真 超 脫!真 超 脫!我 現 今 與 基 督 同 活 著。",
+  "lyricText": "真奧祕真奧祕 主基督與罪人合為一 或人事或時地 不能使主與我再分離 阿利路亞 阿利路亞 榮耀的奧祕 真奧祕真奧祕 在主裡我與神永合一\n真超脫真超脫 我已經與基督同復活 是罪惡是鬼魔 從今後都不能再纏我 阿利路亞 阿利路亞 榮耀的超脫 真超脫真超脫 我現今與基督同活著",
+  "lyricVerses": [
+    "真奧祕真奧祕 主基督與罪人合為一 或人事或時地 不能使主與我再分離 阿利路亞 阿利路亞 榮耀的奧祕 真奧祕真奧祕 在主裡我與神永合一",
+    "真超脫真超脫 我已經與基督同復活 是罪惡是鬼魔 從今後都不能再纏我 阿利路亞 阿利路亞 榮耀的超脫 真超脫真超脫 我現今與基督同活著"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ch/264",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "真奧祕！真奧祕！\n主基督與罪人合為一。\n或人事、或時地，\n不能使主與我再分離。\n阿利路亞！阿利路亞！\n榮耀的奧祕！\n真奧祕！真奧祕！\n在主裡我與神永合一。"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "真超脫！真超脫！\n我已經與基督同復活；\n是罪惡、是鬼魔，\n從今後都不能再纏我；\n阿利路亞！阿利路亞！\n榮耀的超脫！\n真超脫！真超脫！\n我現今與基督同活著。"
+    }
+  ]
+}

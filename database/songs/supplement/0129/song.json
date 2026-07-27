@@ -1,1 +1,28 @@
-{"id":"supplement-129","collection":"supplement","number":129,"title":"耶穌我太陽","images":["database/songs/supplement/0129/01.jpg"],"text":"0129 耶穌我太陽 G 4/4 G G7 vg xa xs’d dlxd xqs xd’a alxa xs xd ’ 一) 耶 穌 我 太 陽，惟 一 的 太 陽，照 亮 我 二) 耶 穌 我 生 命，美 妙 的 生 命，與 我 永 C G G7 C f hlxh xg xf’dty y;y uxd xa xs xd’f hlxh xg xf’ 路 途，燦 爛 明 亮； 不 管 是 陰 霾 抑 或 是 聯 結，扶 持 供 應； 昨 日 今 日 到 永 遠 是 G D G d alvg xa xs’dlxf s xs xd’aty y;y uxa / 天 晴，耶 穌，耶 穌，我 惟 一 太 陽。 一 樣，耶 穌，耶 穌，我 惟 一 生 命。","lyricText":"耶穌我太陽 惟一的太陽 照亮我路途 燦爛明亮 不管是陰霾抑或是天晴 耶穌耶穌 我惟一太陽\n耶穌我生命 美妙的生命 與我永聯結 扶持供應 昨日今日到永遠是一樣 耶穌耶穌 我惟一生命","lyricVerses":["耶穌我太陽 惟一的太陽 照亮我路途 燦爛明亮 不管是陰霾抑或是天晴 耶穌耶穌 我惟一太陽","耶穌我生命 美妙的生命 與我永聯結 扶持供應 昨日今日到永遠是一樣 耶穌耶穌 我惟一生命"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/129"}
+{
+  "id": "supplement-129",
+  "collection": "supplement",
+  "number": 129,
+  "title": "耶穌我太陽",
+  "images": [
+    "database/songs/supplement/0129/01.jpg"
+  ],
+  "text": "0129 耶穌我太陽 G 4/4 G G7 vg xa xs’d dlxd xqs xd’a alxa xs xd ’ 一) 耶 穌 我 太 陽，惟 一 的 太 陽，照 亮 我 二) 耶 穌 我 生 命，美 妙 的 生 命，與 我 永 C G G7 C f hlxh xg xf’dty y;y uxd xa xs xd’f hlxh xg xf’ 路 途，燦 爛 明 亮； 不 管 是 陰 霾 抑 或 是 聯 結，扶 持 供 應； 昨 日 今 日 到 永 遠 是 G D G d alvg xa xs’dlxf s xs xd’aty y;y uxa / 天 晴，耶 穌，耶 穌，我 惟 一 太 陽。 一 樣，耶 穌，耶 穌，我 惟 一 生 命。",
+  "lyricText": "耶穌我太陽 惟一的太陽 照亮我路途 燦爛明亮 不管是陰霾抑或是天晴 耶穌耶穌 我惟一太陽\n耶穌我生命 美妙的生命 與我永聯結 扶持供應 昨日今日到永遠是一樣 耶穌耶穌 我惟一生命",
+  "lyricVerses": [
+    "耶穌我太陽 惟一的太陽 照亮我路途 燦爛明亮 不管是陰霾抑或是天晴 耶穌耶穌 我惟一太陽",
+    "耶穌我生命 美妙的生命 與我永聯結 扶持供應 昨日今日到永遠是一樣 耶穌耶穌 我惟一生命"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/129",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "耶穌我太陽，\n惟一的太陽，\n照亮我路途，燦爛明亮；\n不管是陰霾抑或是天晴，\n耶穌，耶穌，\n我惟一太陽。"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "耶穌我生命，\n美妙的生命，\n與我永聯結，扶持供應；\n昨日今日到永遠是一樣，\n耶穌，耶穌，\n我惟一生命。"
+    }
+  ]
+}

@@ -1,1 +1,22 @@
-{"id":"hymns-677","collection":"hymns","number":677,"title":"福音－救主","images":["database/songs/hymns/0677/01.jpg"],"text":"677 福音－救主 Eb 6/8 C G7 C F C d qxs d xes’alzgl’g xqf h xg’dtyludl’ 憐 憫、慈 愛、寬 恕、 溫 柔 又 謙 和； F C D7 G ra xh f xh’gldl’s vh zj xa’stylusl’ 為 了 罪 人 忍 辱， 甘 負 十 架 軛； C G7 C F C d qxs d xes’alzgl’g xqf h xg’dtyludl’ 捨 命、流 血、受 苦， 為 救 失 喪 者： F C D7 C ra xh f xh’gldl’s vh s vg’atylual/ 這 是 基 督 耶 穌， 對 祂 你 如 何？","lyricText":"憐憫慈愛 寬恕溫柔又謙和 為了罪人忍辱 甘負十架軛 捨命流血 受苦為救失喪者這是基督耶穌 對祂你如何","lyricVerses":["憐憫慈愛 寬恕溫柔又謙和 為了罪人忍辱 甘負十架軛 捨命流血 受苦為救失喪者這是基督耶穌 對祂你如何"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ch/677"}
+{
+  "id": "hymns-677",
+  "collection": "hymns",
+  "number": 677,
+  "title": "福音－救主",
+  "images": [
+    "database/songs/hymns/0677/01.jpg"
+  ],
+  "text": "677 福音－救主 Eb 6/8 C G7 C F C d qxs d xes’alzgl’g xqf h xg’dtyludl’ 憐 憫、慈 愛、寬 恕、 溫 柔 又 謙 和； F C D7 G ra xh f xh’gldl’s vh zj xa’stylusl’ 為 了 罪 人 忍 辱， 甘 負 十 架 軛； C G7 C F C d qxs d xes’alzgl’g xqf h xg’dtyludl’ 捨 命、流 血、受 苦， 為 救 失 喪 者： F C D7 C ra xh f xh’gldl’s vh s vg’atylual/ 這 是 基 督 耶 穌， 對 祂 你 如 何？",
+  "lyricText": "憐憫慈愛 寬恕溫柔又謙和 為了罪人忍辱 甘負十架軛 捨命流血 受苦為救失喪者這是基督耶穌 對祂你如何",
+  "lyricVerses": [
+    "憐憫慈愛 寬恕溫柔又謙和 為了罪人忍辱 甘負十架軛 捨命流血 受苦為救失喪者這是基督耶穌 對祂你如何"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ch/677",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "憐憫、慈愛、寬恕、\n溫柔又謙和；\n為了罪人忍辱，\n甘負十架軛；\n捨命、流血、受苦，\n為救失喪者：\n這是基督耶穌，\n對祂你如何？"
+    }
+  ]
+}

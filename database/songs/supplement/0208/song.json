@@ -1,1 +1,22 @@
-{"id":"supplement-208","collection":"supplement","number":208,"title":"靠耶和華得的喜樂","images":["database/songs/supplement/0208/01.jpg"],"text":"0208 靠耶和華得的喜樂 F 4/4 (尼希米八章) C F C G7 C zg’a xaxs d xsxa’g; ;f’d ; s s’a ; ; 靠 耶 和華 得 的喜 樂 是 你 的 力 量。 C F C G7 C zg’a xaxs d xsxa’g; ;f’d ; s s’a ; ; 靠 耶 和華 得 的喜 樂 是 你 的 力 量。 C F C Em F G7 d’g g g g’h h g xdxf’g g g g’h h g 喫 肥 美 的,喝 甘 甜 的,今日 是 我 們 主 的 聖 日。 C F C G7 C zg’a xaxs d xsxa’g; ;f’d ; s s’a ; ; / 靠 耶 和華 得 的喜 樂 是 你 的 力 量。","lyricText":"靠耶和華得的喜樂是你的力量 靠耶和華得的喜樂是你的力量 喫肥美的 喝甘甜的 今日是我們主的聖日 靠耶和華得的喜樂是你的力量","lyricVerses":["靠耶和華得的喜樂是你的力量 靠耶和華得的喜樂是你的力量 喫肥美的 喝甘甜的 今日是我們主的聖日 靠耶和華得的喜樂是你的力量"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/208"}
+{
+  "id": "supplement-208",
+  "collection": "supplement",
+  "number": 208,
+  "title": "靠耶和華得的喜樂",
+  "images": [
+    "database/songs/supplement/0208/01.jpg"
+  ],
+  "text": "0208 靠耶和華得的喜樂 F 4/4 (尼希米八章) C F C G7 C zg’a xaxs d xsxa’g; ;f’d ; s s’a ; ; 靠 耶 和華 得 的喜 樂 是 你 的 力 量。 C F C G7 C zg’a xaxs d xsxa’g; ;f’d ; s s’a ; ; 靠 耶 和華 得 的喜 樂 是 你 的 力 量。 C F C Em F G7 d’g g g g’h h g xdxf’g g g g’h h g 喫 肥 美 的,喝 甘 甜 的,今日 是 我 們 主 的 聖 日。 C F C G7 C zg’a xaxs d xsxa’g; ;f’d ; s s’a ; ; / 靠 耶 和華 得 的喜 樂 是 你 的 力 量。",
+  "lyricText": "靠耶和華得的喜樂是你的力量 靠耶和華得的喜樂是你的力量 喫肥美的 喝甘甜的 今日是我們主的聖日 靠耶和華得的喜樂是你的力量",
+  "lyricVerses": [
+    "靠耶和華得的喜樂是你的力量 靠耶和華得的喜樂是你的力量 喫肥美的 喝甘甜的 今日是我們主的聖日 靠耶和華得的喜樂是你的力量"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/208",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "靠耶和華得的喜樂\n是你的力量。\n靠耶和華得的喜樂\n是你的力量。\n喫肥美的，喝甘甜的，\n今日是我們主的聖日。\n靠耶和華得的喜樂\n是你的力量。"
+    }
+  ]
+}

@@ -1,1 +1,22 @@
-{"id":"hymns-476","collection":"hymns","number":476,"title":"鼓勵－與主交通","images":["database/songs/hymns/0476/01.jpg"],"text":"476 鼓勵－與主交通 C 3/4 C C7 F ra’rdlrxs xra xrs’rd;ra’ralrxs xra xh’ra; 活 在 生 命 光 中，不 斷 與 主 交 通， C Am D7 G7 h‘glxh xg xd’g;d’dlxd xs xa’s; 瞻 仰 恩 主 慈 容，順 從 聖 靈 感 動， C C7 C g’glxh xg xd’g;ra’ralrxs rxa xh’ra; 天 天 榮 上 加 榮，時 時 讚 美 稱 頌， C G7 C h’g;ra’rd;rs’ria;/ 活 在 生 命 光 中。","lyricText":"活在生命光中 不斷與主交通 瞻仰恩主慈容 順從聖靈感動 天天榮上加榮 時時讚美稱頌 活在生命光中","lyricVerses":["活在生命光中 不斷與主交通 瞻仰恩主慈容 順從聖靈感動 天天榮上加榮 時時讚美稱頌 活在生命光中"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ch/476"}
+{
+  "id": "hymns-476",
+  "collection": "hymns",
+  "number": 476,
+  "title": "鼓勵－與主交通",
+  "images": [
+    "database/songs/hymns/0476/01.jpg"
+  ],
+  "text": "476 鼓勵－與主交通 C 3/4 C C7 F ra’rdlrxs xra xrs’rd;ra’ralrxs xra xh’ra; 活 在 生 命 光 中，不 斷 與 主 交 通， C Am D7 G7 h‘glxh xg xd’g;d’dlxd xs xa’s; 瞻 仰 恩 主 慈 容，順 從 聖 靈 感 動， C C7 C g’glxh xg xd’g;ra’ralrxs rxa xh’ra; 天 天 榮 上 加 榮，時 時 讚 美 稱 頌， C G7 C h’g;ra’rd;rs’ria;/ 活 在 生 命 光 中。",
+  "lyricText": "活在生命光中 不斷與主交通 瞻仰恩主慈容 順從聖靈感動 天天榮上加榮 時時讚美稱頌 活在生命光中",
+  "lyricVerses": [
+    "活在生命光中 不斷與主交通 瞻仰恩主慈容 順從聖靈感動 天天榮上加榮 時時讚美稱頌 活在生命光中"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ch/476",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "活在生命光中，\n不斷與主交通，\n瞻仰恩主慈容，\n順從聖靈感動，\n天天榮上加榮，\n時時讚美稱頌，\n活在生命光中。"
+    }
+  ]
+}

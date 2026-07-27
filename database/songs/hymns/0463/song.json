@@ -1,1 +1,28 @@
-{"id":"hymns-463","collection":"hymns","number":463,"title":"十字架的道路－藉死而生","images":["database/songs/hymns/0463/01.jpg"],"text":"463 十字架的道路－藉死而生 A 4/4 G Am C d d xdl bs a’s s xsl ba zh’ 十 架 樂 接 受，窄 路 肯 行 走， G Em D G G7 zg zg xalmj xa xs’d d s;’d d xdlbs a’ 流 露 生 命，不 再 將 主 扣； 世 界 丟 背 後， Am C G Em D7 G s s xslba zh’zg zg xalmj xa xs’d s a;’ 主 外 無 所 求，流 露 生 命,不 再 將 主 扣。 G7 C G Em D d;a;’a;zh;’zg xalmj a s’d d s;’ 副) 流 露！ 流 露！ 流 露 生 命， 不 再 扣 留； G C G Em D7 G d;a;’a;zh;’zg zg xalmj xa xs’d s a;/ 流 露！ 流 露！ 流 露 生 命,不 再 將 主 扣。","lyricText":"架樂接受 窄路肯行走 流露生命 不再將主扣 世界丟背後 主外無所求 流露生命 不再將主扣\n流露流露 流露生命 不再扣留 流露流露 流露生命 不再將主扣","lyricVerses":["架樂接受 窄路肯行走 流露生命 不再將主扣 世界丟背後 主外無所求 流露生命 不再將主扣","流露流露 流露生命 不再扣留 流露流露 流露生命 不再將主扣"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ch/463"}
+{
+  "id": "hymns-463",
+  "collection": "hymns",
+  "number": 463,
+  "title": "十字架的道路－藉死而生",
+  "images": [
+    "database/songs/hymns/0463/01.jpg"
+  ],
+  "text": "463 十字架的道路－藉死而生 A 4/4 G Am C d d xdl bs a’s s xsl ba zh’ 十 架 樂 接 受，窄 路 肯 行 走， G Em D G G7 zg zg xalmj xa xs’d d s;’d d xdlbs a’ 流 露 生 命，不 再 將 主 扣； 世 界 丟 背 後， Am C G Em D7 G s s xslba zh’zg zg xalmj xa xs’d s a;’ 主 外 無 所 求，流 露 生 命,不 再 將 主 扣。 G7 C G Em D d;a;’a;zh;’zg xalmj a s’d d s;’ 副) 流 露！ 流 露！ 流 露 生 命， 不 再 扣 留； G C G Em D7 G d;a;’a;zh;’zg zg xalmj xa xs’d s a;/ 流 露！ 流 露！ 流 露 生 命,不 再 將 主 扣。",
+  "lyricText": "架樂接受 窄路肯行走 流露生命 不再將主扣 世界丟背後 主外無所求 流露生命 不再將主扣\n流露流露 流露生命 不再扣留 流露流露 流露生命 不再將主扣",
+  "lyricVerses": [
+    "架樂接受 窄路肯行走 流露生命 不再將主扣 世界丟背後 主外無所求 流露生命 不再將主扣",
+    "流露流露 流露生命 不再扣留 流露流露 流露生命 不再將主扣"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ch/463",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "十架樂接受，\n窄路肯行走，\n流露生命，不再將主扣；\n世界丟背後，\n主外無所求，\n流露生命，不再將主扣。"
+    },
+    {
+      "type": "chorus",
+      "number": "",
+      "text": "流露！流露！\n流露生命，不再扣留；\n流露！流露！\n流露生命，不再將主扣。"
+    }
+  ]
+}

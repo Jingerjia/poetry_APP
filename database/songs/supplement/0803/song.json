@@ -1,1 +1,22 @@
-{"id":"supplement-803","collection":"supplement","number":803,"title":"我從來不後悔","images":["database/songs/supplement/0803/01.jpg"],"text":"0803 我從來不後悔 G 4/4 G D7 zg xdL bqs d’a;zgty;y’uzg a xa vj zh’zjty;y;y;y’uzj 我 從 來 不 後 悔 答 應 神 呼 召， D7 G zg xfL bd f’s;zjty;y’uzj zj vj vh zg’dty;y;y;y’ud 我 從 來 不 後 悔 完 全 獻 給 主； G G7 C zg xdL bqs d’a;zgty;y’uzg d xdL bf g’fty;y;y;y’uf 我 與 恩 主 同 行， 天 天 在 登 高， G D7 G zh xaL mj zh’zg;gty;y’ug d xf d xs’aty;y;y;y’ua/ 我 從 來 不 後 悔 所 走 每 步 路。","lyricText":"我從來不後悔答應神呼召 我從來不後悔完全獻給主 我與恩主同行 天天在登高 我從來不後悔所走每步路","lyricVerses":["我從來不後悔答應神呼召 我從來不後悔完全獻給主 我與恩主同行 天天在登高 我從來不後悔所走每步路"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ts/803"}
+{
+  "id": "supplement-803",
+  "collection": "supplement",
+  "number": 803,
+  "title": "我從來不後悔",
+  "images": [
+    "database/songs/supplement/0803/01.jpg"
+  ],
+  "text": "0803 我從來不後悔 G 4/4 G D7 zg xdL bqs d’a;zgty;y’uzg a xa vj zh’zjty;y;y;y’uzj 我 從 來 不 後 悔 答 應 神 呼 召， D7 G zg xfL bd f’s;zjty;y’uzj zj vj vh zg’dty;y;y;y’ud 我 從 來 不 後 悔 完 全 獻 給 主； G G7 C zg xdL bqs d’a;zgty;y’uzg d xdL bf g’fty;y;y;y’uf 我 與 恩 主 同 行， 天 天 在 登 高， G D7 G zh xaL mj zh’zg;gty;y’ug d xf d xs’aty;y;y;y’ua/ 我 從 來 不 後 悔 所 走 每 步 路。",
+  "lyricText": "我從來不後悔答應神呼召 我從來不後悔完全獻給主 我與恩主同行 天天在登高 我從來不後悔所走每步路",
+  "lyricVerses": [
+    "我從來不後悔答應神呼召 我從來不後悔完全獻給主 我與恩主同行 天天在登高 我從來不後悔所走每步路"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ts/803",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "我從來不後悔\n答應神呼召，\n我從來不後悔\n完全獻給主；\n我與恩主同行，\n天天在登高，\n我從來不後悔\n所走每步路。"
+    }
+  ]
+}

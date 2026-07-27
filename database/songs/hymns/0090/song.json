@@ -1,1 +1,34 @@
-{"id":"hymns-90","collection":"hymns","number":90,"title":"讚美主－祂的死","images":["database/songs/hymns/0090/01.jpg"],"text":"090 讚美主－祂的死 D 4/4 C F C G7 C g’rajrag’hty;uxhcxraxjcxtuh’gf ds’a;k 一)讚 美不盡讚 美， 讚 美救 主恩 深； 二)主 愛遠勝爺 娘， 遠 勝最 好朋 友； 三)罪 人今已蒙 恩， 魔 鬼今 已失 敗； F C G7 C g’rajrag’hty;uxhcxraxjcxtuh’g fds’a;k 感 佩無限感 佩， 感 佩 救主捨 身； 蒙 恩罪人頌 揚 主 愛,直到永 久； 誰 能再使我 們 離 開 基督的 愛？ G7 C G7 C ra’rstyjug j’ra ; ; ra’rstyjug j’ra;; 看 哪， 神 子 在 各 各 他， 看 哪， 神 子 在 各 各 他， 看 哪， 神 子 在 各 各 他， F C Dm C G7 C g’hrtyauj h’g; ; f’d ; s;’a;;/ 為 你 和 我 釘 十 字 架。 為 你 和 我 釘 十 字 架。 為 你 和 我 釘 十 字 架。","lyricText":"讚美不盡讚美 讚美救主恩深 感佩無限感佩 感佩救主捨身 看哪神子在各各他 為你和我釘十字架\n主愛遠勝爺娘 遠勝最好朋友 蒙恩罪人頌揚主愛 直到永久 看哪神子在各各他 為你和我釘十字架\n罪人今已蒙恩 魔鬼今已失敗 誰能再使我們離開基督的愛 看哪神子在各各他 為你和我釘十字架","lyricVerses":["讚美不盡讚美 讚美救主恩深 感佩無限感佩 感佩救主捨身 看哪神子在各各他 為你和我釘十字架","主愛遠勝爺娘 遠勝最好朋友 蒙恩罪人頌揚主愛 直到永久 看哪神子在各各他 為你和我釘十字架","罪人今已蒙恩 魔鬼今已失敗 誰能再使我們離開基督的愛 看哪神子在各各他 為你和我釘十字架"],"onlineLyricsSource":"https://www.hymnal.net/zh/hymn/ch/90"}
+{
+  "id": "hymns-90",
+  "collection": "hymns",
+  "number": 90,
+  "title": "讚美主－祂的死",
+  "images": [
+    "database/songs/hymns/0090/01.jpg"
+  ],
+  "text": "090 讚美主－祂的死 D 4/4 C F C G7 C g’rajrag’hty;uxhcxraxjcxtuh’gf ds’a;k 一)讚 美不盡讚 美， 讚 美救 主恩 深； 二)主 愛遠勝爺 娘， 遠 勝最 好朋 友； 三)罪 人今已蒙 恩， 魔 鬼今 已失 敗； F C G7 C g’rajrag’hty;uxhcxraxjcxtuh’g fds’a;k 感 佩無限感 佩， 感 佩 救主捨 身； 蒙 恩罪人頌 揚 主 愛,直到永 久； 誰 能再使我 們 離 開 基督的 愛？ G7 C G7 C ra’rstyjug j’ra ; ; ra’rstyjug j’ra;; 看 哪， 神 子 在 各 各 他， 看 哪， 神 子 在 各 各 他， 看 哪， 神 子 在 各 各 他， F C Dm C G7 C g’hrtyauj h’g; ; f’d ; s;’a;;/ 為 你 和 我 釘 十 字 架。 為 你 和 我 釘 十 字 架。 為 你 和 我 釘 十 字 架。",
+  "lyricText": "讚美不盡讚美 讚美救主恩深 感佩無限感佩 感佩救主捨身 看哪神子在各各他 為你和我釘十字架\n主愛遠勝爺娘 遠勝最好朋友 蒙恩罪人頌揚主愛 直到永久 看哪神子在各各他 為你和我釘十字架\n罪人今已蒙恩 魔鬼今已失敗 誰能再使我們離開基督的愛 看哪神子在各各他 為你和我釘十字架",
+  "lyricVerses": [
+    "讚美不盡讚美 讚美救主恩深 感佩無限感佩 感佩救主捨身 看哪神子在各各他 為你和我釘十字架",
+    "主愛遠勝爺娘 遠勝最好朋友 蒙恩罪人頌揚主愛 直到永久 看哪神子在各各他 為你和我釘十字架",
+    "罪人今已蒙恩 魔鬼今已失敗 誰能再使我們離開基督的愛 看哪神子在各各他 為你和我釘十字架"
+  ],
+  "onlineLyricsSource": "https://www.hymnal.net/zh/hymn/ch/90",
+  "structuredLyrics": [
+    {
+      "type": "verse",
+      "number": "1",
+      "text": "讚美不盡讚美，\n讚美救主恩深；\n感佩無限感佩，\n感佩救主捨身；\n看哪，神子在各各他，\n為你和我釘十字架。"
+    },
+    {
+      "type": "verse",
+      "number": "2",
+      "text": "主愛遠勝爺娘，\n遠勝最好朋友；\n蒙恩罪人頌揚\n主愛，直到永久；\n看哪，神子在各各他，\n為你和我釘十字架。"
+    },
+    {
+      "type": "verse",
+      "number": "3",
+      "text": "罪人今已蒙恩，\n魔鬼今已失敗；\n誰能再使我們\n離開基督的愛？\n看哪，神子在各各他，\n為你和我釘十字架。"
+    }
+  ]
+}
