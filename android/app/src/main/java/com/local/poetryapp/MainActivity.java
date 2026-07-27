@@ -310,10 +310,11 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
-        public void exportUserData(String text) {
+        public void exportUserData(String text, String fileName) {
             String exportText = text == null ? "" : text;
+            String exportFileName = fileName == null ? "" : fileName;
             new Thread(() -> {
-                boolean ok = exportBackupToDownloads(exportText);
+                boolean ok = exportBackupToDownloads(exportText, exportFileName);
                 runOnUiThread(() -> Toast.makeText(
                     MainActivity.this,
                     ok ? "已匯出到 Download/Poetry_APP" : "匯出失敗",
@@ -428,9 +429,11 @@ public class MainActivity extends Activity {
         return Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload%2FPoetry_APP");
     }
 
-    private boolean exportBackupToDownloads(String text) {
+    private boolean exportBackupToDownloads(String text, String requestedFileName) {
         try {
-            String fileName = "hymn-library-backup.json";
+            String fileName = sanitizeFileName(requestedFileName);
+            if (fileName.isEmpty()) fileName = "hymn-library-favorites.json";
+            if (!fileName.toLowerCase().endsWith(".json")) fileName += ".json";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);

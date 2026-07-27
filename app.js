@@ -345,7 +345,8 @@ function appBack() {
 }
 
 function favoriteRow(song, index) {
-  return `<div class="favorite-row">${songButton(song)}<button class="remove-favorite" data-index="${index}" aria-label="remove">\u00d7</button></div>`;
+  const last = index === activeFavoriteGroup().songs.length - 1;
+  return `<div class="favorite-row">${songButton(song)}<button class="move-favorite" data-action="up" data-index="${index}" ${index === 0 ? 'disabled' : ''}>\u2191</button><button class="move-favorite" data-action="down" data-index="${index}" ${last ? 'disabled' : ''}>\u2193</button><button class="remove-favorite" data-index="${index}" aria-label="remove">\u00d7</button></div>`;
 }
 
 function renderFavoriteGroups() {
@@ -366,6 +367,17 @@ function renderFavoriteList() {
   const group = activeFavoriteGroup();
   $('favorite-list').innerHTML = group.songs.length ? group.songs.map(favoriteRow).join('') : '<p class="empty">\u9019\u500b\u7fa4\u7d44\u9084\u6c92\u6709\u8a69\u6b4c</p>';
   bindSongs($('favorite-list'), group.songs);
+  $('favorite-list').querySelectorAll('.move-favorite').forEach((button) => {
+    button.onclick = (event) => {
+      event.stopPropagation();
+      const index = Number(button.dataset.index);
+      const target = button.dataset.action === 'up' ? index - 1 : index + 1;
+      if (target < 0 || target >= group.songs.length) return;
+      [group.songs[index], group.songs[target]] = [group.songs[target], group.songs[index]];
+      saveFavorites();
+      renderFavorites();
+    };
+  });
   $('favorite-list').querySelectorAll('.remove-favorite').forEach((button) => {
     button.onclick = (event) => {
       event.stopPropagation();
@@ -382,6 +394,7 @@ function renderManagedGroups() {
   $('managed-groups').innerHTML = favoriteState.groups.map((group, index) => `
     <div class="managed-group">
       <span>${escapeHtml(group.name)}</span>
+      <button data-action="rename" data-index="${index}">\u91cd\u547d\u540d</button>
       <button data-action="up" data-index="${index}" ${index === 0 ? 'disabled' : ''}>\u2191</button>
       <button data-action="down" data-index="${index}" ${index === favoriteState.groups.length - 1 ? 'disabled' : ''}>\u2193</button>
       <button data-action="delete" data-index="${index}" ${favoriteState.groups.length <= 1 ? 'disabled' : ''}>\u522a\u9664</button>
@@ -391,7 +404,13 @@ function renderManagedGroups() {
     button.onclick = () => {
       const index = Number(button.dataset.index);
       const action = button.dataset.action;
-      if (action === 'up' && index > 0) {
+      if (action === 'rename') {
+        const target = favoriteState.groups[index];
+        if (!target) return;
+        const name = prompt('\u8f38\u5165\u65b0\u7fa4\u7d44\u540d\u7a31', target.name);
+        if (!name || !name.trim()) return;
+        target.name = name.trim();
+      } else if (action === 'up' && index > 0) {
         [favoriteState.groups[index - 1], favoriteState.groups[index]] = [favoriteState.groups[index], favoriteState.groups[index - 1]];
       } else if (action === 'down' && index < favoriteState.groups.length - 1) {
         [favoriteState.groups[index + 1], favoriteState.groups[index]] = [favoriteState.groups[index], favoriteState.groups[index + 1]];
@@ -453,7 +472,7 @@ function toggleCurrentFavorite() {
   const group = activeFavoriteGroup();
   const index = group.songs.findIndex((item) => item.id === song.id);
   if (index >= 0) group.songs.splice(index, 1);
-  else group.songs.unshift(songSummary(song));
+  else group.songs.push(songSummary(song));
   saveFavorites();
   renderFavorites();
 }
@@ -475,17 +494,23 @@ function hydratePersistentState() {
   playerEnabled = readStore(playerEnabledKey, true) !== false;
 }
 
+function timestampForFileName(date = new Date()) {
+  const pad = (value) => String(value).padStart(2, '0');
+  return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}_${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`;
+}
+
 function exportUserData() {
   const text = JSON.stringify(userDataPayload(), null, 2);
+  const fileName = `hymn-library-favorites-${timestampForFileName()}.json`;
   if (window.AndroidBridge?.exportUserData) {
-    window.AndroidBridge.exportUserData(text);
+    window.AndroidBridge.exportUserData(text, fileName);
     return;
   }
   const blob = new Blob([text], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'hymn-library-backup.json';
+  link.download = fileName;
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -844,7 +869,7 @@ async function renderSong() {
 }
 
 function openSong(song, songs) {
-  currentSongs = songs;
+  currentSongs = songs.map((item) => ({ ...item }));
   currentIndex = Math.max(0, songs.findIndex((item) => item.id === song.id));
   currentPageIndex = 0;
   $('search').hidden = true;
