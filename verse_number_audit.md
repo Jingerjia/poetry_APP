@@ -1,0 +1,124 @@
+# Verse Number Audit
+
+修正規則：只補 `structuredLyrics` 裡 type 不是 chorus 且 number 空白的段落；依照同一首歌中已出現的 verse 順序遞增，chorus 不計入節數。
+
+- changed files: 105
+- remaining empty verse numbers: 0
+- non-contiguous numbered verse sequences for manual review: 8
+
+## Fixed Empty Verse Numbers
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0001\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0002\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0003\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0004\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0005\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0006\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0007\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0008\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0009\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0010\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0011\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0012\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0013\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0015\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0016\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0017\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0018\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0019\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0020\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0021\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0022\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0023\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0024\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0025\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0026\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0027\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0028\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0029\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0030\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0031\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0032\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0033\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0038\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0039\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0040\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0041\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0042\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0044\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0046\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0047\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0048\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0049\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0050\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0051\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0052\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0053\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0054\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0055\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0056\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0057\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0061\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0062\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0063\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0064\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0065\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0066\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0067\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0068\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0069\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0071\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0073\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0074\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0076\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0077\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0078\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0079\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0080\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0081\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0082\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0083\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0084\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0085\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0088\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0091\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0092\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0093\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0094\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\hymns\A002\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0035\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0036\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0104\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0123\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0128\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0145\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0149\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0150\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0207\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0314\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0407\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0428\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0444\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0467\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0468\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0543\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0702\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0731\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0807\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0814\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0823\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0826\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0829\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0861\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0926\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0929\song.json`
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\1002\song.json`
+
+## Non-Contiguous Verse Numbers
+- `C:\Users\user\Desktop\poetry_APP\database\songs\hymns\0388\song.json` 經歷基督－作一切: [1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+- `C:\Users\user\Desktop\poetry_APP\database\songs\hymns\0389\song.json` 經歷基督－作一切: [1, 2, 4]
+- `C:\Users\user\Desktop\poetry_APP\database\songs\hymns\0393\song.json` 經歷基督－作一切: [1, 2, 3, 3, 3, 6, 3, 8, 9, 10, 11, 12]
+- `C:\Users\user\Desktop\poetry_APP\database\songs\hymns\0485\song.json` 鼓勵－努力向前: [1, 2, 3, 4, 1, 2, 3]
+- `C:\Users\user\Desktop\poetry_APP\database\songs\hymns\0717\song.json` 福音－勸導: [1, 2, 3, 4, 1, 2, 3, 4]
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0702\song.json` 是你嗎: [1, 1, 2, 3, 1, 2, 3, 1, 2]
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0716\song.json` 同過召會: [1, 2, 3, 3]
+- `C:\Users\user\Desktop\poetry_APP\database\songs\supplement\0926\song.json` 一道生命的水流: [1, 1, 2, 3]
