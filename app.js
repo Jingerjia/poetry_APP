@@ -895,8 +895,9 @@ function renderSongText(song) {
   const sections = Array.isArray(song.structuredLyrics) && song.structuredLyrics.length
     ? song.structuredLyrics
     : fallbackStructuredLyrics(song);
+  const title = `<header class="lyric-title"><h2>${escapeHtml(song.title || '')}</h2></header>`;
   $('song-text').innerHTML = sections.length
-    ? sections.map(renderLyricSection).join('')
+    ? `${title}${sections.map(renderLyricSection).join('')}`
     : '<p class="empty">\u9019\u9996\u76EE\u524D\u6C92\u6709\u6587\u5B57</p>';
 }
 

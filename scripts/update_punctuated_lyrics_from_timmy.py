@@ -12,10 +12,17 @@ SONGS = ROOT / "database" / "songs"
 AUDIT = ROOT / "timmy_lyrics_update_audit.md"
 TIMMY_URL = "https://timmyhymn.github.io/Thymn/hymns.js"
 BOOK_MAP = {
+    "hymns": 1,
+    "supplement": 2,
     "new-songs": 3,
     "new-poems": 4,
+    "blue-poems": 6,
 }
 PUNCTUATION = set("，。！？、；：,.!?;:；")
+FULLWIDTH_PUNCTUATION = str.maketrans({
+    ",": "，",
+    ".": "。",
+})
 USER_AGENT = "Mozilla/5.0 poetry-app-punctuation-updater"
 
 
@@ -45,9 +52,14 @@ def normalize_text(text: str) -> str:
     return re.sub(r"\s+", "", str(text or ""))
 
 
+def fullwidth_punctuation(text: str) -> str:
+    return str(text or "").translate(FULLWIDTH_PUNCTUATION)
+
+
 def join_orphan_punctuation(lines: list[str]) -> list[str]:
     result: list[str] = []
     for line in lines:
+        line = fullwidth_punctuation(line)
         if line in PUNCTUATION and result:
             result[-1] = f"{result[-1]}{line}"
         else:
@@ -141,6 +153,44 @@ def consolidate_choruses(sections: list[dict[str, str]]) -> list[dict[str, str]]
     return result
 
 
+def normalize_sections(sections: list[dict[str, str]]) -> list[dict[str, str]]:
+    normalized = []
+    for section in sections:
+        text = fullwidth_punctuation(str(section.get("text") or "")).strip()
+        if not text:
+            continue
+        normalized.append({
+            "type": str(section.get("type") or "verse"),
+            "number": str(section.get("number") or ""),
+            "text": text,
+        })
+    return normalized
+
+
+def comparable_sections(sections: list[dict[str, str]]) -> list[dict[str, str]]:
+    comparable = []
+    for section in sections:
+        text = str(section.get("text") or "").strip()
+        if not text:
+            continue
+        comparable.append({
+            "type": str(section.get("type") or "verse"),
+            "number": str(section.get("number") or ""),
+            "text": text,
+        })
+    return comparable
+
+
+def timmy_code(book: str, number: str) -> int | None:
+    value = str(number or "").strip()
+    if value.isdigit():
+        return int(value)
+    match = re.fullmatch(r"附\s*(\d+)", value)
+    if book == "hymns" and match:
+        return 1000 + int(match.group(1))
+    return None
+
+
 def fetch_timmy_data() -> dict[tuple[int, int], dict]:
     request = urllib.request.Request(TIMMY_URL, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(request, timeout=40) as response:
@@ -157,11 +207,10 @@ def main() -> int:
     for book in BOOK_MAP:
         for path in sorted((SONGS / book).glob("*/song.json")):
             song = read_json(path)
-            if needs_punctuation(song):
-                targets.append((book, path, song))
+            targets.append((book, path, song))
 
     if not targets:
-        AUDIT.write_text("# Timmy Lyrics Update Audit\n\nNo songs needed punctuation updates.\n", encoding="utf-8", newline="\n")
+        AUDIT.write_text("# Timmy Lyrics Update Audit\n\nNo songs found.\n", encoding="utf-8", newline="\n")
         print("No targets")
         return 0
 
@@ -173,19 +222,28 @@ def main() -> int:
     missing: list[str] = []
     no_sections: list[str] = []
     skipped_no_punctuation: list[str] = []
+    unchanged: list[str] = []
+    unsupported_number: list[str] = []
 
     for book, path, song in targets:
-        item = data.get((BOOK_MAP[book], int(song["number"])))
+        code = timmy_code(book, str(song.get("number") or ""))
+        if code is None:
+            unsupported_number.append(str(path))
+            continue
+        item = data.get((BOOK_MAP[book], code))
         if not item:
             missing.append(str(path))
             continue
-        sections = parse_timmy_lyrics(str(item.get("lyrics") or ""))
+        sections = normalize_sections(parse_timmy_lyrics(str(item.get("lyrics") or "")))
         text = "".join(section.get("text", "") for section in sections)
         if not sections:
             no_sections.append(str(path))
             continue
         if not has_punctuation(text):
             skipped_no_punctuation.append(str(path))
+            continue
+        if comparable_sections(song.get("structuredLyrics") or []) == sections:
+            unchanged.append(str(path))
             continue
         song["structuredLyrics"] = sections
         write_json(path, song)
@@ -196,9 +254,11 @@ def main() -> int:
         "",
         "來源：`https://timmyhymn.github.io/Thymn/hymns.js`。本腳本只發出一次請求，之後在本機處理，避免逐首請求造成網站負擔。",
         "",
-        f"- targets without punctuation before update: {len(targets)}",
+        f"- checked local songs: {len(targets)}",
         f"- changed files: {len(changed)}",
+        f"- unchanged files: {len(unchanged)}",
         f"- missing in Timmy data: {len(missing)}",
+        f"- unsupported local number: {len(unsupported_number)}",
         f"- parsed no sections: {len(no_sections)}",
         f"- source still had no punctuation: {len(skipped_no_punctuation)}",
         "",
@@ -209,6 +269,8 @@ def main() -> int:
         lines.append("")
     if missing or no_sections or skipped_no_punctuation:
         lines.append("## Needs Review")
+        for path in unsupported_number:
+            lines.append(f"- `{path}` unsupported local number")
         for path in missing:
             lines.append(f"- `{path}` missing in Timmy data")
         for path in no_sections:
@@ -219,7 +281,9 @@ def main() -> int:
 
     print(f"targets {len(targets)}")
     print(f"changed {len(changed)}")
+    print(f"unchanged {len(unchanged)}")
     print(f"missing {len(missing)}")
+    print(f"unsupported_number {len(unsupported_number)}")
     print(f"no_sections {len(no_sections)}")
     print(f"skipped_no_punctuation {len(skipped_no_punctuation)}")
     for path in changed[:120]:

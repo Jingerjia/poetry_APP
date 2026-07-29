@@ -1,12 +1,17 @@
 # Timmy Lyrics Update Audit
 
-來源：https://timmyhymn.github.io/Thymn/hymns.js。更新腳本每次只下載 hymns.js 一次，之後在本機處理，避免逐首請求造成網站負擔。
+來源：`https://timmyhymn.github.io/Thymn/hymns.js`。本腳本只發出一次請求，之後在本機處理，避免逐首請求造成網站負擔。
 
-- scope: focused on songs whose structuredLyrics lacked punctuation, primarily new-songs and new-poems
-- updated from Timmy data: 82 songs
-- cleaned orphan punctuation-only lines: 25 songs total, including 22 Timmy-updated songs and 3 existing supplement songs
-- remaining structuredLyrics without punctuation: 0
-- remaining punctuation-only lines: 0
+- checked local songs: 1611
+- changed files: 1
+- unchanged files: 1609
+- missing in Timmy data: 0
+- unsupported local number: 0
+- parsed no sections: 0
+- source still had no punctuation: 1
 
-## Remaining Issues
-- None
+## Updated
+- `C:\Users\user\Desktop\poetry_APP\database\songs\new-songs\0137\song.json`
+
+## Needs Review
+- `C:\Users\user\Desktop\poetry_APP\database\songs\blue-poems\0066\song.json` source still had no punctuation

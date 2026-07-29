@@ -16,19 +16,9 @@
   "onlineLyricsSource": "https://flowingstream.org/hymn/c129/",
   "structuredLyrics": [
     {
-      "type": "verse",
-      "number": "1",
-      "text": "願神從錫安賜福給你，\n願你一生看見撒冷好處，\n願你看見你兒女的兒女，\n願平安歸於神的家；"
-    },
-    {
       "type": "chorus",
       "number": "",
-      "text": "願你城中平安，\n願你宮內興旺，\n當為撒冷求平安；\n愛你的人必然興旺！"
-    },
-    {
-      "type": "verse",
-      "number": "2",
-      "text": "因我弟兄和同伴緣故，\n我要說，願平安在你中間，\n因耶和華我們神殿的緣故，\n我要在此為你求福；"
+      "text": "願你城中平安，\n願你宮內興旺，\n當為撒冷求平安；\n愛你的人必然興旺！\n因我弟兄和同伴緣故，\n我要說，\n願平安在你中間，\n因耶和華我們神殿緣故，\n我要在此為你求福；"
     }
   ]
 }
