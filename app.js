@@ -34,6 +34,7 @@ let currentViewMode = elderSettings.defaultViewMode;
 let imageScale = 1;
 let imagePanX = 0;
 let imagePanY = 0;
+let lastTextScrollKey = '';
 let longPressTimer = null;
 let touchMode = '';
 let pinchStartDistance = 0;
@@ -101,7 +102,7 @@ function loadHistory() {
 }
 
 function saveHistory(items) {
-  writeStore(historyKey, items.slice(0, 30));
+  writeStore(historyKey, items.slice(0, 50));
 }
 
 function loadFavorites() {
@@ -337,13 +338,21 @@ function bindSongs(parent, songs) {
 }
 
 async function fullSong(song) {
-  if (!song || song.images?.length) return song;
+  if (!song) return song;
+  if (song.images?.length && Array.isArray(song.structuredLyrics) && song.structuredLyrics.length) return song;
   if (song.data) {
     try {
       return { ...song, ...(await readJson(song.data)) };
     } catch (error) {
       console.warn('song detail unavailable', song.data, error);
     }
+  }
+  try {
+    const index = await bookIndex(song.collection);
+    const entry = index.songs.find((item) => item.id === song.id || String(item.number) === String(song.number));
+    if (entry?.data) return { ...song, ...(await readJson(entry.data)) };
+  } catch (error) {
+    console.warn('song index detail unavailable', song.id, error);
   }
   try {
     const rows = await searchRows(song.collection);
@@ -379,6 +388,10 @@ function closeViewer() {
 }
 
 function appBack() {
+  if (!$('favorite-editor').hidden) {
+    cancelFavoriteEdit();
+    return true;
+  }
   if (!$('group-manager').hidden) {
     closeGroupManager();
     return true;
@@ -393,10 +406,6 @@ function appBack() {
   }
   if (!$('search').hidden) {
     toggleSearch(false);
-    return true;
-  }
-  if (favoriteEditMode) {
-    cancelFavoriteEdit();
     return true;
   }
   if (!$('viewer').hidden) {
@@ -445,9 +454,11 @@ function renderFavoriteGroups() {
 
 function renderFavoriteList() {
   const group = activeFavoriteGroup();
-  $('favorite-list').innerHTML = group.songs.length ? group.songs.map(favoriteRow).join('') : '<p class="empty">\u9019\u500b\u7fa4\u7d44\u9084\u6c92\u6709\u8a69\u6b4c</p>';
-  if (!favoriteEditMode) bindSongs($('favorite-list'), group.songs);
-  $('favorite-list').querySelectorAll('.move-favorite').forEach((button) => {
+  const target = favoriteEditMode ? $('favorite-edit-list') : $('favorite-list');
+  $('favorite-list').innerHTML = favoriteEditMode ? '' : (group.songs.length ? group.songs.map(favoriteRow).join('') : '<p class="empty">\u9019\u500b\u7fa4\u7d44\u9084\u6c92\u6709\u8a69\u6b4c</p>');
+  if (favoriteEditMode) target.innerHTML = group.songs.length ? group.songs.map(favoriteRow).join('') : '<p class="empty">\u9019\u500b\u7fa4\u7d44\u9084\u6c92\u6709\u8a69\u6b4c</p>';
+  if (!favoriteEditMode) bindSongs(target, group.songs);
+  target.querySelectorAll('.move-favorite').forEach((button) => {
     button.onclick = (event) => {
       event.stopPropagation();
       const index = Number(button.dataset.index);
@@ -457,7 +468,7 @@ function renderFavoriteList() {
       renderFavorites();
     };
   });
-  $('favorite-list').querySelectorAll('.remove-favorite').forEach((button) => {
+  target.querySelectorAll('.remove-favorite').forEach((button) => {
     button.onclick = (event) => {
       event.stopPropagation();
       const song = group.songs[Number(button.dataset.index)];
@@ -476,33 +487,17 @@ function renderManagedGroups() {
   $('managed-groups').innerHTML = draft.groups.map((group, index) => `
     <div class="managed-group">
       <span>${escapeHtml(group.name)}</span>
-      <button data-action="songs" data-index="${index}">\u7BA1\u7406\u6211\u7684\u6700\u611B</button>
       <button data-action="up" data-index="${index}" ${index === 0 ? 'disabled' : ''}>\u2191</button>
       <button data-action="down" data-index="${index}" ${index === draft.groups.length - 1 ? 'disabled' : ''}>\u2193</button>
+      <button data-action="edit" data-index="${index}" aria-label="edit">\u270E</button>
       <button data-action="delete" data-index="${index}" ${draft.groups.length <= 1 ? 'disabled' : ''}>&#x1F5D1;</button>
-      <button data-action="rename" data-index="${index}" aria-label="edit">\u270E</button>
     </div>
   `).join('');
   $('managed-groups').querySelectorAll('button').forEach((button) => {
     button.onclick = () => {
       const index = Number(button.dataset.index);
       const action = button.dataset.action;
-      if (action === 'songs') {
-        activeFavoriteGroupId = draft.groups[index]?.id || activeFavoriteGroupId;
-        favoriteDraft = normalizeFavoriteState(draft);
-        favoriteEditMode = true;
-        groupDraft = null;
-        $('group-manager').hidden = true;
-        renderFavorites();
-        return;
-      }
-      if (action === 'rename') {
-        const target = draft.groups[index];
-        if (!target) return;
-        const name = prompt('\u8f38\u5165\u65b0\u7fa4\u7d44\u540d\u7a31', target.name);
-        if (!name || !name.trim()) return;
-        target.name = name.trim();
-      } else if (action === 'up' && index > 0) {
+      if (action === 'up' && index > 0) {
         [draft.groups[index - 1], draft.groups[index]] = [draft.groups[index], draft.groups[index - 1]];
       } else if (action === 'down' && index < draft.groups.length - 1) {
         [draft.groups[index + 1], draft.groups[index]] = [draft.groups[index], draft.groups[index + 1]];
@@ -511,6 +506,18 @@ function renderManagedGroups() {
         if (!target || !confirm(`\u522a\u9664\u7fa4\u7d44\u300c${target.name}\u300d\uff1f\u7fa4\u7d44\u5167\u7684\u6700\u611b\u4e5f\u6703\u4e00\u8d77\u79fb\u9664\u3002`)) return;
         draft.groups.splice(index, 1);
         if (!draft.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = draft.groups[0].id;
+        favoriteState = normalizeFavoriteState(draft);
+        saveFavorites();
+        groupDraft = cloneFavoriteState(favoriteState);
+        renderFavorites();
+      } else if (action === 'edit') {
+        favoriteState = normalizeFavoriteState(draft);
+        activeFavoriteGroupId = favoriteState.groups[index]?.id || activeFavoriteGroupId;
+        saveFavorites();
+        groupDraft = null;
+        $('group-manager').hidden = true;
+        beginFavoriteEdit();
+        return;
       }
       renderManagedGroups();
     };
@@ -550,9 +557,15 @@ function renderFavoriteTools() {
 }
 
 function renderFavorites() {
-  $('favorite-edit-panel').hidden = !favoriteEditMode;
-  $('manage-favorites').textContent = favoriteEditMode ? '\u7DE8\u8F2F\u4E2D' : '\u7BA1\u7406\u6211\u7684\u6700\u611B';
+  $('favorite-editor').hidden = !favoriteEditMode;
+  $('manage-favorites').textContent = '\u270E';
   $('manage-favorites').disabled = favoriteEditMode;
+  const group = activeFavoriteGroup();
+  if (favoriteEditMode && !$('favorite-editor').hidden) {
+    const draftName = $('edit-favorite-group-name').value.trim();
+    if (draftName) group.name = draftName;
+  }
+  if (favoriteEditMode) $('edit-favorite-group-name').value = group.name;
   renderFavoriteGroups();
   renderFavoriteList();
   renderFavoriteTools();
@@ -561,6 +574,8 @@ function renderFavorites() {
 function beginFavoriteEdit() {
   favoriteDraft = cloneFavoriteState(favoriteState);
   favoriteEditMode = true;
+  const group = activeFavoriteGroup();
+  $('edit-favorite-group-name').value = group.name;
   renderFavorites();
 }
 
@@ -568,11 +583,15 @@ function cancelFavoriteEdit() {
   favoriteDraft = null;
   favoriteEditMode = false;
   $('quick-delete-favorites').checked = false;
+  $('favorite-editor').hidden = true;
   renderFavorites();
 }
 
 function saveFavoriteEdits() {
   if (favoriteDraft) {
+    const group = activeFavoriteGroup();
+    const name = $('edit-favorite-group-name').value.trim();
+    if (name) group.name = name;
     favoriteState = normalizeFavoriteState(favoriteDraft);
     if (!favoriteState.groups.some((item) => item.id === activeFavoriteGroupId)) activeFavoriteGroupId = favoriteState.groups[0].id;
     saveFavorites();
@@ -580,6 +599,7 @@ function saveFavoriteEdits() {
   favoriteDraft = null;
   favoriteEditMode = false;
   $('quick-delete-favorites').checked = false;
+  $('favorite-editor').hidden = true;
   renderFavorites();
 }
 
@@ -588,12 +608,13 @@ function addFavoriteGroup() {
   const name = input.value.trim();
   if (!name) return;
   const id = `group-${Date.now().toString(36)}`;
-  const draft = groupDraft || favoriteState;
-  draft.groups.push({ id, name, songs: [] });
+  const group = { id, name, songs: [] };
+  favoriteState.groups.push(group);
+  if (groupDraft) groupDraft.groups.push({ ...group, songs: [] });
   activeFavoriteGroupId = id;
   input.value = '';
-  if (!groupDraft) saveFavorites();
-  if (!groupDraft) renderFavorites();
+  saveFavorites();
+  renderFavorites();
   renderManagedGroups();
 }
 
@@ -881,7 +902,7 @@ function fallbackStructuredLyrics(song) {
 }
 
 function lyricSectionLabel(section, fallbackIndex) {
-  if (section.type === 'chorus') return `\u526f)${section.number || ''}`;
+  if (section.type === 'chorus') return section.number ? `\u526f ${section.number})` : '\u526f)';
   return String(section.number || fallbackIndex + 1);
 }
 
@@ -1060,6 +1081,11 @@ async function renderSong() {
   $('song-page').src = images[currentPageIndex];
   resetImageZoom();
   renderViewMode(song);
+  const scrollKey = `${song.id || ''}:${currentPageIndex}`;
+  if (scrollKey !== lastTextScrollKey) {
+    $('song-text').scrollTop = 0;
+    lastTextScrollKey = scrollKey;
+  }
   $('page-indicator').textContent = images.length > 1
     ? `${currentPageIndex + 1}/${images.length} · ${currentIndex + 1}/${currentSongs.length}`
     : `${currentIndex + 1} / ${currentSongs.length}`;
@@ -1074,6 +1100,7 @@ function openSong(song, songs) {
   currentSongs = songs.map((item) => ({ ...item }));
   currentIndex = Math.max(0, songs.findIndex((item) => item.id === song.id));
   currentPageIndex = 0;
+  lastTextScrollKey = '';
   currentViewMode = elderSettings.defaultViewMode;
   $('search').hidden = true;
   $('viewer').hidden = false;
@@ -1371,7 +1398,12 @@ function bindUI() {
   $('open-song').onclick = openByNumber;
   $('browse-all').onclick = () => toggleSearch(true);
   $('search').onclick = (event) => { if (event.target === $('search')) toggleSearch(false); };
-  $('clear-history').onclick = () => { saveHistory([]); renderHistory(); };
+  $('clear-history').onclick = () => {
+    if (!loadHistory().length) return;
+    if (!window.confirm('\u78ba\u5b9a\u8981\u6e05\u9664\u6700\u8fd1\u958b\u555f\u8a18\u9304\u55ce\uff1f')) return;
+    saveHistory([]);
+    renderHistory();
+  };
   $('add-group').onclick = addFavoriteGroup;
   $('new-group-name').onkeydown = (event) => { if (event.key === 'Enter') addFavoriteGroup(); };
   $('manage-groups').onclick = openGroupManager;
@@ -1381,6 +1413,7 @@ function bindUI() {
   $('save-group-edits').onclick = saveGroupEdits;
   $('close-group-manager').onclick = closeGroupManager;
   $('group-manager').onclick = (event) => { if (event.target === $('group-manager')) closeGroupManager(); };
+  $('favorite-editor').onclick = (event) => { if (event.target === $('favorite-editor')) cancelFavoriteEdit(); };
   $('favorite-group-jump').onchange = (event) => {
     activeFavoriteGroupId = event.target.value;
     renderFavorites();
